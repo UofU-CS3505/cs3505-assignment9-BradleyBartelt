@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "levelone.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -16,8 +17,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+private slots:
+    void on_level1_2_clicked();
+
+    void on_level1_clicked();
+
+    void on_levelOne_clicked();
 
 private:
     Ui::MainWindow *ui;
+    LevelOne* levelOneWindow;
 };
 #endif // MAINWINDOW_H

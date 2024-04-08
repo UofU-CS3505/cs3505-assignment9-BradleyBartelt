@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>BlackjackWelcome.png</file>
+    </qresource>
+</RCC>
