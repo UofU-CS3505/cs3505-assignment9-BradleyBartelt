@@ -17,9 +17,9 @@
    <widget class="QLabel" name="welcomeText">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>10</y>
-      <width>311</width>
+      <x>220</x>
+      <y>30</y>
+      <width>349</width>
       <height>71</height>
      </rect>
     </property>
@@ -36,14 +36,26 @@
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>90</y>
-      <width>191</width>
-      <height>270</height>
+      <x>220</x>
+      <y>105</y>
+      <width>351</width>
+      <height>321</height>
      </rect>
     </property>
-    <layout class="QFormLayout" name="formLayout">
-     <item row="1" column="0" colspan="2">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="levelOne">
+       <property name="font">
+        <font>
+         <pointsize>43</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Level 1</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="levelTwo">
        <property name="font">
         <font>
@@ -55,7 +67,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2">
+     <item>
       <widget class="QPushButton" name="levelThree">
        <property name="font">
         <font>
@@ -67,7 +79,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0" colspan="2">
+     <item>
       <widget class="QPushButton" name="levelFour">
        <property name="font">
         <font>
@@ -76,18 +88,6 @@
        </property>
        <property name="text">
         <string>Level 4</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="2">
-      <widget class="QPushButton" name="levelOne">
-       <property name="font">
-        <font>
-         <pointsize>43</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Level 1</string>
        </property>
       </widget>
      </item>

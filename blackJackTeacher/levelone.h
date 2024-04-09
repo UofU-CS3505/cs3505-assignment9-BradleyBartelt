@@ -15,6 +15,9 @@ public:
     explicit LevelOne(QWidget *parent = nullptr);
     ~LevelOne();
 
+private slots:
+    void on_hitButton_clicked();
+
 private:
     Ui::LevelOne *ui;
 };
