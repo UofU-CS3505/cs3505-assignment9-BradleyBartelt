@@ -1,5 +1,5 @@
 #include "levelone.h"
-#include "qlabel.h"
+#include "qboxlayout.h"
 #include "ui_levelone.h"
 
 LevelOne::LevelOne(QWidget *parent)
@@ -7,7 +7,7 @@ LevelOne::LevelOne(QWidget *parent)
     , ui(new Ui::LevelOne)
 {
     ui->setupUi(this);
-    QPalette palette;
+    // QPalette palette;
     // this->setStyleSheet("background-color: green;");
 }
 
@@ -18,7 +18,17 @@ LevelOne::~LevelOne()
 
 void LevelOne::on_hitButton_clicked()
 {
-    QHBoxLayout* layout = (QHBoxLayout*)(ui->handArea->widget()->layout());
+    QPushButton* newCard = new QPushButton( ui->handArea);
+    newCard->setFixedSize(125, 175);
+    newCard->setStyleSheet("QPushButton {background-color: rgb(224,224,224);}");
+
+    QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
+    layout->addWidget(newCard, Qt::AlignLeft);
+}
+
+
+void LevelOne::on_pushButton_2_clicked()
+{
 
 }
 

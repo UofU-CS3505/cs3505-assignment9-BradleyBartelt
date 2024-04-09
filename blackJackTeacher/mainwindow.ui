@@ -17,9 +17,9 @@
    <widget class="QLabel" name="welcomeText">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>240</x>
       <y>30</y>
-      <width>349</width>
+      <width>331</width>
       <height>71</height>
      </rect>
     </property>
@@ -33,7 +33,7 @@
      <string>Welcom To Blackjack</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>220</x>
