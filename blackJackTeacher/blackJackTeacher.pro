@@ -10,14 +10,18 @@ CONFIG += c++17
 
 SOURCES += \
     deck.cpp \
+    game.cpp \
     levelone.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    player.cpp
 
 HEADERS += \
     deck.h \
+    game.h \
     levelone.h \
-    mainwindow.h
+    mainwindow.h \
+    player.h
 
 FORMS += \
     levelone.ui \
