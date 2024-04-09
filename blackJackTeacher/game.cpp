@@ -129,13 +129,20 @@ void game::hit(player currentPlayer){
 }
 
 void game::split(player person){
-    person.addHand(gameDeck.draw(), gameDeck.draw());
-    //emit to disable split button
+    if(person.cardArray.at(0).rank == person.cardArray.at(1).rank){
+        person.addHand(gameDeck.draw(), gameDeck.draw());
+        //disable split button because we only allow one split
+    }
+    // say something about the cards not being equal so you cannot split
 }
 
 void game::stand(player currentPlayer){
     currentPlayer.setState(true);
     // emit to disable stand button
+}
+
+void game::doubleBet(){
+    // if we work with bets we can make this method do something
 }
 
 void game::resetGame(player person, player dealer){
