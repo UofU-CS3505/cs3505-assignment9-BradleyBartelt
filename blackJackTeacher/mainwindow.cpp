@@ -11,9 +11,10 @@ MainWindow::MainWindow(QWidget *parent)
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Window, bkgnd);
-    ui->welcomeText->setStyleSheet("QLabel { background-color : black; color : white; }");
+    ui->welcomeText->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%) ; color : white; }");
     this->setPalette(palette);
     levelOneWindow = new LevelOne();
+
 }
 
 
