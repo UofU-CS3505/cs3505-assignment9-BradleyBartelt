@@ -15,7 +15,7 @@ Deck::Deck(){
 
 void Deck::shuffle(){
     for(int i=0; i<4; i++) {
-        for(int j=1; j<14; j++) {
+        for(int j=2; j<14; j++) {
             Rank rank;
             Suit suit;
             QImage image;
@@ -29,9 +29,7 @@ void Deck::shuffle(){
             else
                 suit = spade;
 
-            if(j == 1)
-                rank = one;
-            else if(j == 2)
+            if(j == 2)
                 rank = two;
             else if(j == 3)
                 rank = three;
