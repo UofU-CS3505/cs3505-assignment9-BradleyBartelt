@@ -14,14 +14,16 @@ SOURCES += \
     levelone.cpp \
     main.cpp \
     mainwindow.cpp \
-    player.cpp
+    player.cpp \
+    probability.cpp
 
 HEADERS += \
     deck.h \
     game.h \
     levelone.h \
     mainwindow.h \
-    player.h
+    player.h \
+    probability.h
 
 FORMS += \
     levelone.ui \
