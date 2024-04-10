@@ -34,7 +34,7 @@ void LevelOne::on_pushButton_2_clicked()
 
 void LevelOne::on_mainMenu_clicked()
 {
-    this->hide();
     mainMenu->show();
+    delete this;
 }
 

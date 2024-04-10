@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->levelFour->setStyleSheet("QPushButton { background-color : rgba(100,100,100,50%) ; color : white; }");
 
     this->setPalette(palette);
-    levelOneWindow = new LevelOne(nullptr,this);
 
 }
 
@@ -32,6 +31,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_levelOne_clicked()
 {
+    levelOneWindow = new LevelOne(nullptr,this);
     levelOneWindow->show();
     this->hide();
 }

@@ -190,7 +190,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      </layout>
     </item>
     <item row="2" column="1">
-     <layout class="QGridLayout" name="totalDisplayLayout">
+     <layout class="QGridLayout" name="totalDisplayLayout" columnstretch="0,1,0,1,0">
       <item row="0" column="1">
        <widget class="QLabel" name="playerTotal">
         <property name="sizePolicy">
@@ -223,6 +223,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
         </property>
        </widget>
       </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="dealerTotal">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="2">
        <widget class="QLabel" name="label">
         <property name="font">
@@ -236,18 +249,18 @@ li.checked::marker { content: &quot;\2612&quot;; }
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="dealerTotal">
-        <property name="font">
-         <font>
-          <pointsize>18</pointsize>
-          <bold>true</bold>
-         </font>
+      <item row="0" column="4">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-        <property name="text">
-         <string>0</string>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
         </property>
-       </widget>
+       </spacer>
       </item>
      </layout>
     </item>
