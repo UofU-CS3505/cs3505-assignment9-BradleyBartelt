@@ -12,8 +12,13 @@ MainWindow::MainWindow(QWidget *parent)
     QPalette palette;
     palette.setBrush(QPalette::Window, bkgnd);
     ui->welcomeText->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%) ; color : white; }");
+    ui->levelOne->setStyleSheet("QPushButton { background-color : rgba(100,100,100,50%) ; color : white; }");
+    ui->levelTwo->setStyleSheet("QPushButton { background-color : rgba(100,100,100,50%) ; color : white; }");
+    ui->levelThree->setStyleSheet("QPushButton { background-color : rgba(100,100,100,50%) ; color : white; }");
+    ui->levelFour->setStyleSheet("QPushButton { background-color : rgba(100,100,100,50%) ; color : white; }");
+
     this->setPalette(palette);
-    levelOneWindow = new LevelOne();
+    levelOneWindow = new LevelOne(nullptr,this);
 
 }
 

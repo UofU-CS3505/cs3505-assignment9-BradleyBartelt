@@ -2,13 +2,12 @@
 #include "qboxlayout.h"
 #include "ui_levelone.h"
 
-LevelOne::LevelOne(QWidget *parent)
+LevelOne::LevelOne(QWidget *parent,QMainWindow* menu)
     : QMainWindow(parent)
     , ui(new Ui::LevelOne)
 {
     ui->setupUi(this);
-    // QPalette palette;
-    // this->setStyleSheet("background-color: green;");
+    mainMenu = menu;
 }
 
 LevelOne::~LevelOne()
@@ -30,5 +29,12 @@ void LevelOne::on_hitButton_clicked()
 void LevelOne::on_pushButton_2_clicked()
 {
 
+}
+
+
+void LevelOne::on_mainMenu_clicked()
+{
+    this->hide();
+    mainMenu->show();
 }
 

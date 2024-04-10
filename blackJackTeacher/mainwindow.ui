@@ -48,6 +48,7 @@
        <property name="font">
         <font>
          <pointsize>43</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -60,6 +61,7 @@
        <property name="font">
         <font>
          <pointsize>43</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -72,6 +74,7 @@
        <property name="font">
         <font>
          <pointsize>43</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -84,6 +87,7 @@
        <property name="font">
         <font>
          <pointsize>43</pointsize>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
