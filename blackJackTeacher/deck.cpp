@@ -5,9 +5,10 @@
 #include <iostream>
 #include <chrono>
 #include <vector>
+#include <QUrl>
 
 
-Card::Card(Rank rank, Suit suit, QImage image): rank(rank), suit(suit), image(image){}
+Card::Card(Rank rank, Suit suit, QImage& image): rank(rank), suit(suit), image(image){}
 
 Deck::Deck(){
     shuffle();
@@ -15,48 +16,83 @@ Deck::Deck(){
 
 void Deck::shuffle(){
     for(int i=0; i<4; i++) {
-        for(int j=2; j<14; j++) {
+        for(int j=2; j<=14; j++) {
             Rank rank;
             Suit suit;
             QImage image;
+            QString filename = "";
 
-            if(i == 0)
+            if(i == 0){
                 suit = heart;
-            else if(i == 1)
+                filename += "heart";
+            }
+            else if(i == 1){
                 suit = diamond;
-            else if(i == 2)
+                filename += "diamond";
+            }
+            else if(i == 2){
                 suit = club;
-            else
+                filename += "club";
+            }
+            else{
                 suit = spade;
+                filename += "spade";
+            }
 
-            if(j == 2)
+            if(j == 2){
                 rank = two;
-            else if(j == 3)
+                filename += "Two";
+            }
+            else if(j == 3){
                 rank = three;
-            else if(j == 4)
+                filename += "Three";
+            }
+            else if(j == 4){
                 rank = four;
-            else if(j == 5)
+                filename += "Four";
+            }
+            else if(j == 5){
                 rank = five;
-            else if(j == 6)
+                filename += "Five";
+            }
+            else if(j == 6){
                 rank = six;
-            else if(j == 7)
+                filename += "Six";
+            }
+            else if(j == 7){
                 rank = seven;
-            else if(j == 8)
+                filename += "Seven";
+            }
+            else if(j == 8){
                 rank = eight;
-            else if(j == 9)
+                filename += "Eight";
+            }
+            else if(j == 9){
                 rank = nine;
-            else if(j == 10)
+                filename += "Nine";
+            }
+            else if(j == 10){
                 rank = ten;
-            else if(j == 11)
+                filename += "Ten";
+            }
+            else if(j == 11){
                 rank = jack;
-            else if(j == 12)
+                filename += "Jack";
+            }
+            else if(j == 12){
                 rank = queen;
-            else if(j == 13)
+                filename += "Queen";
+            }
+            else if(j == 13){
                 rank = king;
-            else
+                filename += "King";
+            }
+            else{
                 rank = ace;
+                filename += "Ace";
+            }
 
-            image = QImage(); //we need to add actual image of card here
+            image.load(":/images/cardImages/" + filename + ".png");
 
             cards.push_back(Card(rank, suit, image));
         }
@@ -71,6 +107,5 @@ void Deck::shuffle(){
 Card Deck::draw(){
     Card ret = cards.back();
     cards.pop_back();
-    std::cout << ret.rank << std::endl;
     return ret;
 }
