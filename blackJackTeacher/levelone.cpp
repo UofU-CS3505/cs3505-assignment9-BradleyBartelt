@@ -25,13 +25,6 @@ void LevelOne::on_hitButton_clicked()
     layout->addWidget(newCard, Qt::AlignLeft);
 }
 
-
-void LevelOne::on_pushButton_2_clicked()
-{
-
-}
-
-
 void LevelOne::on_mainMenu_clicked()
 {
     mainMenu->show();

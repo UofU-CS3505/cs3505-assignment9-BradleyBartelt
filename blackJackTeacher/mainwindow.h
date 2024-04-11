@@ -18,9 +18,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 private slots:
-    void on_level1_2_clicked();
-
-    void on_level1_clicked();
 
     void on_levelOne_clicked();
 
