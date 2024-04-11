@@ -38,7 +38,7 @@ enum Rank{
 ///
 class Card{
 public:
-    Card(Rank rank, Suit suit, QImage image);
+    Card(Rank rank, Suit suit, QImage& image);
     ~Card(){};
     Rank rank;
     Suit suit;

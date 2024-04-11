@@ -20,8 +20,6 @@ signals:
 private slots:
     void on_hitButton_clicked();
 
-    void on_pushButton_2_clicked();
-
     void on_mainMenu_clicked();
 
 private:
