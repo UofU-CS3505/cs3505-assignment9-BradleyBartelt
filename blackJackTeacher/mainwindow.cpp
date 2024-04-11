@@ -1,17 +1,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "levelone.h"
+#include "PlayingWindow.h"
 #include "model.h"
+#include <iostream>
+#include <ostream>
 
-MainWindow::MainWindow(QWidget *parent, Model* model)
+MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    setupConnections();
+    this->model = &model;
+    setupConnections(model,ui);
     setupWindowDisplay();
-    this->model = model;
 }
 
 
@@ -22,14 +23,21 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_levelOne_clicked(){
-    this->levelOneWindow = new LevelOne(nullptr,this);
+void MainWindow::levelClicked(int level){
+    this->levelOneWindow = new PlayingWindow(*model,this);
     levelOneWindow->show();
     this->hide();
+    emit SetLevel(level);
 }
-
-void MainWindow::setupConnections(){
-    //connect(&levelOneWindow,&levelOneWindow::hit,&model,model::hitSlot);
+void MainWindow::hitSlot(){
+    std::cout << "hit" << std::endl;
+}
+void MainWindow::setupConnections(Model& model,Ui::MainWindow *ui){
+    connect(ui->levelOne,&QPushButton::clicked,this,[=]{this->levelClicked(1);});
+    connect(ui->levelTwo,&QPushButton::clicked,this,[=]{this->levelClicked(2);});
+    connect(ui->levelThree,&QPushButton::clicked,this,[=]{this->levelClicked(3);});
+    connect(ui->levelFour,&QPushButton::clicked,this,[=]{this->levelClicked(4);});
+    connect(this,&MainWindow::SetLevel,&model,&Model::SetLevel);
 }
 void::MainWindow::setupWindowDisplay(){
     QPixmap bkgnd(":/images/BlackjackWelcome.png");

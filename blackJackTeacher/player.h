@@ -7,13 +7,13 @@
 /// \brief The player holds the information of the current players states, this includes their cards, and their current count
 /// (Ace + 4 = 5 or 15)
 ///
-class player
+class Player
 {
 private:
     bool isDealer; // if the player is a dealer the rules will be different
     bool choseStand[2] = {false, false}; // if theres a split lets game know to check that hand too
 public:
-    player(bool isDealer);
+    Player(bool isDealer);
     /// adds card to players hand
     void addCard(Card topCard);
     /// if a player chooses to split, creates another hand

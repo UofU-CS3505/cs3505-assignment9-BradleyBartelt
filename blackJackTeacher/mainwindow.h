@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "levelone.h"
+#include "PlayingWindow.h"
 #include "model.h"
 
 QT_BEGIN_NAMESPACE
@@ -16,17 +16,19 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr,Model* model = nullptr);
+    MainWindow(Model &model, QWidget *parent = nullptr);
     ~MainWindow();
 private slots:
-
-    void on_levelOne_clicked();
+    void levelClicked(int level);
+    void hitSlot();
+signals:
+    void SetLevel(int level);
 
 private:
     Ui::MainWindow *ui;
-    LevelOne* levelOneWindow;
-    void setupConnections();
-    void setupWindowDisplay();
+    PlayingWindow* levelOneWindow;
     Model* model;
+    void setupConnections(Model& model,Ui::MainWindow *ui);
+    void setupWindowDisplay();
 };
 #endif // MAINWINDOW_H

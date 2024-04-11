@@ -1,10 +1,26 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-class Model
+#include "game.h"
+#include <QObject>
+
+class Model : public QObject
 {
+    Q_OBJECT
 public:
-    Model();
+    explicit Model(QObject *parent = nullptr);
+
+signals:
+
+public slots:
+    void hitSlot();
+    void SetLevel(int level);
+private:
+    Game* game;
+    Player* playerOne;
+    Player* dealer;
+    Deck deck;
+    int currentLevel;
 };
 
 #endif // MODEL_H
