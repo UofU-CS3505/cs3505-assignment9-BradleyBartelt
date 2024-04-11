@@ -14,6 +14,7 @@ SOURCES += \
     levelone.cpp \
     main.cpp \
     mainwindow.cpp \
+    model.cpp \
     player.cpp \
     probability.cpp
 
@@ -22,6 +23,7 @@ HEADERS += \
     game.h \
     levelone.h \
     mainwindow.h \
+    model.h \
     player.h \
     probability.h
 

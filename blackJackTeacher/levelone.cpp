@@ -23,14 +23,8 @@ void LevelOne::on_hitButton_clicked()
 
     QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
     layout->addWidget(newCard, Qt::AlignLeft);
+    emit hit();
 }
-
-
-void LevelOne::on_pushButton_2_clicked()
-{
-
-}
-
 
 void LevelOne::on_mainMenu_clicked()
 {

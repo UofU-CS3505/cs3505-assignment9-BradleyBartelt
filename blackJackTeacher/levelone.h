@@ -14,7 +14,9 @@ class LevelOne : public QMainWindow
 public:
     explicit LevelOne(QWidget *parent = nullptr,QMainWindow* mainMenu = nullptr);
     ~LevelOne();
-
+signals:
+    /// @brief tells the model that the hit button has been pressed and it needs to update the game.
+    void hit();
 private slots:
     void on_hitButton_clicked();
 
@@ -25,6 +27,7 @@ private slots:
 private:
     Ui::LevelOne *ui;
     QMainWindow* mainMenu;
+
 };
 
 #endif // LEVELONE_H
