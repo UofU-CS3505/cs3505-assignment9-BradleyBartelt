@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include "PlayingWindow.h"
 #include "model.h"
-
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -18,11 +17,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(Model &model, QWidget *parent = nullptr);
     ~MainWindow();
-private slots:
-    void levelClicked(int level);
-    void hitSlot();
 signals:
     void SetLevel(int level);
+public slots:
+    void levelClicked(int level);
+    void hitSlot();
 
 private:
     Ui::MainWindow *ui;

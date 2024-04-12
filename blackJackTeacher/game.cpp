@@ -2,10 +2,8 @@
 #include "deck.h"
 #include "player.h"
 
-Game::Game(Deck gameDeck, Player person, Player dealer) {
-    gameDeck = Deck();
-    person = Player(false);
-    dealer = Player(true);
+Game::Game(Deck gameDeck, Player& person, Player& dealer) {
+    this->gameDeck = gameDeck;
     person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
     dealer.addCard(gameDeck.draw());
     person.addCard(gameDeck.draw());

@@ -12,7 +12,7 @@ private:
     int personSplitCount; // count that the right hand totals to
     Deck gameDeck; // the given deck
 public:
-    Game(Deck gameDeck, Player person, Player dealer);
+    Game(Deck gameDeck, Player& person, Player& dealer);
     /// checks whether the dealer or the player has lost
     void checkState(Player currentPlayer);
     /// adds card to player
@@ -29,6 +29,7 @@ public:
     void resetGame(Player person, Player dealer);
     /// initial checker for whether the dealer or the player or both got a blackjack
     void checkBlackJack(Player person, Player dealer);
+
 };
 
 #endif // GAME_H

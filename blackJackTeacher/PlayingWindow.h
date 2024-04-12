@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "model.h"
+#include "qpushbutton.h"
 
 namespace Ui {
 class PlayingWindow;
@@ -18,16 +19,22 @@ public:
 signals:
     /// @brief tells the model that the hit button has been pressed and it needs to update the game.
     void hit();
-private slots:
+public slots:
     void hitButtonClicked();
 
     void mainMenuClicked();
 
+    void updateCardImage(QImage);
+
+    void addCardToPlayerHand(QImage card);
+
+    void addCardToDealerHand(QImage card);
 private:
     Ui::PlayingWindow *ui;
     QMainWindow* mainMenu;
     Model* model;
     void SetUpConnections(Model& model);
+    QVector<QPushButton*> cards;
 
 };
 
