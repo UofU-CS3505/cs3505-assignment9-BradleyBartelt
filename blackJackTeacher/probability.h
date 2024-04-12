@@ -74,6 +74,8 @@ private:
     /// \return a double (0-1) representing the likelyhood that the next card will cause the first provided hand to be over 21
     ///
     double probabilityOfBust3OrMoreHands(std::vector<std::vector<Card>> hands);
+
+
 };
 
 #endif // PROBABILITY_H

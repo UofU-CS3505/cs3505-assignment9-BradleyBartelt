@@ -59,6 +59,7 @@ void PlayingWindow::updateCardImage(QImage image){
     QPushButton* cardToUpdate = cards.back();
     QPixmap pixmap = QPixmap::fromImage(image);
     cardToUpdate->setIcon(QIcon(pixmap));
+    cardToUpdate->setIconSize(QSize(125,175));
     std::cout << "here" << std::endl;
 }
 
