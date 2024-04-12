@@ -19,10 +19,10 @@ public slots:
     void SetLevel(int level);
 
 private:
-    Game* game;
-    Player* playerOne;
-    Player* dealer;
     Deck deck;
+    Player playerOne;
+    Player dealer;
+    Game game;
     int currentLevel;
     void initalDeal();
 };

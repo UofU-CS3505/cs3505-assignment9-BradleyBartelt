@@ -1,19 +1,17 @@
 #include "model.h"
 #include "game.h"
-
 Model::Model(QObject *parent)
     : QObject{parent}
+    , deck()
+    , playerOne(false)
+    , dealer(true)
+    , game(deck, playerOne, dealer)
 {
 
-    Deck deck;
-    playerOne = new Player(false);
-    dealer = new Player(true);
-    game = new Game(deck,*playerOne,*dealer);
 }
 void Model::hitSlot(){
-    game->hit(playerOne);
-    // gets the card most recently added to the player hand
-    emit SendCardImage(playerOne->cardArray.back().image);
+    game.hit(playerOne);
+    emit SendCardImage(playerOne.cardArray.back().image);
 }
 
 void Model::SetLevel(int level){
