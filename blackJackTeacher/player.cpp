@@ -11,7 +11,6 @@ void Player::addCard(Card topCard){
     else{
         splitArray.push_back(topCard);
     }
-
 }
 void Player::addHand(Card topCard, Card cardAfter){
     splitArray.push_back(cardArray.back()); // becomes hand on the right of player

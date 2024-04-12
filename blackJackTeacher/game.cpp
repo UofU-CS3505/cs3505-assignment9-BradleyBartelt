@@ -2,8 +2,8 @@
 #include "deck.h"
 #include "player.h"
 
-Game::Game(Deck gameDeck, Player& person, Player& dealer) {
-    this->gameDeck = gameDeck;
+Game::Game(Deck deck, Player& person, Player& dealer) {
+    gameDeck = deck;
     person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
     dealer.addCard(gameDeck.draw());
     person.addCard(gameDeck.draw());
@@ -11,7 +11,7 @@ Game::Game(Deck gameDeck, Player& person, Player& dealer) {
     checkBlackJack(person, dealer);
 }
 
-void Game::checkBlackJack(Player person, Player dealer){
+void Game::checkBlackJack(Player& person, Player& dealer){
     personCount = person.cardArray.at(0).rank + person.cardArray.at(1).rank; // get inital personCount
     dealerCount = dealer.cardArray.at(0).rank + dealer.cardArray.at(1).rank; // get inital dealerCount
     if(personCount == 21 && dealerCount != 21){
@@ -118,15 +118,15 @@ void Game::endResult(){
         }
     }
 }
-void Game::hit(Player currentPlayer){
+void Game::hit(Player& currentPlayer){
     if(!currentPlayer.getState()){ // if the current player has not chose to stand
         currentPlayer.addCard(gameDeck.draw());
         checkState(currentPlayer);
-        // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
     }
+    // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
 }
 
-void Game::split(Player person){
+void Game::split(Player& person){
     if(person.cardArray.at(0).rank == person.cardArray.at(1).rank){
         person.addHand(gameDeck.draw(), gameDeck.draw());
         //disable split button because we only allow one split
@@ -134,7 +134,7 @@ void Game::split(Player person){
     // say something about the cards not being equal so you cannot split
 }
 
-void Game::stand(Player currentPlayer){
+void Game::stand(Player& currentPlayer){
     currentPlayer.setState(true);
     // emit to disable stand button
 }
@@ -143,7 +143,7 @@ void Game::doubleBet(){
     // if we work with bets we can make this method do something
 }
 
-void Game::resetGame(Player person, Player dealer){
+void Game::resetGame(Player& person, Player& dealer){
     gameDeck.shuffle();
     person.resetPlayer();
     dealer.resetPlayer();
