@@ -23,6 +23,8 @@ void Model::SetLevel(int level){
 void Model::initalDeal(){
     emit addCardToPlayerHand(playerOne->cardArray.at(0).image);
     emit addCardToPlayerHand(playerOne->cardArray.at(1).image);
-    emit addCardToDealerHand(dealer->cardArray.at(0).image);
+    QImage cardBack;
+    cardBack.load(":/images/cardImages/cardBack.png");
+    emit addCardToDealerHand(cardBack);
     emit addCardToDealerHand(dealer->cardArray.at(1).image);
 }

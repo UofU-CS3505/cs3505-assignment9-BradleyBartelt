@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "model.h"
+#include "qlabel.h"
 #include "qpushbutton.h"
 
 namespace Ui {
@@ -34,7 +35,7 @@ private:
     QMainWindow* mainMenu;
     Model* model;
     void SetUpConnections(Model& model);
-    QVector<QPushButton*> cards;
+    QVector<QLabel*> cards;
 
 };
 

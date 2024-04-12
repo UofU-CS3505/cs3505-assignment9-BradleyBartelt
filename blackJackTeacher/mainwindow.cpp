@@ -41,9 +41,11 @@ void MainWindow::setupConnections(Model& model,Ui::MainWindow *ui){
 }
 void::MainWindow::setupWindowDisplay(){
     QPixmap bkgnd(":/images/BlackjackWelcome.png");
-    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    bkgnd = bkgnd.scaled(this->size(), Qt::KeepAspectRatioByExpanding);
     QPalette palette;
     palette.setBrush(QPalette::Window, bkgnd);
+    // this->centralWidget()->setStyleSheet("background-image:url(\":/images/BlackjackWelcome.png\"); background-position: center; ");
+    // the line of code above is cool if you run it instead of the palett stuff
     ui->welcomeText->setStyleSheet("QLabel { background-color : rgba(0,0,0,0%) ; color : white; }");
     ui->levelOne->setStyleSheet("QPushButton { background-color : rgba(100,100,100,50%) ; color : white; }");
     ui->levelTwo->setStyleSheet("QPushButton { background-color : rgba(100,100,100,50%) ; color : white; }");

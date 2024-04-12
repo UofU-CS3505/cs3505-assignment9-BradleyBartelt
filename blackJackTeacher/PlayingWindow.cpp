@@ -19,7 +19,7 @@ PlayingWindow::~PlayingWindow()
 
 
 void PlayingWindow::addCardToPlayerHand(QImage cardImage){
-    QPushButton* newCard = new QPushButton( ui->handArea);
+    QLabel* newCard = new QLabel( ui->handArea);
     cards.push_back(newCard);
     newCard->setFixedSize(125, 175);
     newCard->setStyleSheet("QPushButton {background-color: rgb(224,224,224);}");
@@ -31,9 +31,9 @@ void PlayingWindow::addCardToPlayerHand(QImage cardImage){
 
 
 void PlayingWindow::addCardToDealerHand(QImage cardImage){
-    QPushButton* newCard = new QPushButton( ui->dealerArea);
-    cards.push_back(newCard);
+    QLabel* newCard = new QLabel( ui->dealerArea);
     newCard->setFixedSize(125, 175);
+    cards.push_back(newCard);
     newCard->setStyleSheet("QPushButton {background-color: rgb(224,224,224);}");
 
     QHBoxLayout* layout = (QHBoxLayout*)ui->dealerArea->widget()->layout();
@@ -44,7 +44,7 @@ void PlayingWindow::addCardToDealerHand(QImage cardImage){
 
 void PlayingWindow::hitButtonClicked()
 {
-    QPushButton* newCard = new QPushButton( ui->handArea);
+    QLabel* newCard = new QLabel( ui->handArea);
     cards.push_back(newCard);
     newCard->setFixedSize(125, 175);
     newCard->setStyleSheet("QPushButton {background-color: rgb(224,224,224);}");
@@ -56,11 +56,10 @@ void PlayingWindow::hitButtonClicked()
 
 
 void PlayingWindow::updateCardImage(QImage image){
-    QPushButton* cardToUpdate = cards.back();
+    QLabel* cardToUpdate = cards.back();
     QPixmap pixmap = QPixmap::fromImage(image);
-    cardToUpdate->setIcon(QIcon(pixmap));
-    cardToUpdate->setIconSize(QSize(125,175));
-    std::cout << "here" << std::endl;
+    cardToUpdate->setPixmap(pixmap);
+    cardToUpdate->setScaledContents(true);
 }
 
 
