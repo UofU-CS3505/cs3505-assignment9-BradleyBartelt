@@ -75,7 +75,7 @@ double Probability::probabilityOfDealerExceeding(std::vector<Card> dealersHand, 
         else if(card.rank == jack)
         {
             inDeck[10] -= 1;
-            // handSum += 10;
+            dHandSum += 10;
         }
         else if(card.rank == queen)
         {
@@ -106,6 +106,8 @@ double Probability::probabilityOfDealerExceeding(std::vector<Card> dealersHand, 
 
     return (double)cardsThatBeat/cardsRemaining;
 }
+
+
 ///BACKERS------------------------------------------
 
 double Probability::probabilityOfBust(std::vector<Card> handToAnalyze, std::vector<Card> otherHand)
