@@ -109,3 +109,34 @@ Card Deck::draw(){
     cards.pop_back();
     return ret;
 }
+
+Card Deck::draw(Rank rank, Suit suit){
+    std::vector<Card>::iterator CardPtr;
+    for(CardPtr = cards.begin(); CardPtr < cards.end(); CardPtr++){
+        if(CardPtr->suit == suit && CardPtr->rank == rank){
+            Card retCard = *CardPtr;
+            cards.erase(CardPtr);
+            return retCard;
+        }
+    }
+    throw std::invalid_argument("This card has already been drawn");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

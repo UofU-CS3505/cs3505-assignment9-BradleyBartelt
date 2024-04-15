@@ -58,6 +58,11 @@ public:
     /// \brief returns a single Card object from the "top" of the deck
     /// \return card
     Card draw();
+    /// \brief draws the specified card from the deck, if that card has already been drawn, an error is thrown
+    /// \param rank
+    /// \param suit
+    /// \return card
+    Card draw(Rank rank, Suit suit);
 private:
     /// \brief a vector of card objects that represents all the cards that have yet to be drawn
     std::vector<Card> cards;
