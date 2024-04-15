@@ -21,7 +21,7 @@
 * deal player hand spadeTen
 * deal dealer hand heartSix
 / In this case you have a pretty terrible hand. You should hit.
-* deal player spadeSeven
+* deal player hand spadeSeven
 / This is a bust on your end. Unfortunately, that means you lose your bet.
 / The dealer can also bust, in which case you would win your bet, unless you also went bust.
 * shuffle
