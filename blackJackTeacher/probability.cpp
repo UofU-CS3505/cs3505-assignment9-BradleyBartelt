@@ -21,6 +21,91 @@ double Probability::probabilityOfPlayerBust(std::vector<Card> dealersHand, std::
 {
     return probabilityOfBustSplit(playersHand1, playersHand2, dealersHand)*100;
 }
+
+double Probability::probabilityOfDealerExceeding(std::vector<Card> dealersHand, std::vector<Card> playersHand)
+{
+    //Track the number of cards remaining in the deck
+    int cardsRemaining = 52;
+    //Begin by assuming all cards are in the deck
+    int inDeck[13];
+    for(int i = 0; i<13;i++)
+    {
+        inDeck[i] = 4;
+    }
+    //Hold a tally of the player's cards
+    int pHandSum = 0;
+    for(Card card:playersHand)
+    {
+        if(card.rank == ace)
+        {
+            inDeck[0] -= 1;
+            pHandSum += 1;
+        }
+        else if(card.rank == jack)
+        {
+            inDeck[10] -= 1;
+            pHandSum += 10;
+        }
+        else if(card.rank == queen)
+        {
+            inDeck[11] -= 1;
+            pHandSum += 10;
+        }
+        else if(card.rank == king)
+        {
+            inDeck[12] -= 1;
+            pHandSum += 10;
+        }
+        else
+        {
+            inDeck[card.rank-1] -= 1;//Have to subtract one because we start at 0
+            pHandSum += card.rank;
+        }
+        cardsRemaining --;
+    }
+    //Hold a tally of the player's cards
+    int dHandSum = 0;
+    for(Card card:dealersHand)
+    {
+        if(card.rank == ace)
+        {
+            inDeck[0] -= 1;
+            dHandSum += 1;
+        }
+        else if(card.rank == jack)
+        {
+            inDeck[10] -= 1;
+            // handSum += 10;
+        }
+        else if(card.rank == queen)
+        {
+            inDeck[11] -= 1;
+            dHandSum += 10;
+        }
+        else if(card.rank == king)
+        {
+            inDeck[12] -= 1;
+            dHandSum += 10;
+        }
+        else
+        {
+            inDeck[card.rank-1] -= 1;//Have to subtract one because we start at 0
+            dHandSum += card.rank;
+        }
+        cardsRemaining --;
+    }
+    //Take the difference between the sums
+    int minimumToWin = pHandSum - dHandSum ;
+    //If the dealers hand is already higher, the dealer already exceeded
+    if(minimumToWin < 0)
+        return 1.0;//Return 1
+    int maxNoBust = 21-dHandSum;
+    int cardsThatBeat = 0;
+    for(int i = minimumToWin; i< maxNoBust; i++)
+        cardsThatBeat += inDeck[i];
+
+    return (double)cardsThatBeat/cardsRemaining;
+}
 ///BACKERS------------------------------------------
 
 double Probability::probabilityOfBust(std::vector<Card> handToAnalyze, std::vector<Card> otherHand)
@@ -172,3 +257,57 @@ double Probability::probabilityOfBustSplit(std::vector<Card> handToAnalyze, std:
         cardsOverMin += inDeck[i];
     return (double)cardsOverMin/cardsRemaining;
 }
+
+
+double Probability::probabilityOfBust3OrMoreHands(std::vector<std::vector<Card>> hands)
+{
+    //Track the number of cards remaining in the deck
+    int cardsRemaining = 52;
+    //Begin by assuming all cards are in the deck
+    int inDeck[13];
+    for(int i = 0; i<13;i++)
+    {
+        inDeck[i] = 4;
+    }
+    //Hold a tally of the handToAnalyze's cards
+    int handSum = 0;
+    for(Card card:hands.at(0))
+    {
+        if(card.rank == ace)
+            handSum += 1;
+        else if(card.rank == jack)
+            handSum += 10;
+        else if(card.rank == queen)
+            handSum += 10;
+        else if(card.rank == king)
+            handSum += 10;
+        else
+            handSum += card.rank;
+        cardsRemaining --;
+    }
+    for(std::vector<Card> hand:hands)
+    {
+        for(Card card:hand)
+        {
+            if(card.rank == ace)
+                inDeck[0] -= 1;
+            else if(card.rank == jack)
+                inDeck[10] -= 1;
+            else if(card.rank == queen)
+                inDeck[11] -= 1;
+            else if(card.rank == king)
+                inDeck[12] -= 1;
+            else
+                inDeck[card.rank-1] -= 1;//Have to subtract one because we start at 0
+
+            cardsRemaining --;
+        }
+    }
+    int minimumToBust = 22- handSum;
+    int cardsOverMin =0;
+    for(int i = (minimumToBust-1);i<13;i++)//Have to subtract one because we start at 0
+        cardsOverMin += inDeck[i];
+    return (double)cardsOverMin/cardsRemaining;
+}
+
+

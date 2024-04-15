@@ -14,89 +14,87 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="welcomeText">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>30</y>
-      <width>331</width>
-      <height>71</height>
-     </rect>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <property name="leftMargin">
+     <number>200</number>
     </property>
-    <property name="font">
-     <font>
-      <family>Pristina</family>
-      <pointsize>32</pointsize>
-     </font>
+    <property name="topMargin">
+     <number>5</number>
     </property>
-    <property name="text">
-     <string>Welcom To Blackjack</string>
+    <property name="rightMargin">
+     <number>200</number>
     </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>105</y>
-      <width>351</width>
-      <height>321</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="levelOne">
-       <property name="font">
-        <font>
-         <pointsize>43</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Level 1</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="levelTwo">
-       <property name="font">
-        <font>
-         <pointsize>43</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Level 2</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="levelThree">
-       <property name="font">
-        <font>
-         <pointsize>43</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Level 3</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="levelFour">
-       <property name="font">
-        <font>
-         <pointsize>43</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Level 4</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+    <item row="1" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="welcomeText">
+        <property name="font">
+         <font>
+          <family>Tahoma</family>
+          <pointsize>32</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string> Welcom To Blackjack</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="levelOne">
+        <property name="font">
+         <font>
+          <pointsize>43</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Level 1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="levelTwo">
+        <property name="font">
+         <font>
+          <pointsize>43</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Level 2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="levelThree">
+        <property name="font">
+         <font>
+          <pointsize>43</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Level 3</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="levelFour">
+        <property name="font">
+         <font>
+          <pointsize>43</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Level 4</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

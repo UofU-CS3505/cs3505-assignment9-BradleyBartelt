@@ -2,10 +2,8 @@
 #include "deck.h"
 #include "player.h"
 
-game::game(Deck gameDeck, player person, player dealer) {
-    gameDeck = Deck();
-    person = player(false);
-    dealer = player(true);
+Game::Game(Deck deck, Player& person, Player& dealer) {
+    gameDeck = deck;
     person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
     dealer.addCard(gameDeck.draw());
     person.addCard(gameDeck.draw());
@@ -13,7 +11,7 @@ game::game(Deck gameDeck, player person, player dealer) {
     checkBlackJack(person, dealer);
 }
 
-void game::checkBlackJack(player person, player dealer){
+void Game::checkBlackJack(Player& person, Player& dealer){
     personCount = person.cardArray.at(0).rank + person.cardArray.at(1).rank; // get inital personCount
     dealerCount = dealer.cardArray.at(0).rank + dealer.cardArray.at(1).rank; // get inital dealerCount
     if(personCount == 21 && dealerCount != 21){
@@ -27,7 +25,7 @@ void game::checkBlackJack(player person, player dealer){
     }
 }
 
-void game::checkState(player currentPlayer){
+void Game::checkState(Player currentPlayer){
     if(currentPlayer.getIsDealer()){ // adds up the dealers count when they hit
         dealerCount = 0;
         int aceCount = 0;
@@ -98,7 +96,7 @@ void game::checkState(player currentPlayer){
         }
     }
 }
-void game::endResult(){
+void Game::endResult(){
     if(personCount < dealerCount){
         // emit player loss (left hand)
     }
@@ -120,15 +118,15 @@ void game::endResult(){
         }
     }
 }
-void game::hit(player currentPlayer){
+void Game::hit(Player& currentPlayer){
     if(!currentPlayer.getState()){ // if the current player has not chose to stand
         currentPlayer.addCard(gameDeck.draw());
         checkState(currentPlayer);
-        // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
     }
+    // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
 }
 
-void game::split(player person){
+void Game::split(Player& person){
     if(person.cardArray.at(0).rank == person.cardArray.at(1).rank){
         person.addHand(gameDeck.draw(), gameDeck.draw());
         //disable split button because we only allow one split
@@ -136,16 +134,16 @@ void game::split(player person){
     // say something about the cards not being equal so you cannot split
 }
 
-void game::stand(player currentPlayer){
+void Game::stand(Player& currentPlayer){
     currentPlayer.setState(true);
     // emit to disable stand button
 }
 
-void game::doubleBet(){
+void Game::doubleBet(){
     // if we work with bets we can make this method do something
 }
 
-void game::resetGame(player person, player dealer){
+void Game::resetGame(Player& person, Player& dealer){
     gameDeck.shuffle();
     person.resetPlayer();
     dealer.resetPlayer();

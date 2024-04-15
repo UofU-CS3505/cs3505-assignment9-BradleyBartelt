@@ -4,7 +4,7 @@
 #include "deck.h"
 #include "player.h"
 
-class game
+class Game
 {
 private:
     int personCount; // count that the left hand (or center if no split) totals to
@@ -12,23 +12,24 @@ private:
     int personSplitCount; // count that the right hand totals to
     Deck gameDeck; // the given deck
 public:
-    game(Deck gameDeck, player person, player dealer);
+    Game(Deck deck, Player& person, Player& dealer);
     /// checks whether the dealer or the player has lost
-    void checkState(player currentPlayer);
+    void checkState(Player currentPlayer);
     /// adds card to player
-    void hit(player person);
+    void hit(Player& person);
     /// splits a persons hand
-    void split(player person);
+    void split(Player& person);
     /// doubles the current bet
     void doubleBet();
     /// disables further actions on players current hand
-    void stand(player person);
+    void stand(Player& person);
     /// decides who won or loss
     void endResult();
     /// clears person and dealer hand, as well as, shuffles the deck
-    void resetGame(player person, player dealer);
+    void resetGame(Player& person, Player& dealer);
     /// initial checker for whether the dealer or the player or both got a blackjack
-    void checkBlackJack(player person, player dealer);
+    void checkBlackJack(Player& person, Player& dealer);
+
 };
 
 #endif // GAME_H
