@@ -3,8 +3,9 @@
 
 #include "deck.h"
 #include "player.h"
+#include <QObject>
 
-class Game
+class Game : public QObject
 {
 private:
     int personCount; // count that the left hand (or center if no split) totals to
@@ -12,7 +13,7 @@ private:
     int personSplitCount; // count that the right hand totals to
     Deck gameDeck; // the given deck
 public:
-    Game(Deck deck, Player& person, Player& dealer);
+    Game(Deck deck, Player& person, Player& dealer, bool isRigged);
     /// checks whether the dealer or the player has lost
     void checkState(Player currentPlayer);
     /// adds card to player
@@ -29,6 +30,8 @@ public:
     void resetGame(Player& person, Player& dealer);
     /// initial checker for whether the dealer or the player or both got a blackjack
     void checkBlackJack(Player& person, Player& dealer);
+    /// rigs Game
+    void hit(Player& person, Card card);
 
 };
 

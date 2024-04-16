@@ -2,13 +2,15 @@
 #include "deck.h"
 #include "player.h"
 
-Game::Game(Deck deck, Player& person, Player& dealer) {
+Game::Game(Deck deck, Player& person, Player& dealer, bool isRigged) {
     gameDeck = deck;
-    person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
-    dealer.addCard(gameDeck.draw());
-    person.addCard(gameDeck.draw());
-    dealer.addCard(gameDeck.draw()); // dont show the player this card
-    checkBlackJack(person, dealer);
+    if(!isRigged){
+        person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
+        dealer.addCard(gameDeck.draw());
+        person.addCard(gameDeck.draw());
+        dealer.addCard(gameDeck.draw()); // dont show the player this card
+        checkBlackJack(person, dealer);
+    }
 }
 
 void Game::checkBlackJack(Player& person, Player& dealer){
@@ -121,6 +123,14 @@ void Game::endResult(){
 void Game::hit(Player& currentPlayer){
     if(!currentPlayer.getState()){ // if the current player has not chose to stand
         currentPlayer.addCard(gameDeck.draw());
+        checkState(currentPlayer);
+    }
+    // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
+}
+
+void Game::hit(Player& currentPlayer, Card card){
+    if(!currentPlayer.getState()){ // if the current player has not chose to stand
+        currentPlayer.addCard(gameDeck.draw(card.rank, card.suit));
         checkState(currentPlayer);
     }
     // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
