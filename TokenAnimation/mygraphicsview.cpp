@@ -1,11 +1,12 @@
 #include "mygraphicsview.h"
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem> // Include QGraphicsPixmapItem header
-#include <QTimer>
-#include <Box2D/Box2D.h>
 
-MyGraphicsView::MyGraphicsView() {
-    scene = new QGraphicsScene();
+MyGraphicsView::MyGraphicsView(QWidget *parent)
+    : QGraphicsView(parent),
+    scene(new QGraphicsScene(this)),
+    spriteItem(nullptr),
+    world(nullptr),
+    spriteBody(nullptr)
+{
     setScene(scene);
 
     // Load sprite image
@@ -56,6 +57,6 @@ void MyGraphicsView::advanceSimulation() {
     b2Vec2 position = spriteBody->GetPosition();
     spriteItem->setPos(position.x, position.y);
 
-    // Check for collisions (not implemented in this example)
-    // You would typically handle collisions and update sprite's motion here
+    // Check for collisions (not implemented in this
+
 }

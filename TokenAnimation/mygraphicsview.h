@@ -2,13 +2,17 @@
 #define MYGRAPHICSVIEW_H
 
 #include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 #include <Box2D/Box2D.h>
+#include <QTimer>
 
-class MyGraphicsView : public QGraphicsView {
+class MyGraphicsView : public QGraphicsView
+{
     Q_OBJECT
 
 public:
-    MyGraphicsView();
+    MyGraphicsView(QWidget *parent = nullptr);
 
 protected slots:
     void advanceSimulation();
