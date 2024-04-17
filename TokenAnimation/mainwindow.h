@@ -1,5 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include <Box2D/Box2D.h>
+#include <QTimer>
+
 
 #include <QMainWindow>
 
@@ -19,5 +22,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    b2World world;
+    b2Body* body;
+    QTimer timer;
 };
 #endif // MAINWINDOW_H
