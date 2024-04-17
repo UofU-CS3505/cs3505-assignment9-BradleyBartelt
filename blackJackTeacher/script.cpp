@@ -2,9 +2,8 @@
 #include <vector>
 #include <sstream>
 
-Script::Script(QObject* parent, std::string fileName)
+Script::Script(std::string fileName)
 {
-    parentObject = parent;
     //Try to open the provided file name
     script.open(fileName, std::ios::in);
     //Check to see if it opened. If not throw error
