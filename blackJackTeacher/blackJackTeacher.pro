@@ -16,7 +16,8 @@ SOURCES += \
     mainwindow.cpp \
     model.cpp \
     player.cpp \
-    probability.cpp
+    probability.cpp \
+    script.cpp
 
 HEADERS += \
     PlayingWindow.h \
@@ -25,7 +26,8 @@ HEADERS += \
     mainwindow.h \
     model.h \
     player.h \
-    probability.h
+    probability.h \
+    script.h
 
 FORMS += \
     PlayingWindow.ui \
