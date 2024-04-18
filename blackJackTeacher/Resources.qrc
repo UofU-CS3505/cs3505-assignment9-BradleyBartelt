@@ -56,4 +56,7 @@
         <file>cardImages/spadeThree.png</file>
         <file>cardImages/spadeTwo.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>levelScripts/levelOneScript.txt</file>
+    </qresource>
 </RCC>

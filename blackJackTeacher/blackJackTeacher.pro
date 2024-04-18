@@ -31,6 +31,7 @@ HEADERS += \
 
 FORMS += \
     PlayingWindow.ui \
+    instructionMessages.ui \
     mainwindow.ui
 
 # Default rules for deployment.
