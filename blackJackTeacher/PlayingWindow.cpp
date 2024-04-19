@@ -59,7 +59,6 @@ void PlayingWindow::hitButtonClicked()
     emit hit();
 }
 
-
 void PlayingWindow::updateCardImage(QImage image){
     QLabel* cardToUpdate = cards.back();
     QPixmap pixmap = QPixmap::fromImage(image);
@@ -83,7 +82,7 @@ void PlayingWindow::gameStateUpdateView(bool bust, bool won, bool canSplit){
 void PlayingWindow::SetUpConnections(Model& model){
     //============ hit connections
     connect(this,&PlayingWindow::hit,&model,&Model::hitSlot);
-    connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::hitButtonClicked);
+    connect(ui->hitButton,&QPushButton::clicked,&model, &Model::hitSlot);
     connect(ui->mainMenu,&QPushButton::clicked,this,&PlayingWindow::mainMenuClicked);
     connect(&model,&Model::SendCardImage,this,&PlayingWindow::updateCardImage);
 
@@ -91,6 +90,12 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     connect(ui->standButton,&QPushButton::clicked,&model,&Model::standSlot);
 
+    connect(&model,&Model::sendCardImage,this,&PlayingWindow::updateCardImage);
+    connect(ui->stayButton, &QPushButton::clicked, &model, &Model::standSlot);
+    connect(&model, &Model::disableButtons, ui->hitButton, &QPushButton::setEnabled);
+    connect(&model, &Model::disableButtons, ui->stayButton, &QPushButton::setEnabled);
+    connect(&model, &Model::disableButtons, ui->pushButton, &QPushButton::setEnabled);
+    connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
     //============= initalDeal connections
 
     connect(&model,&Model::addCardToDealerHand,this,&PlayingWindow::addCardToDealerHand);

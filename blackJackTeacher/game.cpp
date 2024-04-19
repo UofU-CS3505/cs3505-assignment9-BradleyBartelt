@@ -30,7 +30,7 @@ int Game::checkBlackJack(Player& person, Player& dealer){
     }
 }
 
-void Game::checkState(Player currentPlayer){
+std::tuple<bool,int> Game::checkState(Player currentPlayer){
     if(currentPlayer.getIsDealer()){ // adds up the dealers count when they hit
         dealerCount = 0;
         int aceCount = 0;
@@ -51,9 +51,13 @@ void Game::checkState(Player currentPlayer){
         }
         if(dealerCount > 17 && dealerCount < 22){ // if a dealer is between a 17 and 21 stand
             stand(currentPlayer);
+            return std::tuple<bool,int>(true,0);
+        }
+        if(dealerCount > 21){
+            return std::tuple<bool,int>(false,0);
         }
         else{
-            // emit dealer loss or something
+            return std::tuple<bool,int>(true,0);
         }
     }
     if(!currentPlayer.getIsDealer()){ // same as above
@@ -75,7 +79,7 @@ void Game::checkState(Player currentPlayer){
             }
         }
         if(personCount > 21){ // if the player goes above a 21 they lose
-            // emit something for a loss on that hand idk
+            return std::tuple<bool,int>(false,0);
         }
         if(int(currentPlayer.splitArray.size()) != 0){ // same as above but for a split hand
             personSplitCount = 0;
@@ -96,20 +100,29 @@ void Game::checkState(Player currentPlayer){
                 }
             }
             if(personSplitCount > 21){
-                // emit something for a loss on that hand idk
+                return std::tuple<bool,int>(false,1);
             }
         }
     }
+    return std::tuple<bool,int>(true, currentPlayer.currentHand);
 }
+<<<<<<< Updated upstream
 std::tuple<int,int> Game::endResult(){
     std::tuple<int,int> result;
+=======
+std::tuple<bool, int> Game::endResult(){
+>>>>>>> Stashed changes
     if(personCount < dealerCount){
         // emit player loss (left hand)
         get<0>(result) = 0;
     }
     if(personCount == dealerCount){
+<<<<<<< Updated upstream
         // emit tie (right hand)
         get<0>(result) = 1;
+=======
+        // emit tie (left hand)
+>>>>>>> Stashed changes
     }
     if(personCount > dealerCount){
         // emit person win (left hand)
@@ -131,12 +144,23 @@ std::tuple<int,int> Game::endResult(){
     }
     return result;
 }
-void Game::hit(Player& currentPlayer){
-    if(!currentPlayer.getState()){ // if the current player has not chose to stand
-        currentPlayer.addCard(gameDeck.draw());
-        checkState(currentPlayer);
+std::tuple<bool,QImage,int> Game::hit(Player& currentPlayer){
+    currentPlayer.addCard(gameDeck.draw());
+    std::tuple<bool, int> playerState = checkState(currentPlayer);
+    if(get<0>(playerState) && get<1>(playerState) == 0){ // if its true that means the game can continue
+        return std::tuple<bool, QImage, int>(true, currentPlayer.cardArray.back().image,currentPlayer.currentHand);
     }
-    // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
+    else if(!get<0>(playerState) && get<1>(playerState) == 0){ // if its false the player has lost
+        return std::tuple<bool, QImage, int>(false, currentPlayer.cardArray.back().image,currentPlayer.currentHand);
+    }
+    if(get<0>(playerState) && get<1>(playerState) == 1){
+        return std::tuple<bool, QImage, int>(true, currentPlayer.splitArray.back().image,currentPlayer.currentHand);
+    }
+    else{
+        int tempVal = currentPlayer.currentHand;
+        currentPlayer.currentHand = 0;
+        return std::tuple<bool, QImage, int>(false, currentPlayer.splitArray.back().image,tempVal);
+    }
 }
 
 void Game::hit(Player& currentPlayer, Card card){
@@ -147,17 +171,20 @@ void Game::hit(Player& currentPlayer, Card card){
     // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
 }
 
-void Game::split(Player& person){
+bool Game::split(Player& person){
     if(person.cardArray.at(0).rank == person.cardArray.at(1).rank){
         person.addHand(gameDeck.draw(), gameDeck.draw());
-        //disable split button because we only allow one split
+        return true;
     }
-    // say something about the cards not being equal so you cannot split
+    return false;
 }
 
-void Game::stand(Player& currentPlayer){
+int Game::stand(Player& currentPlayer){
     currentPlayer.setState(true);
-    // emit to disable stand button
+    if(currentPlayer.currentHand != 1)
+        return currentPlayer.currentHand;
+    currentPlayer.currentHand -= 1;
+    return currentPlayer.currentHand + 1;
 }
 
 void Game::doubleBet(){

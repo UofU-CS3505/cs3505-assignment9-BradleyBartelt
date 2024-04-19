@@ -9,7 +9,25 @@ Model::Model(QObject *parent)
 {
 
 }
+void Model::standSlot(){
+    emit disableButtons(false);
+    // if(game.stand(playerOne) == 0){ // if the player has stayed on the initial hand or the hand on the left of the split
+    //     emit disableButtons(false);
+    //     std::tuple<bool, QImage, int> gameTuple = game.hit(dealer);
+    //     while(get<0>(gameTuple)){
+    //         if(dealer.getState()){
+
+    //         }
+    //         //display card image after a delay
+    //     }
+    //     if(!get<0>(gameTuple)){
+    //         // emit dealer bust
+    //     }
+    // }
+
+}
 void Model::hitSlot(){
+<<<<<<< Updated upstream
     game.hit(playerOne);
     emit addCardToPlayerHand(playerOne.cardArray.back());
 }
@@ -18,6 +36,10 @@ void Model::standSlot(){
     std::tuple<int,int> result;
     result = game.endResult();
     // emit playerStood();
+=======
+    std::tuple<bool, QImage, int> gameTuple = game.hit(playerOne);
+    emit sendCardImage(get<1>(gameTuple));
+>>>>>>> Stashed changes
 }
 void Model::SetLevel(int level){
     currentLevel = level;

@@ -12,11 +12,9 @@ public:
 
 signals:
     void SendCardImage(QImage);
-
-    void addCardToPlayerHand(Card);
-
-    void addCardToDealerHand(Card,bool);
-
+    void disableButtons(bool);
+    void addCardToPlayerHand(QImage);
+    void addCardToDealerHand(QImage);
 public slots:
     void hitSlot();
     void SetLevel(int level);
