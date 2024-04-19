@@ -70,6 +70,7 @@ void Model::interpretCommand(QString messageType)
         //TODO: Figure out this logic
         //parse the content and deal the correct card
 
+
     }
     else if (messageType == "reveal")
     {

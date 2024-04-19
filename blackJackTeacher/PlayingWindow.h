@@ -36,6 +36,7 @@ public slots:
     void messageRecieved(QString message);
 private slots:
     void on_nextButton_clicked();
+    void endLevel(bool errorState);
 
 private:
     Ui::PlayingWindow *ui;

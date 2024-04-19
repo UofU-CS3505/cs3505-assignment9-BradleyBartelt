@@ -105,6 +105,7 @@ void PlayingWindow::SetUpConnections(Model& model){
     //============= script Handling connections
     connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);
     connect(this, &PlayingWindow::nextLine,&model,&Model::readyForNextLine);
+    connect(&model,&Model::endLevel,this,&PlayingWindow::endLevel);
 
 
 
@@ -114,5 +115,15 @@ void PlayingWindow::SetUpConnections(Model& model){
 void PlayingWindow::on_nextButton_clicked()
 {
     emit nextLine();
+}
+void PlayingWindow::endLevel(bool errorState)
+{
+    if(!errorState)
+    {
+        //Play animation
+        //Change text box to display a "hooray" message?
+    }
+    //Disable next
+    ui->nextButton->setEnabled(false);
 }
 
