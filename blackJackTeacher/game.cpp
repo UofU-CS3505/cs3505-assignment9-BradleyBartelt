@@ -9,7 +9,7 @@ Game::Game(Deck deck, Player& person, Player& dealer, bool isRigged) {
         dealer.addCard(gameDeck.draw());
         person.addCard(gameDeck.draw());
         dealer.addCard(gameDeck.draw()); // dont show the player this card
-        checkBlackJack(person, dealer);
+        checkState(dealer);
     }
 }
 
@@ -28,6 +28,7 @@ int Game::checkBlackJack(Player& person, Player& dealer){
         // return tie
         return 3;
     }
+    return 4;
 }
 
 std::tuple<bool,int> Game::checkState(Player currentPlayer){
@@ -49,7 +50,7 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
                 break;
             }
         }
-        if(dealerCount > 17 && dealerCount < 22){ // if a dealer is between a 17 and 21 stand
+        if(dealerCount >= 17 && dealerCount < 22){ // if a dealer is between a 17 and 21 stand
             stand(currentPlayer);
             return std::tuple<bool,int>(true,0);
         }
@@ -131,8 +132,15 @@ std::tuple<bool, int> Game::endResult(){
     return std::tuple<bool,int>(false,0);
 }
 std::tuple<bool,int> Game::hit(Player& currentPlayer){
+    if(currentPlayer.getIsDealer() && dealerCount > 16){
+        stand(currentPlayer);
+        return std::tuple<bool, int>(true, 0);
+    }
     currentPlayer.addCard(gameDeck.draw());
     std::tuple<bool, int> playerState = checkState(currentPlayer);
+    if(get<0>(playerState) && get<1>(playerState) == 0 && personCount == 21){ // if its true that means the game can continue
+        return std::tuple<bool, int>(true,3);
+    }
     if(get<0>(playerState) && get<1>(playerState) == 0){ // if its true that means the game can continue
         return std::tuple<bool, int>(true,currentPlayer.currentHand);
     }

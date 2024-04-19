@@ -60,7 +60,12 @@ void PlayingWindow::updateCardImage(QImage image){
     cardToUpdate->setPixmap(pixmap);
     cardToUpdate->setScaledContents(true);
 }
-
+void PlayingWindow::flipDealerCard(QImage image){
+    QLabel* cardToUpdate = cards.at(1);
+    QPixmap pixmap = QPixmap::fromImage(image);
+    cardToUpdate->setPixmap(pixmap);
+    cardToUpdate->setScaledContents(true);
+}
 
 void PlayingWindow::mainMenuClicked()
 {
@@ -79,12 +84,12 @@ void PlayingWindow::SetUpConnections(Model& model){
     //connect(this,&PlayingWindow::hit,&model,&Model::hitSlot);
     connect(ui->hitButton,&QPushButton::clicked,&model, &Model::hitSlot);
     connect(ui->mainMenu,&QPushButton::clicked,this,&PlayingWindow::mainMenuClicked);
-    connect(&model,&Model::SendCardImage,this,&PlayingWindow::updateCardImage);
+    //connect(&model,&Model::SendCardImage,this,&PlayingWindow::updateCardImage);
 
     // ============ stand connections
 
     connect(ui->standButton,&QPushButton::clicked,&model,&Model::standSlot);
-    connect(&model,&Model::SendCardImage,this,&PlayingWindow::updateCardImage);
+    connect(&model,&Model::SendCardImage,this,&PlayingWindow::flipDealerCard);
     connect(ui->standButton, &QPushButton::clicked, &model, &Model::standSlot);
     connect(&model, &Model::disableButtons, ui->hitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);

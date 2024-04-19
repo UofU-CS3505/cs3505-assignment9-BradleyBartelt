@@ -31,6 +31,8 @@ public slots:
     void addCardToDealerHand(Card card, bool isFirstCard);
 
     void gameStateUpdateView(bool bust, bool won, bool canSplit);
+
+    void flipDealerCard(QImage);
 private:
     Ui::PlayingWindow *ui;
     QMainWindow* mainMenu;
