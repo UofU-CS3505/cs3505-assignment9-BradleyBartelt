@@ -20,6 +20,7 @@ public:
 signals:
     /// @brief tells the model that the hit button has been pressed and it needs to update the game.
     void hit();
+    void nextLine();
 public slots:
 
     void mainMenuClicked();
@@ -33,6 +34,9 @@ public slots:
     void gameStateUpdateView(bool bust, bool won, bool canSplit);
 
     void messageRecieved(QString message);
+private slots:
+    void on_nextButton_clicked();
+
 private:
     Ui::PlayingWindow *ui;
     QMainWindow* mainMenu;

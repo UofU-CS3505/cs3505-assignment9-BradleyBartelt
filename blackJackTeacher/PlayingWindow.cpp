@@ -104,9 +104,15 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     //============= script Handling connections
     connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);
+    connect(this, &PlayingWindow::nextLine,&model,&Model::readyForNextLine);
 
 
 
+}
 
+
+void PlayingWindow::on_nextButton_clicked()
+{
+    emit nextLine();
 }
 

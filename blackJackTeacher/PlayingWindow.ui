@@ -19,7 +19,7 @@
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="statsAndTextLayout" stretch="0,5,2,0">
+     <layout class="QVBoxLayout" name="statsAndTextLayout" stretch="0,5,0,2,0">
       <item>
        <spacer name="verticalSpacer_2">
         <property name="orientation">
@@ -38,7 +38,7 @@
         <property name="font">
          <font>
           <family>Rockwell Extra Bold</family>
-          <pointsize>14</pointsize>
+          <pointsize>12</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -49,8 +49,15 @@ p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Rockwell Extra Bold'; font-size:14pt; font-weight:700; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-weight:400;&quot;&gt;Welcom to Blackjack&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Rockwell Extra Bold'; font-size:12pt; font-weight:700; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-weight:400;&quot;&gt;Welcome to Blackjack&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="nextButton">
+        <property name="text">
+         <string>Next &gt;</string>
         </property>
        </widget>
       </item>
@@ -121,7 +128,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
            </sizepolicy>
           </property>
           <property name="text">
-           <string>DealCards</string>
+           <string>Deal Cards</string>
           </property>
          </widget>
         </item>
@@ -151,7 +158,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
            </sizepolicy>
           </property>
           <property name="text">
-           <string>stand</string>
+           <string>Stand</string>
           </property>
          </widget>
         </item>
@@ -276,8 +283,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>522</width>
-           <height>255</height>
+           <width>509</width>
+           <height>233</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout"/>
@@ -294,8 +301,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>522</width>
-           <height>254</height>
+           <width>509</width>
+           <height>232</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2"/>
@@ -312,7 +319,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

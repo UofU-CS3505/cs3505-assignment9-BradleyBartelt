@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>984</width>
     <height>600</height>
    </rect>
   </property>
@@ -36,7 +36,7 @@
          </font>
         </property>
         <property name="text">
-         <string> Welcom To Blackjack</string>
+         <string> Welcome To Blackjack</string>
         </property>
        </widget>
       </item>
@@ -101,8 +101,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>17</height>
+     <width>984</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>
