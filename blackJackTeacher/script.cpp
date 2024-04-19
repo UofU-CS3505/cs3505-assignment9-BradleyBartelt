@@ -2,37 +2,47 @@
 #include <vector>
 #include <sstream>
 
-Script::Script(std::string fileName)
+Script::Script()
+{}
+Script::~Script()
+{}
+
+void Script::setScript(std::string filename)
 {
     //Try to open the provided file name
-    script.open(fileName, std::ios::in);
+    QFile file(QString::fromStdString(filename));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
     //Check to see if it opened. If not throw error
-    if(!script.is_open())
+    while(!file.atEnd())
     {
-        //Get upset and throw
+        QString line = file.readLine();
+        lines.push_back(line);
     }
 }
-std::string Script::nextCommand(std::string* outputDetails)
+
+QString Script::nextCommand(QString* outputDetails)
 {
     //Read the next line from the file
-    std::string nextLine;
-    if(getline(script, nextLine))
+    QString nextLine = lines[lineNum];
+    lineNum++;
+    if(!nextLine.isEmpty())
     {
         // By the contract we made for the scripts, starting with a forward slash represents a message to display to the view
         if(nextLine.at(0) == '/')
         {
-            *outputDetails = nextLine.substr(2);
+            nextLine = nextLine.removeFirst();
+            *outputDetails = nextLine.removeFirst();
             return "message";
         }
         // Otherwise, all other commands should start with an asterisk.
         else if(nextLine.at(0) == '*')
         {
-            nextLine = nextLine.substr(2);
-            std::vector<std::string> tokens = tokenize(nextLine);
+            nextLine = nextLine.removeFirst();
+            std::vector<QString> tokens = tokenize(nextLine.removeFirst());
             if(tokens[0] == "deal")
             {
                 //Deal card tokens[3] to player tokens[1], hand tokens[2]
-                *outputDetails = tokens[1] + tokens[2] + tokens[3];
+                *outputDetails = tokens[1] +" " + tokens[2] +" "+ tokens[3];
                 return "deal";
             }
             if(tokens[0] == "shuffle")
@@ -52,10 +62,9 @@ std::string Script::nextCommand(std::string* outputDetails)
         {
             //We should be throwing at this point. If we are not starting with a '/' or '*'
             //We are not following the contract. If it is empty, we should close this script otherwise they tried to open something that they shouldn't
-            if(nextLine.empty())
+            if(nextLine.isEmpty())
             {
                 *outputDetails = "";
-                script.close();
                 return "finish";
             }
             return "error";
@@ -66,20 +75,29 @@ std::string Script::nextCommand(std::string* outputDetails)
     {
         *outputDetails = "";
         //We made it to the end of the file. End the Module, close the file, and return to home screen
-        script.close();
         return "finish";
     }
     return "error";
 }
 
-std::vector<std::string> Script::tokenize(std::string providedString)
+std::vector<QString> Script::tokenize(QString providedString)
 {
-    std::vector<std::string> tokens;
-    std::stringstream stream(providedString);
-    std::string token;
-    while(getline(stream, token, ' '))
-    {
-        tokens.push_back(token);
-    }
+    std::vector<QString> tokens;
+    // std::stringstream stream(providedString);
+    // std::string token;
+    // while(getline(stream, token, ' '))
+    // {
+    //     tokens.push_back(token);
+    // }
+    QStringList list1 = providedString.split(u' ');
+    for(QString s:list1)
+        tokens.push_back(s);
     return tokens;
+}
+
+Script& Script::operator=(Script& other)
+{
+    std::swap(lines, other.lines);
+    std::swap(lineNum, other.lineNum);
+    return *this;
 }

@@ -72,6 +72,13 @@ void PlayingWindow::mainMenuClicked()
 void PlayingWindow::gameStateUpdateView(bool bust, bool won, bool canSplit){
 
 }
+
+void PlayingWindow::messageRecieved(QString message)
+{
+    //Setlabel to the message recieved
+    ui->textDisplay->setText(message);
+    //Show next button
+}
 //=========================== CONECTIONS =========================
 
 void PlayingWindow::SetUpConnections(Model& model){
@@ -94,6 +101,12 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     connect(&model,&Model::addCardToDealerHand,this,&PlayingWindow::addCardToDealerHand);
     connect(&model,&Model::addCardToPlayerHand,this,&PlayingWindow::addCardToPlayerHand);
+
+    //============= script Handling connections
+    connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);
+
+
+
 
 }
 
