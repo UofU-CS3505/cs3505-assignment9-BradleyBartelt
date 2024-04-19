@@ -12,11 +12,15 @@ public:
 
 signals:
     void SendCardImage(QImage);
-    void addCardToPlayerHand(QImage);
-    void addCardToDealerHand(QImage);
+
+    void addCardToPlayerHand(Card);
+
+    void addCardToDealerHand(Card,bool);
+
 public slots:
     void hitSlot();
     void SetLevel(int level);
+    void standSlot();
 
 private:
     Deck deck;

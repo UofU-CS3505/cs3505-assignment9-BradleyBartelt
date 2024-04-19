@@ -27,9 +27,11 @@ public slots:
 
     void updateCardImage(QImage);
 
-    void addCardToPlayerHand(QImage card);
+    void addCardToPlayerHand(Card card);
 
-    void addCardToDealerHand(QImage card);
+    void addCardToDealerHand(Card card, bool isFirstCard);
+
+    void gameStateUpdateView(bool bust, bool won, bool canSplit);
 private:
     Ui::PlayingWindow *ui;
     QMainWindow* mainMenu;

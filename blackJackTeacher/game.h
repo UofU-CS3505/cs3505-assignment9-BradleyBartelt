@@ -25,11 +25,11 @@ public:
     /// disables further actions on players current hand
     void stand(Player& person);
     /// decides who won or loss
-    void endResult();
+    std::tuple<int,int> endResult();
     /// clears person and dealer hand, as well as, shuffles the deck
     void resetGame(Player& person, Player& dealer);
     /// initial checker for whether the dealer or the player or both got a blackjack
-    void checkBlackJack(Player& person, Player& dealer);
+    int checkBlackJack(Player& person, Player& dealer);
     /// rigs Game
     void hit(Player& person, Card card);
 

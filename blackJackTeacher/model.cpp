@@ -11,17 +11,22 @@ Model::Model(QObject *parent)
 }
 void Model::hitSlot(){
     game.hit(playerOne);
-    emit SendCardImage(playerOne.cardArray.back().image);
+    emit addCardToPlayerHand(playerOne.cardArray.back());
+}
+void Model::standSlot(){
+    game.stand(playerOne);
+    std::tuple<int,int> result;
+    result = game.endResult();
+    // emit playerStood();
 }
 void Model::SetLevel(int level){
     currentLevel = level;
     initalDeal();
 }
 void Model::initalDeal(){
-    emit addCardToPlayerHand(playerOne.cardArray.at(0).image);
-    emit addCardToPlayerHand(playerOne.cardArray.at(1).image);
-    QImage cardBack;
-    cardBack.load(":/images/cardImages/cardBack.png");
-    emit addCardToDealerHand(cardBack);
-    emit addCardToDealerHand(dealer.cardArray.at(1).image);
+    emit addCardToPlayerHand(playerOne.cardArray.at(0));
+    emit addCardToPlayerHand(playerOne.cardArray.at(1));
+    emit addCardToDealerHand(dealer.cardArray.at(0),true);
+    emit addCardToDealerHand(dealer.cardArray.at(1),false);
 }
+

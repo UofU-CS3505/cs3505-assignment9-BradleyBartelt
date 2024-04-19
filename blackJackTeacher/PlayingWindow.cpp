@@ -10,6 +10,10 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     ui->setupUi(this);
     mainMenu = menu;
     SetUpConnections(model);
+    ui->splitButton->setEnabled(false);
+    ui->dealCards->setEnabled(false);
+    ui->doubleButton->setEnabled(false);
+
 }
 
 PlayingWindow::~PlayingWindow()
@@ -18,7 +22,7 @@ PlayingWindow::~PlayingWindow()
 }
 
 
-void PlayingWindow::addCardToPlayerHand(QImage cardImage){
+void PlayingWindow::addCardToPlayerHand(Card card){
     QLabel* newCard = new QLabel( ui->handArea);
     cards.push_back(newCard);
     newCard->setFixedSize(125, 175);
@@ -26,11 +30,14 @@ void PlayingWindow::addCardToPlayerHand(QImage cardImage){
 
     QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
     layout->addWidget(newCard, Qt::AlignLeft);
-    updateCardImage(cardImage);
+    updateCardImage(card.image);
+    QLabel* playerTotal = ui->playerTotal;
+    int currentTotal = playerTotal->text().toInt(nullptr,10);
+    playerTotal->setText(QString(QString::number(currentTotal + card.rank))); // calculates the new card plus all the other cards
 }
 
 
-void PlayingWindow::addCardToDealerHand(QImage cardImage){
+void PlayingWindow::addCardToDealerHand(Card card, bool isFirstCard){
     QLabel* newCard = new QLabel( ui->dealerArea);
     newCard->setFixedSize(125, 175);
     cards.push_back(newCard);
@@ -38,19 +45,17 @@ void PlayingWindow::addCardToDealerHand(QImage cardImage){
 
     QHBoxLayout* layout = (QHBoxLayout*)ui->dealerArea->widget()->layout();
     layout->addWidget(newCard, Qt::AlignLeft);
-    updateCardImage(cardImage);
+    if(isFirstCard){
+        QImage cardBack;
+        cardBack.load(":/images/cardImages/cardBack.png");
+        updateCardImage(cardBack);
+    }
+    else{updateCardImage(card.image);}
 }
 
 
 void PlayingWindow::hitButtonClicked()
 {
-    QLabel* newCard = new QLabel( ui->handArea);
-    cards.push_back(newCard);
-    newCard->setFixedSize(125, 175);
-    newCard->setStyleSheet("QPushButton {background-color: rgb(224,224,224);}");
-
-    QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
-    layout->addWidget(newCard, Qt::AlignLeft);
     emit hit();
 }
 
@@ -70,7 +75,9 @@ void PlayingWindow::mainMenuClicked()
 }
 
 
+void PlayingWindow::gameStateUpdateView(bool bust, bool won, bool canSplit){
 
+}
 //=========================== CONECTIONS =========================
 
 void PlayingWindow::SetUpConnections(Model& model){
@@ -80,9 +87,14 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->mainMenu,&QPushButton::clicked,this,&PlayingWindow::mainMenuClicked);
     connect(&model,&Model::SendCardImage,this,&PlayingWindow::updateCardImage);
 
+    // ============ stand connections
+
+    connect(ui->standButton,&QPushButton::clicked,&model,&Model::standSlot);
+
     //============= initalDeal connections
 
     connect(&model,&Model::addCardToDealerHand,this,&PlayingWindow::addCardToDealerHand);
     connect(&model,&Model::addCardToPlayerHand,this,&PlayingWindow::addCardToPlayerHand);
+
 }
 

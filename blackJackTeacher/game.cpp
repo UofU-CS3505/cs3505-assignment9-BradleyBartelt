@@ -13,17 +13,20 @@ Game::Game(Deck deck, Player& person, Player& dealer, bool isRigged) {
     }
 }
 
-void Game::checkBlackJack(Player& person, Player& dealer){
+int Game::checkBlackJack(Player& person, Player& dealer){
     personCount = person.cardArray.at(0).rank + person.cardArray.at(1).rank; // get inital personCount
     dealerCount = dealer.cardArray.at(0).rank + dealer.cardArray.at(1).rank; // get inital dealerCount
     if(personCount == 21 && dealerCount != 21){
         //emit person win + 1.5, if bet 5, get 12.50 (remember when you bet you deduct 5)
+        return 1;
     }
     else if(dealerCount == 21 && personCount != 21){
         // emit dealer win
+        return 2;
     }
     else if(dealerCount == 21 && personCount == 21){
-        // emit tie
+        // return tie
+        return 3;
     }
 }
 
@@ -98,27 +101,35 @@ void Game::checkState(Player currentPlayer){
         }
     }
 }
-void Game::endResult(){
+std::tuple<int,int> Game::endResult(){
+    std::tuple<int,int> result;
     if(personCount < dealerCount){
         // emit player loss (left hand)
+        get<0>(result) = 0;
     }
     if(personCount == dealerCount){
         // emit tie (right hand)
+        get<0>(result) = 1;
     }
     if(personCount > dealerCount){
         // emit person win (left hand)
+        get<0>(result) = 2;
     }
-    if(personSplitCount != 0){
+    if(personSplitCount != 0){ // if a split exists
         if(personSplitCount == dealerCount){
             // emit tie for the split hand (right hand)
+            get<1>(result) = 2;
         }
         if(personSplitCount < dealerCount){
             // emit loss for the split hand (right hand)
+            get<1>(result) = 2;
         }
         if(personSplitCount > dealerCount){
             // emit win for the split hand (right hand)
+            get<1>(result) = 2;
         }
     }
+    return result;
 }
 void Game::hit(Player& currentPlayer){
     if(!currentPlayer.getState()){ // if the current player has not chose to stand
