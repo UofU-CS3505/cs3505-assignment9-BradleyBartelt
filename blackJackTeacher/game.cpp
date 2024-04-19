@@ -106,60 +106,46 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
     }
     return std::tuple<bool,int>(true, currentPlayer.currentHand);
 }
-<<<<<<< Updated upstream
-std::tuple<int,int> Game::endResult(){
-    std::tuple<int,int> result;
-=======
+
 std::tuple<bool, int> Game::endResult(){
->>>>>>> Stashed changes
     if(personCount < dealerCount){
         // emit player loss (left hand)
-        get<0>(result) = 0;
     }
     if(personCount == dealerCount){
-<<<<<<< Updated upstream
-        // emit tie (right hand)
-        get<0>(result) = 1;
-=======
         // emit tie (left hand)
->>>>>>> Stashed changes
     }
     if(personCount > dealerCount){
         // emit person win (left hand)
-        get<0>(result) = 2;
     }
     if(personSplitCount != 0){ // if a split exists
         if(personSplitCount == dealerCount){
             // emit tie for the split hand (right hand)
-            get<1>(result) = 2;
         }
         if(personSplitCount < dealerCount){
             // emit loss for the split hand (right hand)
-            get<1>(result) = 2;
         }
         if(personSplitCount > dealerCount){
             // emit win for the split hand (right hand)
-            get<1>(result) = 2;
         }
     }
-    return result;
+    return std::tuple<bool,int>(false,0);
 }
-std::tuple<bool,QImage,int> Game::hit(Player& currentPlayer){
+std::tuple<bool,int> Game::hit(Player& currentPlayer){
     currentPlayer.addCard(gameDeck.draw());
     std::tuple<bool, int> playerState = checkState(currentPlayer);
     if(get<0>(playerState) && get<1>(playerState) == 0){ // if its true that means the game can continue
-        return std::tuple<bool, QImage, int>(true, currentPlayer.cardArray.back().image,currentPlayer.currentHand);
+        return std::tuple<bool, int>(true,currentPlayer.currentHand);
     }
     else if(!get<0>(playerState) && get<1>(playerState) == 0){ // if its false the player has lost
-        return std::tuple<bool, QImage, int>(false, currentPlayer.cardArray.back().image,currentPlayer.currentHand);
+        return std::tuple<bool, int>(false, currentPlayer.currentHand);
     }
     if(get<0>(playerState) && get<1>(playerState) == 1){
-        return std::tuple<bool, QImage, int>(true, currentPlayer.splitArray.back().image,currentPlayer.currentHand);
+        return std::tuple<bool, int>(true, currentPlayer.currentHand);
     }
     else{
         int tempVal = currentPlayer.currentHand;
         currentPlayer.currentHand = 0;
-        return std::tuple<bool, QImage, int>(false, currentPlayer.splitArray.back().image,tempVal);
+        return std::tuple<bool, int>(false, tempVal);
     }
 }
 

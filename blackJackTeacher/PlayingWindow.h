@@ -21,7 +21,6 @@ signals:
     /// @brief tells the model that the hit button has been pressed and it needs to update the game.
     void hit();
 public slots:
-    void hitButtonClicked();
 
     void mainMenuClicked();
 

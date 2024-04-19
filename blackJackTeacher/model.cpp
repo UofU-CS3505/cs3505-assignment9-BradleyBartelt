@@ -27,19 +27,8 @@ void Model::standSlot(){
 
 }
 void Model::hitSlot(){
-<<<<<<< Updated upstream
     game.hit(playerOne);
     emit addCardToPlayerHand(playerOne.cardArray.back());
-}
-void Model::standSlot(){
-    game.stand(playerOne);
-    std::tuple<int,int> result;
-    result = game.endResult();
-    // emit playerStood();
-=======
-    std::tuple<bool, QImage, int> gameTuple = game.hit(playerOne);
-    emit sendCardImage(get<1>(gameTuple));
->>>>>>> Stashed changes
 }
 void Model::SetLevel(int level){
     currentLevel = level;
@@ -48,7 +37,6 @@ void Model::SetLevel(int level){
 void Model::initalDeal(){
     emit addCardToPlayerHand(playerOne.cardArray.at(0));
     emit addCardToPlayerHand(playerOne.cardArray.at(1));
-    emit addCardToDealerHand(dealer.cardArray.at(0),true);
-    emit addCardToDealerHand(dealer.cardArray.at(1),false);
+    emit addCardToDealerHand(dealer.cardArray.at(0), true);
+    emit addCardToDealerHand(dealer.cardArray.at(1), false);
 }
-

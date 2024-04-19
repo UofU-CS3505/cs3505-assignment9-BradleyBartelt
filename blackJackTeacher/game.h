@@ -17,7 +17,7 @@ public:
     /// checks whether the dealer or the player has lost, false is player bust, true means that the player did not bust or the dealer bust
     std::tuple<bool,int> checkState(Player currentPlayer);
     /// adds card to player
-    std::tuple<bool,QImage,int> hit(Player& person);
+    std::tuple<bool,int> hit(Player& person);
     /// splits a persons hand
     bool split(Player& person);
     /// doubles the current bet
@@ -29,7 +29,7 @@ public:
     /// clears person and dealer hand, as well as, shuffles the deck
     void resetGame(Player& person, Player& dealer);
     /// initial checker for whether the dealer or the player or both got a blackjack
-    void checkBlackJack(Player& person, Player& dealer);
+    int checkBlackJack(Player& person, Player& dealer);
     /// rigs Game
     void hit(Player& person, Card card);
 
