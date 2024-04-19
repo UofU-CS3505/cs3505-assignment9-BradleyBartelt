@@ -3,6 +3,7 @@
 
 #include "game.h"
 #include <QObject>
+#include "script.h"
 
 class Model : public QObject
 {
@@ -15,10 +16,29 @@ signals:
     void disableButtons(bool);
     void addCardToPlayerHand(Card);
     void addCardToDealerHand(Card, bool);
+    ///
+    /// \brief endLevel send a signal to the view to display game end information
+    /// \param errorState whether the game was terminated due to an error or naturally
+    ///
+    void endLevel(bool errorState);
+    ///
+    /// \brief sendMessage sends a message to be displayed to the user
+    /// \param message a QString containing text to display to the user
+    ///
+    void sendMessage(QString message);
+    ///
+    /// \brief revealHole signals the view to display the hole card to the user
+    ///
+    void revealHole();
+
 public slots:
     void hitSlot();
     void SetLevel(int level);
     void standSlot();
+    ///
+    /// \brief readyForNextLine parse the next line and prepare to send it to the view
+    ///
+    void readyForNextLine();
 
 private:
     Deck deck;
@@ -26,7 +46,21 @@ private:
     Player dealer;
     Game game;
     int currentLevel;
+    ///
+    /// \brief scriptOutputDetails a string used as an additional output by the script object
+    ///
+    QString scriptOutputDetails;
+    ///
+    /// \brief levelScript a script file that is read in by a QFile object. represents the current level's script
+    ///
+    Script levelScript;
     void initalDeal();
+    ///
+    /// \brief interpretCommand parses the output of the line provided by levelScript's nextLine and handles it in the context of the game
+    /// \param messagetype the string returned by levelScript. Represents a command type
+    ///
+    void interpretCommand(QString messagetype);
+
 };
 
 #endif // MODEL_H
