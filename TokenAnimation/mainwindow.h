@@ -7,6 +7,7 @@
 #include <QGraphicsEllipseItem>
 #include <QTimer>
 #include <Box2D/Box2D.h>
+#include "ui_mainwindow.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -16,14 +17,16 @@ public:
     ~MainWindow();
 
 private slots:
-    void updatePhysics();
+    void updateWorld();
 
 private:
+    Ui::MainWindow *ui;
     QGraphicsView *view;
     QGraphicsScene *scene;
+    void setupBox2D();
     QGraphicsEllipseItem *circleItem;
     QTimer *timer;
-    b2World *world;
+    b2World world;
     b2Body *circleBody; // Add a member for the circle body
 };
 
