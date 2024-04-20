@@ -1,69 +1,80 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include <QApplication>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsEllipseItem>
+#include <QTimer>
+#include <Box2D/Box2D.h>
+#include <QMainWindow>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QGraphicsView(parent),
-    ui(new Ui::MainWindow)
-{
-   // ui->setupUi(this);
-    //ui->setupUi(new QWidget());
+class MainWindow : public QMainWindow {
+    Q_OBJECT
 
-    scene = new QGraphicsScene();
-    setScene(scene);
+public:
+    MainWindow(QWidget *parent = nullptr)
+        : QMainWindow(parent),
+        view(new QGraphicsView(this)),
+        scene(new QGraphicsScene(this)),
+        circleItem(new QGraphicsEllipseItem(0, 0, 50, 50)),
+        timer(new QTimer(this)) {
+        view->setScene(scene);
+        view->setSceneRect(0, 0, 800, 600);
+        circleItem->setPos(400, 0);
+        scene->addItem(circleItem);
 
-    // Load sprite image
-    QPixmap spritePixmap(":/images/cardImages/pokerChip.png");
+        // Initialize Box2D world
+        b2Vec2 gravity(0.0f, -10.0f);
+        world = new b2World(gravity);
 
-    // Create QGraphicsPixmapItem and add it to the scene
-    spriteItem = new QGraphicsPixmapItem(spritePixmap);
-    scene->addItem(spriteItem);
+        // Create the circle body
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody;
+        bodyDef.position.Set(400 / 30.0f, 600 / 30.0f);
+        b2Body *body = world->CreateBody(&bodyDef);
 
-    // Position the item at the top of the scene
-    spriteItem->setPos(0, 0);
+        b2CircleShape circleShape;
+        circleShape.m_radius = 25 / 30.0f;
 
-    // Set up Box2D world
-    b2Vec2 gravity(0.0f, 9.81f); // Define gravity
-    world = new b2World(gravity);
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &circleShape;
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.3f;
 
-    // Create a dynamic body for the sprite
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(0, 0); // Set initial position
-    spriteBody = world->CreateBody(&bodyDef);
+        body->CreateFixture(&fixtureDef);
 
-    // Define a shape for the sprite
-    b2PolygonShape shape;
-    shape.SetAsBox(spritePixmap.width() / 2.0f, spritePixmap.height() / 2.0f); // Assuming rectangular shape
+        // Connect timer to update function
+        connect(timer, &QTimer::timeout, this, &MainWindow::updatePhysics);
+        timer->start(1000 / 60); // 60 FPS
+    }
 
-    // Define fixture
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &shape;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f;
-    fixtureDef.restitution = 0.5f; // Bounciness
+    ~MainWindow() {
+        // Clean up resources
+        delete world;
+        delete timer;
+        delete circleItem;
+        delete scene;
+        delete view;
+    }
 
-    // Attach fixture to the body
-    spriteBody->CreateFixture(&fixtureDef);
+private slots:
+    void updatePhysics() {
+        world->Step(1.0f / 60.0f, 6, 2);
 
-    // Start simulation timer
-    QTimer* timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(advanceSimulation()));
-    timer->start(16); // Update every 16 ms (roughly 60 fps)
-}
+        // Update circle position
+        b2Vec2 position = world->GetBodyList()->GetPosition();
+        circleItem->setPos(position.x * 30.0f, 600 - position.y * 30.0f);
+    }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
+private:
+    QGraphicsView *view;
+    QGraphicsScene *scene;
+    QGraphicsEllipseItem *circleItem;
+    QTimer *timer;
+    b2World *world;
+};
 
-void MainWindow::advanceSimulation() {
-    // Step Box2D world simulation
-    world->Step(1.0f / 60.0f, 8, 3); // Assuming 60 Hz timestep
-
-    // Update position of QGraphicsPixmapItem based on Box2D body's position
-    b2Vec2 position = spriteBody->GetPosition();
-    spriteItem->setPos(position.x, position.y);
-
-    // Check for collisions (not implemented in this example)
-    // You would typically handle collisions and update sprite's motion here
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+    MainWindow window;
+    window.show();
+    return app.exec();
 }

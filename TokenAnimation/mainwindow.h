@@ -4,31 +4,26 @@
 #include <QMainWindow>
 #include <QGraphicsView>
 #include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
-#include <Box2D/Box2D.h>
+#include <QGraphicsEllipseItem>
 #include <QTimer>
+#include <Box2D/Box2D.h>
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QGraphicsView
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-protected slots:
-    void advanceSimulation();
+private slots:
+    void updatePhysics();
 
 private:
-    Ui::MainWindow *ui;
-    QGraphicsScene* scene;
-    QGraphicsPixmapItem* spriteItem;
-    b2World* world;
-    b2Body* spriteBody;
+    QGraphicsView *view;
+    QGraphicsScene *scene;
+    QGraphicsEllipseItem *circleItem;
+    QTimer *timer;
+    b2World *world;
 };
 
 #endif // MAINWINDOW_H
