@@ -24,6 +24,7 @@ private:
     QGraphicsEllipseItem *circleItem;
     QTimer *timer;
     b2World *world;
+    b2Body *circleBody; // Add a member for the circle body
 };
 
 #endif // MAINWINDOW_H
