@@ -188,6 +188,7 @@ std::tuple<bool,int> Game::hit(Player& currentPlayer, Card card){
     currentPlayer.addCard(gameDeck.draw(card.rank,card.suit));
     std::tuple<bool, int> playerState = checkState(currentPlayer);
     if(get<0>(playerState) && get<1>(playerState) == 0 && personCount == 21){ // if its true that means the game can continue
+        stand(currentPlayer);
         return std::tuple<bool, int>(true,3);
     }
     if(get<0>(playerState) && get<1>(playerState) == 0){ // if its true that means the game can continue
@@ -216,6 +217,9 @@ bool Game::split(Player& person){
 }
 
 int Game::stand(Player& currentPlayer){
+    if(!currentPlayer.getIsDealer()){
+        personHitCount++;
+    }
     currentPlayer.setState(true);
     if(currentPlayer.currentHand != 1)
         return currentPlayer.currentHand;
