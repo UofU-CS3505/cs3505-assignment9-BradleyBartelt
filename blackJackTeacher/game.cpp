@@ -20,14 +20,14 @@ Game::Game(const Game& otherGame){
     personCount = otherGame.personCount;
     dealerCount = otherGame.dealerCount;
     personSplitCount = otherGame.personSplitCount;
-    personHitCount = otherGame.personHitCount;
+    dealerHits = otherGame.dealerHits;
 }
 Game& Game::operator=(Game otherGame){
     std::swap(gameDeck,otherGame.gameDeck);
     std::swap(personCount,otherGame.personCount);
     std::swap(dealerCount,otherGame.dealerCount);
     std::swap(personSplitCount,otherGame.personSplitCount);
-    std::swap(personHitCount,otherGame.personHitCount);
+    std::swap(dealerHits,otherGame.dealerHits);
     return *this;
 }
 Game::~Game(){}
@@ -51,6 +51,7 @@ int Game::checkBlackJack(Player& person, Player& dealer){
 
 std::tuple<bool,int> Game::checkState(Player currentPlayer){
     if(currentPlayer.getIsDealer()){ // adds up the dealers count when they hit
+        dealerHits++;
         dealerCount = 0;
         int aceCount = 0;
         for(int i = 0; i < int(currentPlayer.cardArray.size()); i++){
@@ -68,10 +69,6 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
                 break;
             }
         }
-        if(dealerCount > personCount && personHitCount != 0){
-            stand(currentPlayer);
-            return std::tuple<bool,int>(true,0);
-        }
         if(dealerCount >= 17 && dealerCount < 22){ // if a dealer is between a 17 and 21 stand
             stand(currentPlayer);
             return std::tuple<bool,int>(true,0);
@@ -84,7 +81,6 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
         }
     }
     if(!currentPlayer.getIsDealer()){ // same as above
-        personHitCount += 1;
         personCount = 0;
         int aceCount = 0;
         for(int i = 0; i < int(currentPlayer.cardArray.size()); i++){
@@ -217,9 +213,6 @@ bool Game::split(Player& person){
 }
 
 int Game::stand(Player& currentPlayer){
-    if(!currentPlayer.getIsDealer()){
-        personHitCount++;
-    }
     currentPlayer.setState(true);
     if(currentPlayer.currentHand != 1)
         return currentPlayer.currentHand;

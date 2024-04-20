@@ -9,7 +9,7 @@ class Game
 
 private:
     Deck gameDeck; // the given deck
-    int personHitCount = 0;
+    int dealerHits = 0;
     bool isRigged;
 public:
     int personCount; // count that the left hand (or center if no split) totals to
