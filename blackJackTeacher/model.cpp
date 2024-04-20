@@ -22,43 +22,79 @@ void Model::standSlot(){
             waitTime = abs(count * waitTime);
             if(dealer.getState()){
                 // do stuff to represent end game
+                emit enableDealCards(true);
                 break;
             }
-            game.hit(dealer);
+            if(isRigged){
+                // pass in card you want to rig
+                game.hit(dealer);
+            }
+            else{
+                game.hit(dealer);
+            }
             QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
             count++;
+            // change the card that your rigging to the next rigged card here
         }
         if(!get<0>(gameTuple)){
             // emit dealer bust
+            QTimer::singleShot(1000, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
+            QTimer::singleShot(1000, this,[=]{ emit enableDealCards(true);});
         }
     }
 }
+
 void Model::hitSlot(){
-    std::tuple<bool, int> gameTuple = game.hit(playerOne);
+    std::tuple<bool, int> gameTuple;
+    if(isRigged){
+        // pass in whatever card that needs to be rigged into the game
+        gameTuple = game.hit(playerOne);
+    }
+    else{
+        gameTuple = game.hit(playerOne);
+    }
     if(get<0>(gameTuple) && get<1>(gameTuple) != 3)
         emit addCardToPlayerHand(playerOne.cardArray.back());
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21
         emit addCardToPlayerHand(playerOne.cardArray.back());
         emit disableButtons(false);
+        emit enableDealCards(true);
     }
     else{
         emit addCardToPlayerHand(playerOne.cardArray.back());
         // emit a loss
         emit disableButtons(false);
+        emit enableDealCards(true);
     }
 
+}
+void Model::dealCards(){
+    if(currentLevel < 4)
+        isRigged = true;
+    initialDeal();
+    emit disableButtons(true);
 }
 void Model::SetLevel(int level){
     currentLevel = level;
     levelScript.setScript(":/scripts/levelScripts/levelOneScript.txt");//Change this once we get something better figured out
-    //game = Game(deck, playerOne, dealer, true);
     QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
     messagetype = levelScript.nextCommand(&scriptOutputDetails);
     interpretCommand(messagetype);
-    //initalDeal();
-
+    if(currentLevel < 4)
+        isRigged = true;
+    initialDeal();
 }
-void Model::initalDeal(){
+void Model::initialDeal(){
+    if(isRigged){
+        Game riggedGame(deck, playerOne, dealer, true);
+        game = riggedGame;
+        game.resetGame(playerOne, dealer);
+        // hit with specific cards in the order of person dealer person dealer
+    }
+    else{
+        game.resetGame(playerOne, dealer);
+    }
+    emit enableDealCards(false);
     emit addCardToPlayerHand(playerOne.cardArray.at(0));
     emit addCardToDealerHand(dealer.cardArray.at(0), true);
     emit addCardToPlayerHand(playerOne.cardArray.at(1));
@@ -67,16 +103,19 @@ void Model::initalDeal(){
     if(checkBlackJack == 1){
         emit disableButtons(false);
         // emit player win
+        emit enableDealCards(true);
     }
     else if(checkBlackJack == 2){
         emit disableButtons(false);
         emit SendCardImage(dealer.cardArray.begin()->image);
         // emit player loss
+        emit enableDealCards(true);
     }
     else if(checkBlackJack == 3){
         emit disableButtons(false);
         emit SendCardImage(dealer.cardArray.begin()->image);
         // emit tie
+        emit enableDealCards(true);
     }
 }
 void Model::readyForNextLine()

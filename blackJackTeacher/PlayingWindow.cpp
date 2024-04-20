@@ -73,6 +73,13 @@ void PlayingWindow::mainMenuClicked()
     delete this;
 }
 
+// not working yet
+void PlayingWindow::clearOldImages(){
+    for(int i = 0; i < cards.size(); i++){
+        delete cards.at(i);
+    }
+    cards.clear();
+}
 
 void PlayingWindow::gameStateUpdateView(bool bust, bool won, bool canSplit){
 
@@ -102,10 +109,21 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
+
+    //============= Reset game connections
+
+    //connect(ui->mainMenu, &QPushButton::clicked, &model, &Model::resetGame);
+
     //============= initalDeal connections
 
     connect(&model,&Model::addCardToDealerHand,this,&PlayingWindow::addCardToDealerHand);
     connect(&model,&Model::addCardToPlayerHand,this,&PlayingWindow::addCardToPlayerHand);
+
+    //============= dealCards
+
+    connect(ui->dealCards,&QPushButton::clicked,this,&PlayingWindow::clearOldImages);
+    connect(&model, &Model::enableDealCards, ui->dealCards, &QPushButton::setEnabled);
+    connect(ui->dealCards, &QPushButton::clicked, &model, &Model::dealCards);
 
     //============= script Handling connections
     connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);

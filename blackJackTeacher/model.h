@@ -16,6 +16,7 @@ signals:
     void disableButtons(bool);
     void addCardToPlayerHand(Card);
     void addCardToDealerHand(Card, bool);
+    void enableDealCards(bool);
     ///
     /// \brief endLevel send a signal to the view to display game end information
     /// \param errorState whether the game was terminated due to an error or naturally
@@ -33,6 +34,7 @@ signals:
 
 public slots:
     void hitSlot();
+    void dealCards();
     void SetLevel(int level);
     void standSlot();
     ///
@@ -45,6 +47,7 @@ private:
     Player playerOne;
     Player dealer;
     Game game;
+    bool isRigged;
     int currentLevel;
     ///
     /// \brief scriptOutputDetails a string used as an additional output by the script object
@@ -54,7 +57,7 @@ private:
     /// \brief levelScript a script file that is read in by a QFile object. represents the current level's script
     ///
     Script levelScript;
-    void initalDeal();
+    void initialDeal();
     ///
     /// \brief interpretCommand parses the output of the line provided by levelScript's nextLine and handles it in the context of the game
     /// \param messagetype the string returned by levelScript. Represents a command type

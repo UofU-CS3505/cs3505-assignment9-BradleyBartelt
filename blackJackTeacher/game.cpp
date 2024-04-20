@@ -1,18 +1,36 @@
 #include "game.h"
 #include "deck.h"
 #include "player.h"
+#include <iostream>
 
 Game::Game(Deck deck, Player& person, Player& dealer, bool isRigged) {
     gameDeck = deck;
     if(!isRigged){
+        isRigged = false;
         person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
         dealer.addCard(gameDeck.draw());
         person.addCard(gameDeck.draw());
         dealer.addCard(gameDeck.draw()); // dont show the player this card
         checkState(dealer);
     }
+    isRigged = true;
 }
-
+Game::Game(const Game& otherGame){
+    gameDeck = otherGame.gameDeck;
+    personCount = otherGame.personCount;
+    dealerCount = otherGame.dealerCount;
+    personSplitCount = otherGame.personSplitCount;
+    personHitCount = otherGame.personHitCount;
+}
+Game& Game::operator=(Game otherGame){
+    std::swap(gameDeck,otherGame.gameDeck);
+    std::swap(personCount,otherGame.personCount);
+    std::swap(dealerCount,otherGame.dealerCount);
+    std::swap(personSplitCount,otherGame.personSplitCount);
+    std::swap(personHitCount,otherGame.personHitCount);
+    return *this;
+}
+Game::~Game(){}
 int Game::checkBlackJack(Player& person, Player& dealer){
     personCount = person.cardArray.at(0).rank + person.cardArray.at(1).rank; // get inital personCount
     dealerCount = dealer.cardArray.at(0).rank + dealer.cardArray.at(1).rank; // get inital dealerCount
@@ -50,6 +68,10 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
                 break;
             }
         }
+        if(dealerCount > personCount && personHitCount != 0){
+            stand(currentPlayer);
+            return std::tuple<bool,int>(true,0);
+        }
         if(dealerCount >= 17 && dealerCount < 22){ // if a dealer is between a 17 and 21 stand
             stand(currentPlayer);
             return std::tuple<bool,int>(true,0);
@@ -62,6 +84,7 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
         }
     }
     if(!currentPlayer.getIsDealer()){ // same as above
+        personHitCount += 1;
         personCount = 0;
         int aceCount = 0;
         for(int i = 0; i < int(currentPlayer.cardArray.size()); i++){
@@ -157,10 +180,29 @@ std::tuple<bool,int> Game::hit(Player& currentPlayer){
     }
 }
 
-void Game::hit(Player& currentPlayer, Card card){
-    if(!currentPlayer.getState()){ // if the current player has not chose to stand
-        currentPlayer.addCard(gameDeck.draw(card.rank, card.suit));
-        checkState(currentPlayer);
+std::tuple<bool,int> Game::hit(Player& currentPlayer, Card card){
+    if(currentPlayer.getIsDealer() && dealerCount > 16){
+        stand(currentPlayer);
+        return std::tuple<bool, int>(true, 0);
+    }
+    currentPlayer.addCard(gameDeck.draw(card.rank,card.suit));
+    std::tuple<bool, int> playerState = checkState(currentPlayer);
+    if(get<0>(playerState) && get<1>(playerState) == 0 && personCount == 21){ // if its true that means the game can continue
+        return std::tuple<bool, int>(true,3);
+    }
+    if(get<0>(playerState) && get<1>(playerState) == 0){ // if its true that means the game can continue
+        return std::tuple<bool, int>(true,currentPlayer.currentHand);
+    }
+    else if(!get<0>(playerState) && get<1>(playerState) == 0){ // if its false the player has lost
+        return std::tuple<bool, int>(false, currentPlayer.currentHand);
+    }
+    if(get<0>(playerState) && get<1>(playerState) == 1){
+        return std::tuple<bool, int>(true, currentPlayer.currentHand);
+    }
+    else{
+        int tempVal = currentPlayer.currentHand;
+        currentPlayer.currentHand = 0;
+        return std::tuple<bool, int>(false, tempVal);
     }
     // emit signal to disable hit button for person and if its a dealer, disable the ability to hit
 }
@@ -192,4 +234,11 @@ void Game::resetGame(Player& person, Player& dealer){
     personCount = 0;
     dealerCount = 0;
     personSplitCount = 0;
+    if(!isRigged){
+        person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
+        dealer.addCard(gameDeck.draw());
+        person.addCard(gameDeck.draw());
+        dealer.addCard(gameDeck.draw()); // dont show the player this card
+    }
+    checkState(dealer);
 }

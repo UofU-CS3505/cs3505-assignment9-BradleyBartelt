@@ -33,6 +33,8 @@ public slots:
 
     void gameStateUpdateView(bool bust, bool won, bool canSplit);
 
+    void clearOldImages();
+
     void flipDealerCard(QImage);
     void messageRecieved(QString message);
 private slots:
