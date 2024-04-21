@@ -15,6 +15,12 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     ui->doubleButton->setEnabled(false);
     ui->winButton->setVisible(false);
     ui->loseButton->setVisible(false);
+
+    QPalette palette = this->palette();
+    QColor bg = QColor(61, 59, 59);
+    palette.setColor(QPalette::Window, bg);
+    this->setAutoFillBackground(true);
+    this->setPalette(palette);
 }
 
 PlayingWindow::~PlayingWindow()
