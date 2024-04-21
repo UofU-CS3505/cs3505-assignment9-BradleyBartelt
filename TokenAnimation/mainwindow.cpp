@@ -51,15 +51,18 @@ void MainWindow::setupBox2D() {
 }
 
 void MainWindow::updateWorld() {
+
     // Step the world
     world.Step(1.0f / 60.0f, 6, 2);
 
     // Get the position of the Box2D object
     b2Vec2 position = circleBody->GetPosition();
 
-    // Update the UI element based on the Box2D object's position
-    // Assuming you have a UI element to update, e.g., a slider or label
-    // For demonstration, let's update a hypothetical slider
+
+    // Update the vertical slider's value based on the Box2D object's position
     int sliderValue = static_cast<int>(position.y * 100); // Scale the position to fit the slider's range
     ui->verticalSlider->setValue(sliderValue);
+    ui->verticalSlider_2->setValue(static_cast<int>(position.y * 150)); // Slider 2
+    ui->verticalSlider_3->setValue(static_cast<int>(position.y * 115)); // Slider 3
+    ui->verticalSlider_4->setValue(static_cast<int>(position.y * 105)); // Slider 4
 }

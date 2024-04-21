@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <Box2D/Box2D.h>
 #include "ui_mainwindow.h"
+#include <QLabel>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -28,6 +29,7 @@ private:
     QTimer *timer;
     b2World world;
     b2Body *circleBody; // Add a member for the circle body
+     QLabel *label;
 };
 
 #endif // MAINWINDOW_H
