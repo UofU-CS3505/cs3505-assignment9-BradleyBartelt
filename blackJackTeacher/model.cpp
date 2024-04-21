@@ -56,6 +56,7 @@ void Model::standSlot(){
                     // end game stuff
                     QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
                     emit enableDealCards(true);
+                    endGame();
                     return;
                 }
             }
@@ -72,10 +73,14 @@ void Model::endGame(){
         // emit main hand tie
     }
     else if(game.endResult() == "win"){
-        // emit main hand win
+        std::cout << "end Win" << std::endl;
+
+        emit winMessage(true);
     }
     else if(game.endResult() == "loss"){
-        // emit main hand loss
+        std::cout << "end loss" << std::endl;
+
+        emit lossMessage(true);
     }
     else if(game.endResult() == "splitTie"){
         // emit split hand tie
@@ -171,7 +176,9 @@ void Model::initialDeal(){
         emit winMessage(true);
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
-        // emit player win
+        std::cout << "player BlackJack" << std::endl;
+
+        emit winMessage(true);
         emit enableDealCards(true);
     }
     else if(checkBlackJack == 2){
@@ -179,7 +186,9 @@ void Model::initialDeal(){
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit lossMessage(true);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
-        // emit player loss
+        emit lossMessage(true);
+        std::cout << "dealer BlackJack" << std::endl;
+
         emit enableDealCards(true);
     }
     else if(checkBlackJack == 3){

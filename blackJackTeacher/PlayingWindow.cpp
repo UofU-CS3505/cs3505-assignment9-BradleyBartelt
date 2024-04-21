@@ -168,8 +168,8 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);
     connect(this, &PlayingWindow::nextLine,&model,&Model::readyForNextLine);
     connect(&model,&Model::endLevel,this,&PlayingWindow::endLevel);
-    connect(ui->standButton,&QPushButton::clicked,this,&PlayingWindow::unlockStand);
-    connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
+   // connect(ui->standButton,&QPushButton::clicked,this,&PlayingWindow::unlockStand);
+    //connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
     connect(&model,&Model::revealHole,this,&PlayingWindow::flipDealerCard);
     connect(&model,&Model::sendLock,this,&PlayingWindow::recievedLock);
 
