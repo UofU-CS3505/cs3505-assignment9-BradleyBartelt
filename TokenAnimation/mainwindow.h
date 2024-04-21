@@ -30,6 +30,9 @@ private:
     b2World world;
     b2Body *circleBody; // Add a member for the circle body
     QLabel *label;
+
+    int currentX = 0; // Add declaration for currentX
+    int currentY = 0; // Add declaration for currentY
 };
 
 #endif // MAINWINDOW_H
