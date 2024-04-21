@@ -12,6 +12,7 @@ Game::Game(Deck deck, Player& person, Player& dealer, bool isRigged) {
         person.addCard(gameDeck.draw());
         dealer.addCard(gameDeck.draw()); // dont show the player this card
         checkState(dealer);
+        checkState(person);
     }
     isRigged = true;
 }
@@ -127,28 +128,28 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
     return std::tuple<bool,int>(true, currentPlayer.currentHand);
 }
 
-std::tuple<bool, int> Game::endResult(){
+QString Game::endResult(){
     if(personCount < dealerCount){
-        // emit player loss (left hand)
+        return "loss";
     }
     if(personCount == dealerCount){
-        // emit tie (left hand)
+        return "tie";
     }
     if(personCount > dealerCount){
-        // emit person win (left hand)
+        return "win";
     }
     if(personSplitCount != 0){ // if a split exists
         if(personSplitCount == dealerCount){
-            // emit tie for the split hand (right hand)
+            return "splitTie";
         }
         if(personSplitCount < dealerCount){
-            // emit loss for the split hand (right hand)
+            return "splitLoss";
         }
         if(personSplitCount > dealerCount){
-            // emit win for the split hand (right hand)
+            return "splitWin";
         }
     }
-    return std::tuple<bool,int>(false,0);
+    return "";
 }
 std::tuple<bool,int> Game::hit(Player& currentPlayer){
     if(currentPlayer.getIsDealer() && dealerCount > 16){
@@ -238,4 +239,5 @@ void Game::resetGame(Player& person, Player& dealer){
         dealer.addCard(gameDeck.draw()); // dont show the player this card
     }
     checkState(dealer);
+    checkState(person);
 }

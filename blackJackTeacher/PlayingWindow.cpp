@@ -32,9 +32,6 @@ void PlayingWindow::addCardToPlayerHand(Card card){
     QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
     layout->addWidget(newCard, Qt::AlignLeft);
     updateCardImage(card.image);
-    QLabel* playerTotal = ui->playerTotal;
-    int currentTotal = playerTotal->text().toInt(nullptr,10);
-    playerTotal->setText(QString(QString::number(currentTotal + card.value))); // calculates the new card plus all the other cards
 }
 
 
@@ -90,7 +87,40 @@ void PlayingWindow::messageRecieved(QString message)
 {
     //Setlabel to the message recieved
     ui->textDisplay->setText(message);
-    //Show next button
+}
+
+void PlayingWindow::recievedLock(QString allBut)
+{
+    if(allBut == "stand\n")
+    {
+        ui->hitButton->setEnabled(false);
+        ui->standButton->setEnabled(true);
+        ui->nextButton->setEnabled(false);
+    }
+    if(allBut == "hit\n")
+    {
+        ui->hitButton->setEnabled(true);
+        ui->standButton->setEnabled(false);
+        ui->nextButton->setEnabled(false);
+    }
+    if(allBut == "next\n")
+    {
+        ui->hitButton->setEnabled(false);
+        ui->standButton->setEnabled(false);
+        ui->nextButton->setEnabled(true);
+    }
+}
+void PlayingWindow::unlockStand()
+{
+    ui->hitButton->setEnabled(false);
+    ui->standButton->setEnabled(false);
+    ui->nextButton->setEnabled(true);
+}
+void PlayingWindow::unlockHit()
+{
+    ui->hitButton->setEnabled(false);
+    ui->standButton->setEnabled(false);
+    ui->nextButton->setEnabled(true);
 }
 //=========================== CONECTIONS =========================
 
@@ -128,10 +158,20 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model, &Model::enableDealCards, ui->dealCards, &QPushButton::setEnabled);
     connect(ui->dealCards, &QPushButton::clicked, &model, &Model::dealCards);
 
+    //============= update Counts
+
+    connect(&model, &Model::updateDealerCount, ui->dealerTotal, &QLabel::setText);
+    connect(&model, &Model::updatePlayerCount, ui->playerTotal, &QLabel::setText);
+
+
     //============= script Handling connections
     connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);
     connect(this, &PlayingWindow::nextLine,&model,&Model::readyForNextLine);
     connect(&model,&Model::endLevel,this,&PlayingWindow::endLevel);
+    connect(ui->standButton,&QPushButton::clicked,this,&PlayingWindow::unlockStand);
+    connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
+    connect(&model,&Model::revealHole,this,&PlayingWindow::flipDealerCard);
+    connect(&model,&Model::sendLock,this,&PlayingWindow::recievedLock);
 
 
 
@@ -150,6 +190,7 @@ void PlayingWindow::endLevel(bool errorState)
         //Change text box to display a "hooray" message?
     }
     //Disable next
+    sendLock("next");
     ui->nextButton->setEnabled(false);
 }
 void PlayingWindow::winPopUp(bool isVisible)

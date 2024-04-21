@@ -39,6 +39,11 @@ public slots:
     void messageRecieved(QString message);
     void winPopUp(bool);
     void lossPopUp(bool);
+
+    void recievedLock(QString allBut);
+
+    void unlockStand();
+    void unlockHit();
 private slots:
     void on_nextButton_clicked();
     void endLevel(bool errorState);
