@@ -19,8 +19,9 @@ void Model::standSlot(){
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         emit disableButtons(false);
-        if(game.dealerCount > game.personCount){
+        if(game.dealerCount > game.personCount && game.dealerCount > 16){
             // end game stuff
+            endGame();
             emit enableDealCards(true);
             return;
         }
@@ -34,13 +35,13 @@ void Model::standSlot(){
                 continueDealing = get<0>(game.hit(dealer));
                 if(dealer.getState()){ // if the dealer pulls between a 17 and 21 or they have a higher number than the player under a 17
                     endGame();
-                    emit enableDealCards(true);
+                    QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
                     break;
                 }
                 if(game.dealerCount > game.personCount && game.dealerCount > 16){
                     // end game stuff
                     QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-                    emit enableDealCards(true);
+                    QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
                     return;
                 }
             }
@@ -55,7 +56,8 @@ void Model::standSlot(){
                 if(game.dealerCount > game.personCount && game.dealerCount > 16){
                     // end game stuff
                     QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-                    emit enableDealCards(true);
+                    QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
+                    endGame();
                     return;
                 }
             }
@@ -65,6 +67,8 @@ void Model::standSlot(){
             count++;
             // change the card that your rigging to the next rigged card here
         }
+        endGame();
+        QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
     }
 }
 void Model::endGame(){
