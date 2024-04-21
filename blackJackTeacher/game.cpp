@@ -20,20 +20,20 @@ Game::Game(const Game& otherGame){
     personCount = otherGame.personCount;
     dealerCount = otherGame.dealerCount;
     personSplitCount = otherGame.personSplitCount;
-    personHitCount = otherGame.personHitCount;
+    dealerHits = otherGame.dealerHits;
 }
 Game& Game::operator=(Game otherGame){
     std::swap(gameDeck,otherGame.gameDeck);
     std::swap(personCount,otherGame.personCount);
     std::swap(dealerCount,otherGame.dealerCount);
     std::swap(personSplitCount,otherGame.personSplitCount);
-    std::swap(personHitCount,otherGame.personHitCount);
+    std::swap(dealerHits,otherGame.dealerHits);
     return *this;
 }
 Game::~Game(){}
 int Game::checkBlackJack(Player& person, Player& dealer){
-    personCount = person.cardArray.at(0).rank + person.cardArray.at(1).rank; // get inital personCount
-    dealerCount = dealer.cardArray.at(0).rank + dealer.cardArray.at(1).rank; // get inital dealerCount
+    personCount = person.cardArray.at(0).value + person.cardArray.at(1).value; // get inital personCount
+    dealerCount = dealer.cardArray.at(0).value + dealer.cardArray.at(1).value; // get inital dealerCount
     if(personCount == 21 && dealerCount != 21){
         //emit person win + 1.5, if bet 5, get 12.50 (remember when you bet you deduct 5)
         return 1;
@@ -51,10 +51,11 @@ int Game::checkBlackJack(Player& person, Player& dealer){
 
 std::tuple<bool,int> Game::checkState(Player currentPlayer){
     if(currentPlayer.getIsDealer()){ // adds up the dealers count when they hit
+        dealerHits++;
         dealerCount = 0;
         int aceCount = 0;
         for(int i = 0; i < int(currentPlayer.cardArray.size()); i++){
-            dealerCount += currentPlayer.cardArray.at(i).rank;
+            dealerCount += currentPlayer.cardArray.at(i).value;
             if(currentPlayer.cardArray.at(i).rank == ace){
                 aceCount += 1;
             }
@@ -68,10 +69,6 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
                 break;
             }
         }
-        if(dealerCount > personCount && personHitCount != 0){
-            stand(currentPlayer);
-            return std::tuple<bool,int>(true,0);
-        }
         if(dealerCount >= 17 && dealerCount < 22){ // if a dealer is between a 17 and 21 stand
             stand(currentPlayer);
             return std::tuple<bool,int>(true,0);
@@ -84,11 +81,10 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
         }
     }
     if(!currentPlayer.getIsDealer()){ // same as above
-        personHitCount += 1;
         personCount = 0;
         int aceCount = 0;
         for(int i = 0; i < int(currentPlayer.cardArray.size()); i++){
-            personCount += currentPlayer.cardArray.at(i).rank;
+            personCount += currentPlayer.cardArray.at(i).value;
             if(currentPlayer.cardArray.at(i).rank == ace){
                 aceCount += 1;
             }
@@ -109,7 +105,7 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
             personSplitCount = 0;
             aceCount = 0;
             for(int i = 0; i < int(currentPlayer.splitArray.size()); i++){
-                personSplitCount += currentPlayer.splitArray.at(i).rank;
+                personSplitCount += currentPlayer.splitArray.at(i).value;
                 if(currentPlayer.splitArray.at(i).rank == ace){
                     aceCount += 1;
                 }
@@ -188,6 +184,7 @@ std::tuple<bool,int> Game::hit(Player& currentPlayer, Card card){
     currentPlayer.addCard(gameDeck.draw(card.rank,card.suit));
     std::tuple<bool, int> playerState = checkState(currentPlayer);
     if(get<0>(playerState) && get<1>(playerState) == 0 && personCount == 21){ // if its true that means the game can continue
+        stand(currentPlayer);
         return std::tuple<bool, int>(true,3);
     }
     if(get<0>(playerState) && get<1>(playerState) == 0){ // if its true that means the game can continue

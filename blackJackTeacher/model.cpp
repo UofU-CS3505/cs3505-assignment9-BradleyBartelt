@@ -12,36 +12,52 @@ Model::Model(QObject *parent)
 
 }
 void Model::standSlot(){
+    // if a 1 is returned then the player has stood on their split hand, this makes it so the players
+    // hits now only work on the left hand (represented by a 0)
+
     if(game.stand(playerOne) == 0){ // if the player has stayed on the initial hand or the hand on the left of the split
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit disableButtons(false);
-        std::tuple<bool, int> gameTuple = game.hit(dealer);
+        if(game.dealerCount > game.personCount){
+            // end game stuff
+            emit enableDealCards(true);
+            return;
+        }
+        bool continueDealing = true;
         int waitTime = 1000;
         int count = 1;
-        while(get<0>(gameTuple)){
+        while(continueDealing){
             waitTime = abs(count * waitTime);
-            if(dealer.getState()){
+            if(dealer.getState()){ // if the dealer pulls between a 17 and 21 or they have a higher number than the player under a 17
                 // do stuff to represent end game
                 emit enableDealCards(true);
                 break;
             }
             if(isRigged){
                 // pass in card you want to rig
-                game.hit(dealer);
+                continueDealing = get<0>(game.hit(dealer));
+                if(game.dealerCount > game.personCount){
+                    // end game stuff
+                    QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
+                    emit enableDealCards(true);
+                    return;
+                }
             }
             else{
-                game.hit(dealer);
+                continueDealing = get<0>(game.hit(dealer));
+                if(game.dealerCount > game.personCount){
+                    // end game stuff
+                    QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
+                    emit enableDealCards(true);
+                    return;
+                }
             }
             QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
             count++;
             // change the card that your rigging to the next rigged card here
         }
-        if(!get<0>(gameTuple)){
-            // emit dealer bust
-            QTimer::singleShot(1000, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-            QTimer::singleShot(1000, this,[=]{ emit enableDealCards(true);});
-        }
     }
+
 }
 
 void Model::hitSlot(){
@@ -58,7 +74,7 @@ void Model::hitSlot(){
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21
         emit addCardToPlayerHand(playerOne.cardArray.back());
         emit disableButtons(false);
-        emit enableDealCards(true);
+        standSlot();
     }
     else{
         emit addCardToPlayerHand(playerOne.cardArray.back());

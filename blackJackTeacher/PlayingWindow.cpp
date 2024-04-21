@@ -33,7 +33,7 @@ void PlayingWindow::addCardToPlayerHand(Card card){
     updateCardImage(card.image);
     QLabel* playerTotal = ui->playerTotal;
     int currentTotal = playerTotal->text().toInt(nullptr,10);
-    playerTotal->setText(QString(QString::number(currentTotal + card.rank))); // calculates the new card plus all the other cards
+    playerTotal->setText(QString(QString::number(currentTotal + card.value))); // calculates the new card plus all the other cards
 }
 
 

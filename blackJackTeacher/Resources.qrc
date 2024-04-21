@@ -58,7 +58,7 @@
     </qresource>
     <qresource prefix="/scripts">
         <file>levelScripts/levelOneScript.txt</file>
-        <file>levelScripts/LevelTwoScript.txt</file>
         <file>levelScripts/levelThreeScript.txt</file>
+        <file>levelScripts/levelTwoScript.txt</file>
     </qresource>
 </RCC>
