@@ -13,7 +13,8 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     ui->splitButton->setEnabled(false);
     ui->dealCards->setEnabled(false);
     ui->doubleButton->setEnabled(false);
-
+    ui->winButton->setVisible(false);
+    ui->loseButton->setVisible(false);
 }
 
 PlayingWindow::~PlayingWindow()
@@ -109,6 +110,8 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
+    connect(&model, &Model::winMessage, this, &PlayingWindow::winPopUp);
+    connect(&model, &Model::lossMessage, this, &PlayingWindow::lossPopUp);
 
     //============= Reset game connections
 
@@ -149,4 +152,11 @@ void PlayingWindow::endLevel(bool errorState)
     //Disable next
     ui->nextButton->setEnabled(false);
 }
-
+void PlayingWindow::winPopUp(bool isVisible)
+{
+    ui->winButton->setVisible(isVisible);
+}
+void PlayingWindow::lossPopUp(bool isVisible)
+{
+    ui->loseButton->setVisible(isVisible);
+}

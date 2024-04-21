@@ -201,7 +201,7 @@
      </layout>
     </item>
     <item row="0" column="1" rowspan="2">
-     <layout class="QVBoxLayout" name="playAreaLayout" stretch="2,2">
+     <layout class="QVBoxLayout" name="playAreaLayout" stretch="2,0,0,2">
       <item>
        <widget class="QScrollArea" name="dealerArea">
         <property name="widgetResizable">
@@ -212,12 +212,44 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>509</width>
-           <height>233</height>
+           <width>514</width>
+           <height>177</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout"/>
         </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="winButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>You Win!</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="loseButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>You Lose!</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -230,8 +262,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>509</width>
-           <height>232</height>
+           <width>514</width>
+           <height>176</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2"/>
@@ -313,7 +345,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

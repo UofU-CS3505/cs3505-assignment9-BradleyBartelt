@@ -17,6 +17,8 @@ signals:
     void addCardToPlayerHand(Card);
     void addCardToDealerHand(Card, bool);
     void enableDealCards(bool);
+    void lossMessage(bool);
+    void winMessage(bool);
     ///
     /// \brief endLevel send a signal to the view to display game end information
     /// \param errorState whether the game was terminated due to an error or naturally

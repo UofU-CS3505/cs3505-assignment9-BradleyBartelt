@@ -37,6 +37,8 @@ public slots:
 
     void flipDealerCard(QImage);
     void messageRecieved(QString message);
+    void winPopUp(bool);
+    void lossPopUp(bool);
 private slots:
     void on_nextButton_clicked();
     void endLevel(bool errorState);
