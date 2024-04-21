@@ -17,6 +17,8 @@ signals:
     void addCardToPlayerHand(Card);
     void addCardToDealerHand(Card, bool);
     void enableDealCards(bool);
+    void updatePlayerCount(QString);
+    void updateDealerCount(QString);
     ///
     /// \brief endLevel send a signal to the view to display game end information
     /// \param errorState whether the game was terminated due to an error or naturally
@@ -49,6 +51,7 @@ private:
     Game game;
     bool isRigged;
     int currentLevel;
+    void endGame();
     ///
     /// \brief scriptOutputDetails a string used as an additional output by the script object
     ///

@@ -33,7 +33,7 @@ public:
     /// disables further actions on players current hand
     int stand(Player& person);
     /// decides who won or loss, bool determines whether the dealer won or the player won, and the int determines which hand won
-    std::tuple<bool, int> endResult();
+    QString endResult();
     /// clears person and dealer hand, as well as, shuffles the deck
     void resetGame(Player& person, Player& dealer);
     /// initial checker for whether the dealer or the player or both got a blackjack

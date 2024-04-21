@@ -31,9 +31,6 @@ void PlayingWindow::addCardToPlayerHand(Card card){
     QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
     layout->addWidget(newCard, Qt::AlignLeft);
     updateCardImage(card.image);
-    QLabel* playerTotal = ui->playerTotal;
-    int currentTotal = playerTotal->text().toInt(nullptr,10);
-    playerTotal->setText(QString(QString::number(currentTotal + card.value))); // calculates the new card plus all the other cards
 }
 
 
@@ -124,6 +121,12 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->dealCards,&QPushButton::clicked,this,&PlayingWindow::clearOldImages);
     connect(&model, &Model::enableDealCards, ui->dealCards, &QPushButton::setEnabled);
     connect(ui->dealCards, &QPushButton::clicked, &model, &Model::dealCards);
+
+    //============= update Counts
+
+    connect(&model, &Model::updateDealerCount, ui->dealerTotal, &QLabel::setText);
+    connect(&model, &Model::updatePlayerCount, ui->playerTotal, &QLabel::setText);
+
 
     //============= script Handling connections
     connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);
