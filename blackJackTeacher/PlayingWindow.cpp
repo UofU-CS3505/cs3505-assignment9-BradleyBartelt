@@ -187,7 +187,7 @@ void PlayingWindow::endLevel(bool errorState)
         //Change text box to display a "hooray" message?
     }
     //Disable next
-    sendLock("next");
+    //sendLock("next");
     ui->nextButton->setEnabled(false);
 }
 

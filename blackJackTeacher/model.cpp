@@ -28,7 +28,6 @@ void Model::standSlot(){
         int waitTime = 1000;
         int count = 1;
         while(continueDealing){
-
             waitTime = abs(count * waitTime);
             if(isRigged){
                 // pass in card you want to rig
@@ -38,7 +37,7 @@ void Model::standSlot(){
                     emit enableDealCards(true);
                     break;
                 }
-                if(game.dealerCount > game.personCount){
+                if(game.dealerCount > game.personCount && game.dealerCount > 16){
                     // end game stuff
                     QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
                     emit enableDealCards(true);
@@ -53,7 +52,7 @@ void Model::standSlot(){
                     emit enableDealCards(true);
                     break;
                 }
-                if(game.dealerCount > game.personCount){
+                if(game.dealerCount > game.personCount && game.dealerCount > 16){
                     // end game stuff
                     QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
                     emit enableDealCards(true);
@@ -92,9 +91,8 @@ void Model::hitSlot(){
     std::tuple<bool, int> gameTuple;
     if(isRigged){
         // pass in whatever card that needs to be rigged into the game
-        gameTuple = game.hit(playerOne);
-        emit updatePlayerCount(QString(QString::number(game.personCount)));
         gameTuple = game.hit(playerOne,riggedCards[nextCard]);
+        emit updatePlayerCount(QString(QString::number(game.personCount)));
         nextCard++;
         readyForNextLine();
     }
