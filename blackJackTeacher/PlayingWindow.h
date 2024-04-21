@@ -37,6 +37,8 @@ public slots:
 
     void flipDealerCard(QImage);
     void messageRecieved(QString message);
+    void winPopUp(bool);
+    void lossPopUp(bool);
 
     void recievedLock(QString allBut);
 

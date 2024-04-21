@@ -109,13 +109,15 @@ void Model::hitSlot(){
     }
     else{
         emit addCardToPlayerHand(playerOne.cardArray.back());
-        // emit a loss
+        emit lossMessage(true);
         emit disableButtons(false);
         emit enableDealCards(true);
     }
 
 }
 void Model::dealCards(){
+    emit lossMessage(false);
+    emit winMessage(false);
     if(currentLevel < 4)
         isRigged = true;
     initialDeal();
@@ -166,6 +168,7 @@ void Model::initialDeal(){
     int checkBlackJack = game.checkBlackJack(playerOne,dealer);
     if(checkBlackJack == 1){
         emit disableButtons(false);
+        emit winMessage(true);
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         // emit player win
@@ -174,6 +177,7 @@ void Model::initialDeal(){
     else if(checkBlackJack == 2){
         emit disableButtons(false);
         emit SendCardImage(dealer.cardArray.begin()->image);
+        emit lossMessage(true);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         // emit player loss
         emit enableDealCards(true);

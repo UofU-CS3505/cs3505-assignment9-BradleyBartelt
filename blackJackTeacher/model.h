@@ -18,6 +18,8 @@ signals:
     void addCardToPlayerHand(Card);
     void addCardToDealerHand(Card, bool);
     void enableDealCards(bool);
+    void lossMessage(bool);
+    void winMessage(bool);
     void updatePlayerCount(QString);
     void updateDealerCount(QString);
     ///
