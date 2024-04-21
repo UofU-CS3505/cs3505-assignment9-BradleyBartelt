@@ -8,7 +8,7 @@
 #include <QUrl>
 
 
-Card::Card(Rank rank, Suit suit, QImage& image): rank(rank), suit(suit), image(image){}
+Card::Card(Rank rank, Suit suit, int value, QImage& image): rank(rank), suit(suit), value(value), image(image){}
 
 Deck::Deck(){
     shuffle();
@@ -19,6 +19,7 @@ void Deck::shuffle(){
         for(int j=2; j<=14; j++) {
             Rank rank;
             Suit suit;
+            int value;
             QImage image;
             QString filename = "";
 
@@ -42,59 +43,72 @@ void Deck::shuffle(){
             if(j == 2){
                 rank = two;
                 filename += "Two";
+                value = 2;
             }
             else if(j == 3){
                 rank = three;
                 filename += "Three";
+                value = 3;
             }
             else if(j == 4){
                 rank = four;
                 filename += "Four";
+                value = 4;
             }
             else if(j == 5){
                 rank = five;
                 filename += "Five";
+                value = 5;
             }
             else if(j == 6){
                 rank = six;
                 filename += "Six";
+                value = 6;
             }
             else if(j == 7){
                 rank = seven;
                 filename += "Seven";
+                value = 7;
             }
             else if(j == 8){
                 rank = eight;
                 filename += "Eight";
+                value = 8;
             }
             else if(j == 9){
                 rank = nine;
                 filename += "Nine";
+                value = 9;
             }
             else if(j == 10){
                 rank = ten;
                 filename += "Ten";
+                value = 10;
             }
             else if(j == 11){
                 rank = jack;
                 filename += "Jack";
+                value = 10;
             }
             else if(j == 12){
                 rank = queen;
                 filename += "Queen";
+                value = 10;
             }
             else if(j == 13){
                 rank = king;
                 filename += "King";
+                value = 10;
             }
             else{
                 rank = ace;
                 filename += "Ace";
+                value = 11;
             }
 
             image.load(":/images/cardImages/" + filename + ".png");
 
-            cards.push_back(Card(rank, suit, image));
+            cards.push_back(Card(rank, suit, value, image));
         }
     }
 

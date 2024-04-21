@@ -32,8 +32,8 @@ Game& Game::operator=(Game otherGame){
 }
 Game::~Game(){}
 int Game::checkBlackJack(Player& person, Player& dealer){
-    personCount = person.cardArray.at(0).rank + person.cardArray.at(1).rank; // get inital personCount
-    dealerCount = dealer.cardArray.at(0).rank + dealer.cardArray.at(1).rank; // get inital dealerCount
+    personCount = person.cardArray.at(0).value + person.cardArray.at(1).value; // get inital personCount
+    dealerCount = dealer.cardArray.at(0).value + dealer.cardArray.at(1).value; // get inital dealerCount
     if(personCount == 21 && dealerCount != 21){
         //emit person win + 1.5, if bet 5, get 12.50 (remember when you bet you deduct 5)
         return 1;
@@ -54,7 +54,7 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
         dealerCount = 0;
         int aceCount = 0;
         for(int i = 0; i < int(currentPlayer.cardArray.size()); i++){
-            dealerCount += currentPlayer.cardArray.at(i).rank;
+            dealerCount += currentPlayer.cardArray.at(i).value;
             if(currentPlayer.cardArray.at(i).rank == ace){
                 aceCount += 1;
             }
@@ -88,7 +88,7 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
         personCount = 0;
         int aceCount = 0;
         for(int i = 0; i < int(currentPlayer.cardArray.size()); i++){
-            personCount += currentPlayer.cardArray.at(i).rank;
+            personCount += currentPlayer.cardArray.at(i).value;
             if(currentPlayer.cardArray.at(i).rank == ace){
                 aceCount += 1;
             }
@@ -109,7 +109,7 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
             personSplitCount = 0;
             aceCount = 0;
             for(int i = 0; i < int(currentPlayer.splitArray.size()); i++){
-                personSplitCount += currentPlayer.splitArray.at(i).rank;
+                personSplitCount += currentPlayer.splitArray.at(i).value;
                 if(currentPlayer.splitArray.at(i).rank == ace){
                     aceCount += 1;
                 }
