@@ -3,8 +3,9 @@
 #include "player.h"
 #include <iostream>
 
-Game::Game(Deck deck, Player& person, Player& dealer, bool isRigged) {
+Game::Game(Deck deck, Player& person, Player& dealer, bool rigged) {
     gameDeck = deck;
+    isRigged = rigged;
     if(!isRigged){
         isRigged = false;
         person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
@@ -14,7 +15,9 @@ Game::Game(Deck deck, Player& person, Player& dealer, bool isRigged) {
         checkState(dealer);
         checkState(person);
     }
-    isRigged = true;
+    else{
+        isRigged = true;
+    }
 }
 Game::Game(const Game& otherGame){
     gameDeck = otherGame.gameDeck;
@@ -22,6 +25,7 @@ Game::Game(const Game& otherGame){
     dealerCount = otherGame.dealerCount;
     personSplitCount = otherGame.personSplitCount;
     dealerHits = otherGame.dealerHits;
+    isRigged = otherGame.isRigged;
 }
 Game& Game::operator=(Game otherGame){
     std::swap(gameDeck,otherGame.gameDeck);
@@ -29,6 +33,7 @@ Game& Game::operator=(Game otherGame){
     std::swap(dealerCount,otherGame.dealerCount);
     std::swap(personSplitCount,otherGame.personSplitCount);
     std::swap(dealerHits,otherGame.dealerHits);
+    std::swap(isRigged, otherGame.isRigged);
     return *this;
 }
 Game::~Game(){}
