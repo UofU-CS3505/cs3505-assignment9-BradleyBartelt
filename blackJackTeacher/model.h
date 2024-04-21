@@ -12,6 +12,7 @@ public:
     explicit Model(QObject *parent = nullptr);
 
 signals:
+    void sendLock(QString allBut);
     void SendCardImage(QImage);
     void disableButtons(bool);
     void addCardToPlayerHand(Card);
@@ -32,7 +33,7 @@ signals:
     ///
     /// \brief revealHole signals the view to display the hole card to the user
     ///
-    void revealHole();
+    void revealHole(QImage cardFront);
 
 public slots:
     void hitSlot();
@@ -52,6 +53,8 @@ private:
     bool isRigged;
     int currentLevel;
     void endGame();
+    std::vector<Card> riggedCards;
+    int nextCard = 0;
     ///
     /// \brief scriptOutputDetails a string used as an additional output by the script object
     ///
@@ -66,7 +69,7 @@ private:
     /// \param messagetype the string returned by levelScript. Represents a command type
     ///
     void interpretCommand(QString messagetype);
-
+    Rank stringToRank(QString text);
 };
 
 #endif // MODEL_H

@@ -37,6 +37,11 @@ public slots:
 
     void flipDealerCard(QImage);
     void messageRecieved(QString message);
+
+    void recievedLock(QString allBut);
+
+    void unlockStand();
+    void unlockHit();
 private slots:
     void on_nextButton_clicked();
     void endLevel(bool errorState);
