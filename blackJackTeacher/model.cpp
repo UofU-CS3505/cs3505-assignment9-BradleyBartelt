@@ -36,12 +36,12 @@ void Model::standSlot(){
                 if(dealer.getState()){ // if the dealer pulls between a 17 and 21 or they have a higher number than the player under a 17
                     endGame();
                     QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
-                    break;
+                    return;
                 }
                 if(game.dealerCount > game.personCount && game.dealerCount > 16){
-                    // end game stuff
                     QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
                     QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
+                    endGame();
                     return;
                 }
             }
@@ -49,9 +49,8 @@ void Model::standSlot(){
                 continueDealing = get<0>(game.hit(dealer));
                 if(dealer.getState()){ // if the dealer pulls between a 17 and 21 or they have a higher number than the player under a 17
                     endGame();
-                    // do stuff to represent end game
-                    emit enableDealCards(true);
-                    break;
+                    QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
+                    return;
                 }
                 if(game.dealerCount > game.personCount && game.dealerCount > 16){
                     // end game stuff
@@ -63,7 +62,6 @@ void Model::standSlot(){
             }
             QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
             QTimer::singleShot(waitTime, this,[=]{ emit updateDealerCount(QString(QString::number(game.dealerCount)));});
-
             count++;
             // change the card that your rigging to the next rigged card here
         }

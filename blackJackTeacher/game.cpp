@@ -129,6 +129,9 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
 }
 
 QString Game::endResult(){
+    if(dealerCount > 21){
+        return "win";
+    }
     if(personCount < dealerCount){
         return "loss";
     }
@@ -152,7 +155,7 @@ QString Game::endResult(){
     return "";
 }
 std::tuple<bool,int> Game::hit(Player& currentPlayer){
-    if(currentPlayer.getIsDealer() && dealerCount > 16){
+    if(currentPlayer.getIsDealer() && dealerCount > 16 && dealerCount >= personCount){
         stand(currentPlayer);
         return std::tuple<bool, int>(true, 0);
     }
