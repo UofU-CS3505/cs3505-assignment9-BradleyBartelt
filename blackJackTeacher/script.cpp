@@ -41,8 +41,7 @@ QString Script::nextCommand(QString* outputDetails)
             std::vector<QString> tokens = tokenize(nextLine.removeFirst());
             if(tokens[0] == "deal")
             {
-                //Deal card tokens[3] to player tokens[1], hand tokens[2]
-                *outputDetails = tokens[1] +" " + tokens[2] +" "+ tokens[3];
+                *outputDetails = tokens[1] +" " + tokens[2];
                 return "deal";
             }
             if(tokens[0] == "shuffle")
@@ -57,6 +56,18 @@ QString Script::nextCommand(QString* outputDetails)
                 //flip the display of the dealers hole card, so the user can see
                 return "reveal";
             }
+            if(tokens[0] == "lock")
+            {
+                *outputDetails = tokens[1];
+                //flip the display of the dealers hole card, so the user can see
+                return "lock";
+            }
+        }
+        else if (nextLine.at(0) == '+')
+        {
+            nextLine = nextLine.removeFirst();
+            *outputDetails = nextLine.removeFirst();
+            return "addCards";
         }
         else
         {
@@ -83,12 +94,6 @@ QString Script::nextCommand(QString* outputDetails)
 std::vector<QString> Script::tokenize(QString providedString)
 {
     std::vector<QString> tokens;
-    // std::stringstream stream(providedString);
-    // std::string token;
-    // while(getline(stream, token, ' '))
-    // {
-    //     tokens.push_back(token);
-    // }
     QStringList list1 = providedString.split(u' ');
     for(QString s:list1)
         tokens.push_back(s);

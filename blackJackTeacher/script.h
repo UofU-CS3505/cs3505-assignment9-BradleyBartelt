@@ -20,7 +20,12 @@ public:
     Script& operator=(Script& other);
 
     void setScript(std::string filename);
-
+    ///
+    /// \brief tokenize breaks a given string into a vector of tokens seperated by a ' ' as a delimiter
+    /// \param providedString a line to be tokenized
+    /// \return a vector inn which each entry is a word in the original string.
+    ///
+    std::vector<QString> tokenize(QString providedString);
 private:
     ///
     /// \brief script a file stream reading the script
@@ -31,12 +36,7 @@ private:
     /// \brief index
     ///
     int lineNum = 0;
-    ///
-    /// \brief tokenize breaks a given string into a vector of tokens seperated by a ' ' as a delimiter
-    /// \param providedString a line to be tokenized
-    /// \return a vector inn which each entry is a word in the original string.
-    ///
-    std::vector<QString> tokenize(QString providedString);
+    
 };
 
 #endif // SCRIPT_H
