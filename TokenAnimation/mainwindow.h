@@ -29,7 +29,7 @@ private:
     QTimer *timer;
     b2World world;
     b2Body *circleBody; // Add a member for the circle body
-     QLabel *label;
+    QLabel *label;
 };
 
 #endif // MAINWINDOW_H

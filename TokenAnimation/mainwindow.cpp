@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
     world(b2Vec2(0.0f, -10.0f)) { // Initialize Box2D world with gravity
     ui->setupUi(this);
 
+    //ui->label->setPixmap(QPixmap("/Users/manyanair/Downloads/pokerchip.png"));
+
+
     setupBox2D(); // Setup Box2D world and body
 
     // Initialize and configure the timer
@@ -25,7 +28,7 @@ MainWindow::~MainWindow() {
 void MainWindow::setupBox2D() {
     // Ground body setup
     b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0.0f, -10.0f);
+    groundBodyDef.position.Set(0.0f, -15.0f);
     b2Body* groundBody = world.CreateBody(&groundBodyDef);
 
     b2PolygonShape groundBox;
@@ -59,10 +62,26 @@ void MainWindow::updateWorld() {
     b2Vec2 position = circleBody->GetPosition();
 
 
-    // Update the vertical slider's value based on the Box2D object's position
-    int sliderValue = static_cast<int>(position.y * 100); // Scale the position to fit the slider's range
-    ui->verticalSlider->setValue(sliderValue);
-    ui->verticalSlider_2->setValue(static_cast<int>(position.y * 150)); // Slider 2
-    ui->verticalSlider_3->setValue(static_cast<int>(position.y * 115)); // Slider 3
-    ui->verticalSlider_4->setValue(static_cast<int>(position.y * 105)); // Slider 4
+    int x = static_cast<int>(position.x * 100); // Scale x-position
+    int y = static_cast<int>(-position.y * 100); // Scale and invert y-position
+
+
+
+    QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png");
+    QPixmap scaledPixmap1 = pixmap.scaled(50, 50, Qt::KeepAspectRatio);
+    ui->label->setPixmap(scaledPixmap1);
+    ui->label->setGeometry(100 + x, 100 + y, scaledPixmap1.width(), scaledPixmap1.height());
+
+    QPixmap pixmap2("/Users/manyanair/Downloads/pokerchip.png");
+    QPixmap scaledPixmap2 = pixmap2.scaled(50, 50, Qt::KeepAspectRatio);
+    ui->label_2->setPixmap(scaledPixmap2);
+    ui->label_2->setGeometry(250 + x, 100 + y, scaledPixmap2.width(), scaledPixmap2.height());
+
+    QPixmap pixmap3("/Users/manyanair/Downloads/pokerchip.png");
+    QPixmap scaledPixmap3 = pixmap3.scaled(50, 50, Qt::KeepAspectRatio);
+    ui->label_3->setPixmap(scaledPixmap1);
+    ui->label_3->setGeometry(400 + x, 100 + y, scaledPixmap3.width(), scaledPixmap3.height());
+
+
+
 }
