@@ -108,6 +108,8 @@ void Model::hitSlot(){
 void Model::dealCards(){
     if(currentLevel < 4)
         isRigged = true;
+    else
+        isRigged = false;
     initialDeal();
     emit disableButtons(true);
     emit enableDealCards(false);
@@ -142,8 +144,15 @@ void Model::SetLevel(int level){
         QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
         interpretCommand(messagetype);
     }
+    else
+        isRigged = false;
     initialDeal();
     //riggedCards.clear();
+}
+void Model::mainMenuSlot(){
+    riggedCards.clear();
+    deck.shuffle();
+    emit endLevel(true);
 }
 void Model::resetGame(){
     playerOne.resetPlayer();

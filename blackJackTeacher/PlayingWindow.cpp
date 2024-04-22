@@ -145,7 +145,8 @@ void PlayingWindow::SetUpConnections(Model& model){
     //============ hit connections
     //connect(this,&PlayingWindow::hit,&model,&Model::hitSlot);
     connect(ui->hitButton,&QPushButton::clicked,&model, &Model::hitSlot);
-    connect(ui->mainMenu,&QPushButton::clicked,this,&PlayingWindow::mainMenuClicked);
+    connect(ui->mainMenu, &QPushButton::clicked, &model, &Model::mainMenuSlot);
+    connect(ui->mainMenu, &QPushButton::clicked,this,&PlayingWindow::mainMenuClicked);
     //connect(&model,&Model::SendCardImage,this,&PlayingWindow::updateCardImage);
 
     // ============ stand connections

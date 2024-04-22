@@ -49,6 +49,7 @@ public slots:
     /// \brief readyForNextLine parse the next line and prepare to send it to the view
     ///
     void readyForNextLine();
+    void mainMenuSlot();
 
 private:
     Deck deck;
