@@ -34,6 +34,9 @@ private:
     std::vector<b2Body*> labelBodies;
     int currentX = 0; // Add declaration for currentX
     int currentY = 0; // Add declaration for currentY
+    std::array<int, 6> startTimes;
+    int currentDelay = 0;
+    void moveLabelWithDelay(QLabel* label, int targetX, int targetY, int delay);
 };
 
 #endif // MAINWINDOW_H
