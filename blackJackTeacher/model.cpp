@@ -9,6 +9,7 @@ Model::Model(QObject *parent)
     , dealer(true)
     , game(deck, playerOne, dealer, false)
 {
+    probability = Probability();
 }
 void Model::standSlot(){
     // if a 1 is returned then the player has stood on their split hand, this makes it so the players
@@ -85,6 +86,8 @@ void Model::hitSlot(){
         emit updatePlayerCount(QString(QString::number(game.personCount)));
         nextCard++;
         readyForNextLine();
+        emit sendProbabilities(probability.probabilityOfDealerBust(dealer.cardArray, playerOne.cardArray, true),
+                               probability.probabilityOfDealerExceeding(dealer.cardArray, playerOne.cardArray));
     }
     else{
         gameTuple = game.hit(playerOne);
@@ -153,8 +156,11 @@ void Model::SetLevel(int level){
     //riggedCards.clear();
 }
 void Model::mainMenuSlot(){
+    std::cout << "reset stuff" << std::endl;
     riggedCards.clear();
     deck.shuffle();
+    levelScript.lineNum = 0;
+    nextCard = 0;
     emit endLevel(true);
 }
 void Model::resetGame(){
@@ -223,7 +229,7 @@ void Model::initialDeal(){
         enableGameRestartButtons();
         // emit tie
     }
-    if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value){ emit enableSplit(true); }
+    if(playerOne.cardArray.at(0).rank == playerOne.cardArray.at(1).rank && isRigged == false){ emit enableSplit(true); }
     else{emit enableSplit(false);}
 }
 void Model::enableGameRestartButtons(){
@@ -245,11 +251,18 @@ void Model::interpretCommand(QString messageType)
     }
     else if (messageType == "message")
     {
+        std::vector<QString> tokens =levelScript.tokenize(scriptOutputDetails);
+        if(tokens[tokens.size()-2] == "lock"){
+            emit sendLock(tokens[tokens.size()-1]);
+            scriptOutputDetails.clear();
+            for(int i =0; i<tokens.size()-2; i++)
+            {
+                scriptOutputDetails.append(tokens[i]);
+                scriptOutputDetails.append(" ");
+            }
+        }
         //emit message to the view (it will show the popup)
         emit sendMessage(scriptOutputDetails);
-        std::vector<QString> tokens =levelScript.tokenize(scriptOutputDetails);
-        if(tokens[tokens.size()-2] == "lock")
-            emit sendLock(tokens[tokens.size()-1]);
     }
     else if (messageType == "deal")
     {

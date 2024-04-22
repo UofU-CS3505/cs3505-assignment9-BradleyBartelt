@@ -46,6 +46,9 @@ public slots:
 
     void unlockStand();
     void unlockHit();
+    void unlockSplit();
+
+    void receivedProb(double probOfDealerBust, double probOfDealerWin);
 private slots:
     void on_nextButton_clicked();
     void endLevel(bool errorState);

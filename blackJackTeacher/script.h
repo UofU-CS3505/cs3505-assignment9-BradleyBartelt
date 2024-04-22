@@ -8,6 +8,10 @@
 class Script
 {
 public:
+    ///
+    /// \brief index
+    ///
+    int lineNum = 0;
     Script();
     ~Script();
     ///
@@ -31,11 +35,6 @@ private:
     /// \brief script a file stream reading the script
     ///
     std::vector<QString> lines;
-
-    ///
-    /// \brief index
-    ///
-    int lineNum = 0;
     
 };
 
