@@ -19,7 +19,7 @@ void Model::standSlot(){
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         emit disableButtons(false);
-        if(game.dealerCount > game.personCount && game.dealerCount > 16){
+        if(game.dealerCount > game.personCount || game.dealerCount > 16){
             // end game stuff
             endGame();
             emit enableDealCards(true);
