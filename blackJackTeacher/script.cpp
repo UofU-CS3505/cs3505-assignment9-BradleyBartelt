@@ -44,7 +44,7 @@ QString Script::nextCommand(QString* outputDetails)
                 *outputDetails = tokens[1] +" " + tokens[2];
                 return "deal";
             }
-            if(tokens[0] == "shuffle")
+            if(tokens[0] == "shuffle\n")
             {
                 *outputDetails = "";
                 //Pull all cards back into the deck and prepare for the next deal

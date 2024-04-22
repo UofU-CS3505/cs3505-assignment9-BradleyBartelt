@@ -85,42 +85,53 @@ void PlayingWindow::gameStateUpdateView(bool bust, bool won, bool canSplit){
 
 void PlayingWindow::messageRecieved(QString message)
 {
+    readingScript = true;
     //Setlabel to the message recieved
     ui->textDisplay->setText(message);
 }
 
 void PlayingWindow::recievedLock(QString allBut)
 {
-    if(allBut == "stand\n")
+    if(readingScript)
     {
-        ui->hitButton->setEnabled(false);
-        ui->standButton->setEnabled(true);
-        ui->nextButton->setEnabled(false);
+        if(allBut == "stand\n")
+        {
+            ui->hitButton->setEnabled(false);
+            ui->standButton->setEnabled(true);
+            ui->nextButton->setEnabled(false);
+        }
+        if(allBut == "hit\n")
+        {
+            ui->hitButton->setEnabled(true);
+            ui->standButton->setEnabled(false);
+            ui->nextButton->setEnabled(false);
+        }
+        if(allBut == "next\n")
+        {
+            ui->hitButton->setEnabled(false);
+            ui->standButton->setEnabled(false);
+            ui->nextButton->setEnabled(true);
+        }
     }
-    if(allBut == "hit\n")
-    {
-        ui->hitButton->setEnabled(true);
-        ui->standButton->setEnabled(false);
-        ui->nextButton->setEnabled(false);
-    }
-    if(allBut == "next\n")
+}
+void PlayingWindow::unlockStand()
+{
+    if(readingScript)
     {
         ui->hitButton->setEnabled(false);
         ui->standButton->setEnabled(false);
         ui->nextButton->setEnabled(true);
     }
 }
-void PlayingWindow::unlockStand()
-{
-    ui->hitButton->setEnabled(false);
-    ui->standButton->setEnabled(false);
-    ui->nextButton->setEnabled(true);
-}
 void PlayingWindow::unlockHit()
 {
-    ui->hitButton->setEnabled(false);
-    ui->standButton->setEnabled(false);
-    ui->nextButton->setEnabled(true);
+    if(readingScript)
+    {
+        ui->hitButton->setEnabled(false);
+        ui->standButton->setEnabled(false);
+        ui->nextButton->setEnabled(true);
+    }
+
 }
 //=========================== CONECTIONS =========================
 
@@ -168,8 +179,8 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);
     connect(this, &PlayingWindow::nextLine,&model,&Model::readyForNextLine);
     connect(&model,&Model::endLevel,this,&PlayingWindow::endLevel);
-    // connect(ui->standButton,&QPushButton::clicked,this,&PlayingWindow::unlockStand);
-    // connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
+    connect(ui->standButton,&QPushButton::clicked,this,&PlayingWindow::unlockStand);
+    connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
     connect(&model,&Model::revealHole,this,&PlayingWindow::flipDealerCard);
     connect(&model,&Model::sendLock,this,&PlayingWindow::recievedLock);
 
@@ -190,8 +201,12 @@ void PlayingWindow::endLevel(bool errorState)
         //Change text box to display a "hooray" message?
     }
     //Disable next
-    //sendLock("next");
-    ui->nextButton->setEnabled(false);
+    if(readingScript)
+    {
+        recievedLock("next");
+        ui->nextButton->setEnabled(false);
+    }
+
 }
 void PlayingWindow::winPopUp(bool isVisible)
 {

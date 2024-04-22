@@ -54,6 +54,7 @@ private:
     Model* model;
     void SetUpConnections(Model& model);
     QVector<QLabel*> cards;
+    bool readingScript = false;
 
 };
 

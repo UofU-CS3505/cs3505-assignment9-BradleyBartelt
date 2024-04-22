@@ -32,7 +32,8 @@ void Model::standSlot(){
             waitTime = abs(count * waitTime);
             if(isRigged){
                 // pass in card you want to rig
-                continueDealing = get<0>(game.hit(dealer));
+                continueDealing = get<0>(game.hit(dealer, riggedCards[nextCard]));
+                nextCard++;
                 if(dealer.getState()){ // if the dealer pulls between a 17 and 21 or they have a higher number than the player under a 17
                     endGame();
                     QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
@@ -114,9 +115,13 @@ void Model::hitSlot(){
     }
     else{
         emit addCardToPlayerHand(playerOne.cardArray.back());
-        emit lossMessage(true);
-        emit disableButtons(false);
-        emit enableDealCards(true);
+        if(!isRigged)
+        {
+            emit lossMessage(true);
+            emit disableButtons(false);
+            emit enableDealCards(true);
+        }
+
     }
 
 }
@@ -171,21 +176,28 @@ void Model::initialDeal(){
     emit addCardToDealerHand(dealer.cardArray.at(1), false);
     int checkBlackJack = game.checkBlackJack(playerOne,dealer);
     if(checkBlackJack == 1){
-        emit disableButtons(false);
-        emit winMessage(true);
+        if(!isRigged)
+        {
+            emit disableButtons(false);
+            emit winMessage(true);
+        }
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         std::cout << "player BlackJack" << std::endl;
 
-        emit winMessage(true);
+        //emit winMessage(true);
         emit enableDealCards(true);
     }
     else if(checkBlackJack == 2){
-        emit disableButtons(false);
+        if(!isRigged)
+        {
+            emit disableButtons(false);
+            emit lossMessage(true);
+        }
+
         emit SendCardImage(dealer.cardArray.begin()->image);
-        emit lossMessage(true);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
-        emit lossMessage(true);
+        //emit lossMessage(true);
         std::cout << "dealer BlackJack" << std::endl;
 
         emit enableDealCards(true);
@@ -281,7 +293,7 @@ void Model::interpretCommand(QString messageType)
     else if (messageType == "shuffle")
     {
         //Pull all cards back into the deck and shuffle
-        game.resetGame(playerOne, dealer);
+        initialDeal();
     }
     else if (messageType == "lock")
     {
