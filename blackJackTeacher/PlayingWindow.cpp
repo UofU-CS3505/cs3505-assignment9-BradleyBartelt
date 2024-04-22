@@ -91,7 +91,6 @@ void PlayingWindow::gameStateUpdateView(bool bust, bool won, bool canSplit){
 
 void PlayingWindow::messageRecieved(QString message)
 {
-    readingScript = true;
     //Setlabel to the message recieved
     ui->textDisplay->setText(message);
 }
@@ -138,6 +137,11 @@ void PlayingWindow::unlockHit()
         ui->nextButton->setEnabled(true);
     }
 
+}
+
+void PlayingWindow::setReadingScript(bool reading)
+{
+    readingScript = reading;
 }
 //=========================== CONECTIONS =========================
 
@@ -194,6 +198,7 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model,&Model::revealHole,this,&PlayingWindow::flipDealerCard);
     connect(&model,&Model::sendLock,this,&PlayingWindow::recievedLock);
     connect(&model,&Model::sendClear,this,&PlayingWindow::clearOldImages);
+    connect(&model,&Model::sendReadingScript,this,&PlayingWindow::setReadingScript);
 
 
 }

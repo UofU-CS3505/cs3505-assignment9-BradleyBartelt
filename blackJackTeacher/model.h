@@ -23,6 +23,7 @@ signals:
     void updatePlayerCount(QString);
     void updateDealerCount(QString);
     void enableMainMenu(bool);
+    void sendReadingScript(bool);
     ///
     /// \brief endLevel send a signal to the view to display game end information
     /// \param errorState whether the game was terminated due to an error or naturally

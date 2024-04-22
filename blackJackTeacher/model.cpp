@@ -138,14 +138,17 @@ void Model::SetLevel(int level){
                 break;
             }
         }
+        emit sendReadingScript(isRigged);
         QString scriptName =":/scripts/levelScripts/level";
         scriptName.append(levelNum);
         levelScript.setScript(scriptName.append("Script.txt").toStdString());
         QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
         interpretCommand(messagetype);
+        emit sendLock("next\n");
     }
     else
         isRigged = false;
+
     initialDeal();
     //riggedCards.clear();
 }
@@ -314,9 +317,6 @@ void Model::interpretCommand(QString messageType)
         //Pull all cards back into the deck and shuffle
         emit sendClear();
         initialDeal();
-
-
-
     }
     else if (messageType == "lock")
     {
