@@ -15,6 +15,7 @@ Deck::Deck(){
 }
 
 void Deck::shuffle(){
+    cards.clear();
     for(int i=0; i<4; i++) {
         for(int j=2; j<=14; j++) {
             Rank rank;

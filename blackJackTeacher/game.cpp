@@ -3,7 +3,7 @@
 #include "player.h"
 #include <iostream>
 
-Game::Game(Deck deck, Player& person, Player& dealer, bool rigged) {
+Game::Game(Deck& deck, Player& person, Player& dealer, bool rigged) {
     gameDeck = deck;
     isRigged = rigged;
     if(!isRigged){
@@ -24,7 +24,6 @@ Game::Game(const Game& otherGame){
     personCount = otherGame.personCount;
     dealerCount = otherGame.dealerCount;
     personSplitCount = otherGame.personSplitCount;
-    dealerHits = otherGame.dealerHits;
     isRigged = otherGame.isRigged;
 }
 Game& Game::operator=(Game otherGame){
@@ -32,7 +31,6 @@ Game& Game::operator=(Game otherGame){
     std::swap(personCount,otherGame.personCount);
     std::swap(dealerCount,otherGame.dealerCount);
     std::swap(personSplitCount,otherGame.personSplitCount);
-    std::swap(dealerHits,otherGame.dealerHits);
     std::swap(isRigged, otherGame.isRigged);
     return *this;
 }
@@ -57,7 +55,6 @@ int Game::checkBlackJack(Player& person, Player& dealer){
 
 std::tuple<bool,int> Game::checkState(Player currentPlayer){
     if(currentPlayer.getIsDealer()){ // adds up the dealers count when they hit
-        dealerHits++;
         dealerCount = 0;
         int aceCount = 0;
         for(int i = 0; i < int(currentPlayer.cardArray.size()); i++){
@@ -160,10 +157,6 @@ QString Game::endResult(){
     return "";
 }
 std::tuple<bool,int> Game::hit(Player& currentPlayer){
-    if(currentPlayer.getIsDealer() && dealerCount > 16 && dealerCount >= personCount){
-        stand(currentPlayer);
-        return std::tuple<bool, int>(true, 0);
-    }
     currentPlayer.addCard(gameDeck.draw());
     std::tuple<bool, int> playerState = checkState(currentPlayer);
     if(get<0>(playerState) && get<1>(playerState) == 0 && personCount == 21){ // if its true that means the game can continue
@@ -233,8 +226,8 @@ void Game::doubleBet(){
     // if we work with bets we can make this method do something
 }
 
-void Game::resetGame(Player& person, Player& dealer){
-    gameDeck.shuffle();
+void Game::resetGame(Player& person, Player& dealer, Deck& deck){
+    deck.shuffle();
     person.resetPlayer();
     dealer.resetPlayer();
     personCount = 0;

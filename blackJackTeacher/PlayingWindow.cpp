@@ -157,8 +157,11 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
+    connect(&model, &Model::disableButtons, ui->mainMenu, &QPushButton::setEnabled);
+    connect(&model, &Model::disableButtons, ui->dealCards, &QPushButton::setEnabled);
     connect(&model, &Model::winMessage, this, &PlayingWindow::winPopUp);
     connect(&model, &Model::lossMessage, this, &PlayingWindow::lossPopUp);
+    connect(&model, &Model::enableMainMenu, ui->mainMenu, &QPushButton::setEnabled);
 
     //============= Reset game connections
 
