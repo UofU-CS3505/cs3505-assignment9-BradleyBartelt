@@ -189,7 +189,7 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
     connect(&model,&Model::revealHole,this,&PlayingWindow::flipDealerCard);
     connect(&model,&Model::sendLock,this,&PlayingWindow::recievedLock);
-
+    connect(&model,&Model::sendClear,this,&PlayingWindow::clearOldImages);
 
 
 }

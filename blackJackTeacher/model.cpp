@@ -137,7 +137,7 @@ void Model::SetLevel(int level){
     if(currentLevel < 4)
         isRigged = true;
     initialDeal();
-    riggedCards.clear();
+    //riggedCards.clear();
 }
 void Model::initialDeal(){
     if(isRigged){
@@ -276,13 +276,18 @@ void Model::interpretCommand(QString messageType)
     }
     else if (messageType == "finish")
     {
+        riggedCards.clear();
         //emit end level signal
         emit endLevel(false);
     }
     else if (messageType == "shuffle")
     {
         //Pull all cards back into the deck and shuffle
+        emit sendClear();
         initialDeal();
+
+
+
     }
     else if (messageType == "lock")
     {

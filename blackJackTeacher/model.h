@@ -37,6 +37,8 @@ signals:
     ///
     void revealHole(QImage cardFront);
 
+    void sendClear();
+
 public slots:
     void hitSlot();
     void dealCards();
