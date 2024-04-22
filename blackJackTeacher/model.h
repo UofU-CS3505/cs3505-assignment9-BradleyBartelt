@@ -12,6 +12,7 @@ public:
     explicit Model(QObject *parent = nullptr);
 
 signals:
+    void enableSplit(bool canSplit);
     void sendLock(QString allBut);
     void SendCardImage(QImage);
     void disableButtons(bool);

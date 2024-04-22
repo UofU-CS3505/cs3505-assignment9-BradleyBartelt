@@ -198,6 +198,8 @@ void Model::initialDeal(){
         // emit tie
         emit enableDealCards(true);
     }
+    if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value){ emit enableSplit(true); }
+    else{emit enableSplit(false);}
 }
 void Model::readyForNextLine()
 {
