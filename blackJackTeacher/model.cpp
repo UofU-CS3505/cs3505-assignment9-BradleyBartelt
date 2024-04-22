@@ -9,7 +9,6 @@ Model::Model(QObject *parent)
     , dealer(true)
     , game(deck, playerOne, dealer, false)
 {
-    Game game(deck, playerOne, dealer, false);
 }
 void Model::standSlot(){
     // if a 1 is returned then the player has stood on their split hand, this makes it so the players
@@ -126,13 +125,18 @@ void Model::SetLevel(int level){
     initialDeal();
     //riggedCards.clear();
 }
+void Model::resetGame(){
+    playerOne.resetPlayer();
+    dealer.resetPlayer();
+    deck.shuffle();
+}
 void Model::initialDeal(){
     emit lossMessage(false);
     emit winMessage(false);
     if(isRigged){
+        resetGame();
         Game riggedGame(deck, playerOne, dealer, true);
         game = riggedGame;
-        game.resetGame(playerOne, dealer, deck);
         // hit with specific cards in the order of person dealer person dealer
         for(int i = 0; i<4; i++)
         {
@@ -148,7 +152,9 @@ void Model::initialDeal(){
         emit updateDealerCount(QString(QString::number(temp)));
     }
     else{
-        game.resetGame(playerOne, dealer, deck);
+        resetGame();
+        Game newGame(deck, playerOne, dealer, false);
+        game = newGame;
         emit updatePlayerCount(QString(QString::number(game.personCount)));
         int temp = game.dealerCount;
         temp = temp - dealer.cardArray.at(0).value;

@@ -12,12 +12,12 @@ Game::Game(Deck& deck, Player& person, Player& dealer, bool rigged) {
         dealer.addCard(gameDeck.draw());
         person.addCard(gameDeck.draw());
         dealer.addCard(gameDeck.draw()); // dont show the player this card
-        checkState(dealer);
-        checkState(person);
     }
     else{
         isRigged = true;
     }
+    checkState(dealer);
+    checkState(person);
 }
 Game::Game(const Game& otherGame){
     gameDeck = otherGame.gameDeck;
@@ -35,6 +35,9 @@ Game& Game::operator=(Game otherGame){
     return *this;
 }
 Game::~Game(){}
+Deck Game::getDeck(){
+    return gameDeck;
+}
 int Game::checkBlackJack(Player& person, Player& dealer){
     personCount = person.cardArray.at(0).value + person.cardArray.at(1).value; // get inital personCount
     dealerCount = dealer.cardArray.at(0).value + dealer.cardArray.at(1).value; // get inital dealerCount
@@ -226,19 +229,3 @@ void Game::doubleBet(){
     // if we work with bets we can make this method do something
 }
 
-void Game::resetGame(Player& person, Player& dealer, Deck& deck){
-    deck.shuffle();
-    person.resetPlayer();
-    dealer.resetPlayer();
-    personCount = 0;
-    dealerCount = 0;
-    personSplitCount = 0;
-    if(!isRigged){
-        person.addCard(gameDeck.draw()); // add cards to player and dealer (emit these cards)
-        dealer.addCard(gameDeck.draw());
-        person.addCard(gameDeck.draw());
-        dealer.addCard(gameDeck.draw()); // dont show the player this card
-    }
-    checkState(dealer);
-    checkState(person);
-}

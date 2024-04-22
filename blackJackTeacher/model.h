@@ -60,6 +60,7 @@ private:
     void endGame();
     std::vector<Card> riggedCards;
     int nextCard = 0;
+    void resetGame();
     void enableGameRestartButtons();
     ///
     /// \brief scriptOutputDetails a string used as an additional output by the script object
