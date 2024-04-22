@@ -131,11 +131,14 @@ void Model::dealCards(){
 }
 void Model::SetLevel(int level){
     currentLevel = level;
-    levelScript.setScript(":/scripts/levelScripts/levelOneScript.txt");//Change this once we get something better figured out
-    QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
-    interpretCommand(messagetype);
+
     if(currentLevel < 4)
+    {
         isRigged = true;
+        levelScript.setScript(":/scripts/levelScripts/levelOneScript.txt");//Change this once we get something better figured out
+        QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
+        interpretCommand(messagetype);
+    }
     initialDeal();
     //riggedCards.clear();
 }
