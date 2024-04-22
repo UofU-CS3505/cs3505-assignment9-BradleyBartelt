@@ -254,6 +254,12 @@ void Model::interpretCommand(QString messageType)
         std::vector<QString> tokens =levelScript.tokenize(scriptOutputDetails);
         if(tokens[tokens.size()-2] == "lock"){
             emit sendLock(tokens[tokens.size()-1]);
+            scriptOutputDetails.clear();
+            for(int i =0; i<tokens.size()-2; i++)
+            {
+                scriptOutputDetails.append(tokens[i]);
+                scriptOutputDetails.append(" ");
+            }
         }
         //emit message to the view (it will show the popup)
         emit sendMessage(scriptOutputDetails);
