@@ -135,7 +135,26 @@ void Model::SetLevel(int level){
     if(currentLevel < 4)
     {
         isRigged = true;
-        levelScript.setScript(":/scripts/levelScripts/levelOneScript.txt");//Change this once we get something better figured out
+        QString levelNum;
+        switch(level){
+            case(1):
+            {
+                levelNum = "One";
+                break;
+            }
+            case(2):
+            {
+                levelNum = "Two";
+                break;
+            }
+            default:
+            {
+                levelNum = "Three";
+            }
+        }
+        QString scriptName =":/scripts/levelScripts/level";
+        scriptName.append(levelNum);
+        levelScript.setScript(scriptName.append("Script.txt").toStdString());
         QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
         interpretCommand(messagetype);
     }
