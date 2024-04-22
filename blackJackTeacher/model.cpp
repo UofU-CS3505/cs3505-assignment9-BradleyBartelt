@@ -150,8 +150,11 @@ void Model::SetLevel(int level){
     //riggedCards.clear();
 }
 void Model::mainMenuSlot(){
+    std::cout << "reset stuff" << std::endl;
     riggedCards.clear();
     deck.shuffle();
+    levelScript.lineNum = 0;
+    nextCard = 0;
     emit endLevel(true);
 }
 void Model::resetGame(){
