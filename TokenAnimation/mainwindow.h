@@ -30,7 +30,8 @@ private:
     b2World world;
     b2Body *circleBody; // Add a member for the circle body
     QLabel *label;
-
+    std::vector<b2World*> labelWorlds;
+    std::vector<b2Body*> labelBodies;
     int currentX = 0; // Add declaration for currentX
     int currentY = 0; // Add declaration for currentY
 };

@@ -61,28 +61,6 @@ void MainWindow::updateWorld() {
     // Get the position of the Box2D object
     b2Vec2 position = circleBody->GetPosition();
 
-
-    // int x = static_cast<int>(position.x * 100); // Scale x-position
-    // int y = static_cast<int>(-position.y * 100); // Scale and invert y-position
-
-
-    // QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png");
-    // QPixmap scaledPixmap1 = pixmap.scaled(50, 50, Qt::KeepAspectRatio);
-    // ui->label->setPixmap(scaledPixmap1);
-    // ui->label->setGeometry(100 + x, 100 + y, scaledPixmap1.width(), scaledPixmap1.height());
-
-
-    // QPixmap pixmap2("/Users/manyanair/Downloads/pokerchip.png");
-    // QPixmap scaledPixmap2 = pixmap2.scaled(50, 50, Qt::KeepAspectRatio);
-    // ui->label_2->setPixmap(scaledPixmap2);
-    // ui->label_2->setGeometry(250 + x, 100 + y, scaledPixmap2.width(), scaledPixmap2.height());
-
-
-    // QPixmap pixmap3("/Users/manyanair/Downloads/pokerchip.png");
-    // QPixmap scaledPixmap3 = pixmap3.scaled(50, 50, Qt::KeepAspectRatio);
-    // ui->label_3->setPixmap(scaledPixmap3);
-    // ui->label_3->setGeometry(400 + x, 100 + y, scaledPixmap3.width(), scaledPixmap3.height());
-
     int commonEndX = 100; // Adjust as needed
     int commonEndY = 100;
 
@@ -98,7 +76,7 @@ void MainWindow::updateWorld() {
     QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png");
     QPixmap scaledPixmap = pixmap.scaled(50, 50, Qt::KeepAspectRatio);
 
-    int labelYOffset = commonEndY - (100 + scaledPixmap.height()); // Calculate the Y offset
+    //int labelYOffset = commonEndY - (100 + scaledPixmap.height()); // Calculate the Y offset
 
     ui->label->setPixmap(scaledPixmap);
     ui->label->move(100 + currentX, 100 + currentY);
