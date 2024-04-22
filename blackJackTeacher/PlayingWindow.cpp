@@ -95,7 +95,6 @@ void PlayingWindow::canSplit(bool enableSplit){
 
 void PlayingWindow::messageRecieved(QString message)
 {
-    readingScript = true;
     //Setlabel to the message recieved
     ui->textDisplay->setText(message);
 }
@@ -168,13 +167,19 @@ void PlayingWindow::unlockHit()
     }
 
 }
+
+void PlayingWindow::setReadingScript(bool reading)
+{
+    readingScript = reading;
+}
 //=========================== CONECTIONS =========================
 
 void PlayingWindow::SetUpConnections(Model& model){
     //============ hit connections
     //connect(this,&PlayingWindow::hit,&model,&Model::hitSlot);
     connect(ui->hitButton,&QPushButton::clicked,&model, &Model::hitSlot);
-    connect(ui->mainMenu,&QPushButton::clicked,this,&PlayingWindow::mainMenuClicked);
+    connect(ui->mainMenu, &QPushButton::clicked, &model, &Model::mainMenuSlot);
+    connect(ui->mainMenu, &QPushButton::clicked,this,&PlayingWindow::mainMenuClicked);
     //connect(&model,&Model::SendCardImage,this,&PlayingWindow::updateCardImage);
 
     // ============ stand connections
@@ -186,8 +191,11 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
+    connect(&model, &Model::disableButtons, ui->mainMenu, &QPushButton::setEnabled);
+    connect(&model, &Model::disableButtons, ui->dealCards, &QPushButton::setEnabled);
     connect(&model, &Model::winMessage, this, &PlayingWindow::winPopUp);
     connect(&model, &Model::lossMessage, this, &PlayingWindow::lossPopUp);
+    connect(&model, &Model::enableMainMenu, ui->mainMenu, &QPushButton::setEnabled);
 
     //============= Reset game connections
 
@@ -220,9 +228,10 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
     connect(&model,&Model::revealHole,this,&PlayingWindow::flipDealerCard);
     connect(&model,&Model::sendLock,this,&PlayingWindow::recievedLock);
-
+   
+    connect(&model,&Model::sendClear,this,&PlayingWindow::clearOldImages);
+    connect(&model,&Model::sendReadingScript,this,&PlayingWindow::setReadingScript);
     //============= split connect
-
     connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::split);
 
 }

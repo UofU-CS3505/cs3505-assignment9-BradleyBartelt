@@ -9,67 +9,51 @@ Model::Model(QObject *parent)
     , dealer(true)
     , game(deck, playerOne, dealer, false)
 {
-
 }
 void Model::standSlot(){
     // if a 1 is returned then the player has stood on their split hand, this makes it so the players
     // hits now only work on the left hand (represented by a 0)
-
     if(game.stand(playerOne) == 0){ // if the player has stayed on the initial hand or the hand on the left of the split
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         emit disableButtons(false);
-        if(game.dealerCount > game.personCount || game.dealerCount > 16){
+        if(game.dealerCount > 16){
             // end game stuff
             endGame();
-            emit enableDealCards(true);
             return;
         }
-        bool continueDealing = true;
         int waitTime = 1000;
         int count = 1;
-        while(continueDealing){
+        while(true){
             waitTime = abs(count * waitTime);
             if(isRigged){
                 // pass in card you want to rig
-                continueDealing = get<0>(game.hit(dealer, riggedCards[nextCard]));
+                get<0>(game.hit(dealer, riggedCards[nextCard]));
                 nextCard++;
-                if(dealer.getState()){ // if the dealer pulls between a 17 and 21 or they have a higher number than the player under a 17
-                    endGame();
-                    QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
-                    return;
-                }
-                if(game.dealerCount > game.personCount && game.dealerCount > 16){
+                if(game.dealerCount > 16){
                     QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-                    QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
                     endGame();
-                    return;
+                    break;
                 }
             }
             else{
-                continueDealing = get<0>(game.hit(dealer));
-                if(dealer.getState()){ // if the dealer pulls between a 17 and 21 or they have a higher number than the player under a 17
-                    endGame();
-                    QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
-                    return;
-                }
-                if(game.dealerCount > game.personCount && game.dealerCount > 16){
+                get<0>(game.hit(dealer));
+                if(game.dealerCount > 16){
                     // end game stuff
                     QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-                    QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
                     endGame();
-                    return;
+                    break;
                 }
             }
             QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
             QTimer::singleShot(waitTime, this,[=]{ emit updateDealerCount(QString(QString::number(game.dealerCount)));});
             count++;
-            // change the card that your rigging to the next rigged card here
         }
-        QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
     }
 }
 void Model::endGame(){
+    QTimer::singleShot(3000, this,[=]{ emit enableDealCards(true);});
+    QTimer::singleShot(3000, this,[=]{ emit enableMainMenu(true);});
     if(game.endResult() == "tie"){
         // emit main hand tie
     }
@@ -122,28 +106,69 @@ void Model::hitSlot(){
 
 }
 void Model::dealCards(){
-    emit lossMessage(false);
-    emit winMessage(false);
     if(currentLevel < 4)
         isRigged = true;
+    else
+        isRigged = false;
     initialDeal();
     emit disableButtons(true);
+    emit enableDealCards(false);
 }
 void Model::SetLevel(int level){
     currentLevel = level;
-    levelScript.setScript(":/scripts/levelScripts/levelOneScript.txt");//Change this once we get something better figured out
-    QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
-    interpretCommand(messagetype);
+
     if(currentLevel < 4)
+    {
         isRigged = true;
+        QString levelNum;
+        switch(level){
+            case(1):
+            {
+                levelNum = "One";
+                break;
+            }
+            case(2):
+            {
+                levelNum = "Two";
+                break;
+            }
+            default:
+            {
+                levelNum = "Three";
+                break;
+            }
+        }
+        emit sendReadingScript(isRigged);
+        QString scriptName =":/scripts/levelScripts/level";
+        scriptName.append(levelNum);
+        levelScript.setScript(scriptName.append("Script.txt").toStdString());
+        QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
+        interpretCommand(messagetype);
+        emit sendLock("next\n");
+    }
+    else
+        isRigged = false;
+
     initialDeal();
+    //riggedCards.clear();
+}
+void Model::mainMenuSlot(){
     riggedCards.clear();
+    deck.shuffle();
+    emit endLevel(true);
+}
+void Model::resetGame(){
+    playerOne.resetPlayer();
+    dealer.resetPlayer();
+    deck.shuffle();
 }
 void Model::initialDeal(){
+    emit lossMessage(false);
+    emit winMessage(false);
     if(isRigged){
+        resetGame();
         Game riggedGame(deck, playerOne, dealer, true);
         game = riggedGame;
-        game.resetGame(playerOne, dealer);
         // hit with specific cards in the order of person dealer person dealer
         for(int i = 0; i<4; i++)
         {
@@ -159,7 +184,9 @@ void Model::initialDeal(){
         emit updateDealerCount(QString(QString::number(temp)));
     }
     else{
-        game.resetGame(playerOne, dealer);
+        resetGame();
+        Game newGame(deck, playerOne, dealer, false);
+        game = newGame;
         emit updatePlayerCount(QString(QString::number(game.personCount)));
         int temp = game.dealerCount;
         temp = temp - dealer.cardArray.at(0).value;
@@ -177,9 +204,8 @@ void Model::initialDeal(){
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         std::cout << "player BlackJack" << std::endl;
-
+        enableGameRestartButtons();
         emit winMessage(true);
-        emit enableDealCards(true);
     }
     else if(checkBlackJack == 2){
         emit disableButtons(false);
@@ -187,19 +213,22 @@ void Model::initialDeal(){
         emit lossMessage(true);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         emit lossMessage(true);
+        enableGameRestartButtons();
         std::cout << "dealer BlackJack" << std::endl;
-
-        emit enableDealCards(true);
     }
     else if(checkBlackJack == 3){
         emit disableButtons(false);
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
+        enableGameRestartButtons();
         // emit tie
-        emit enableDealCards(true);
     }
     if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value){ emit enableSplit(true); }
     else{emit enableSplit(false);}
+}
+void Model::enableGameRestartButtons(){
+    emit enableDealCards(true);
+    emit enableMainMenu(true);
 }
 void Model::readyForNextLine()
 {
@@ -278,12 +307,14 @@ void Model::interpretCommand(QString messageType)
     }
     else if (messageType == "finish")
     {
+        riggedCards.clear();
         //emit end level signal
         emit endLevel(false);
     }
     else if (messageType == "shuffle")
     {
         //Pull all cards back into the deck and shuffle
+        emit sendClear();
         initialDeal();
     }
     else if (messageType == "lock")

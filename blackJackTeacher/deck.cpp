@@ -15,6 +15,7 @@ Deck::Deck(){
 }
 
 void Deck::shuffle(){
+    cards.clear();
     for(int i=0; i<4; i++) {
         for(int j=2; j<=14; j++) {
             Rank rank;
@@ -119,9 +120,14 @@ void Deck::shuffle(){
 }
 
 Card Deck::draw(){
-    Card ret = cards.back();
-    cards.pop_back();
-    return ret;
+    if(cards.size() > 0){
+        Card ret = cards.back();
+        cards.pop_back();
+        return ret;
+    }
+    else{
+        throw std::invalid_argument("no more cards");
+    }
 }
 
 Card Deck::draw(Rank rank, Suit suit){

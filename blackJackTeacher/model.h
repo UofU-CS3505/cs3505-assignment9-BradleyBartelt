@@ -23,6 +23,8 @@ signals:
     void winMessage(bool);
     void updatePlayerCount(QString);
     void updateDealerCount(QString);
+    void enableMainMenu(bool);
+    void sendReadingScript(bool);
     ///
     /// \brief endLevel send a signal to the view to display game end information
     /// \param errorState whether the game was terminated due to an error or naturally
@@ -38,6 +40,8 @@ signals:
     ///
     void revealHole(QImage cardFront);
 
+    void sendClear();
+
 public slots:
     void hitSlot();
     void dealCards();
@@ -47,17 +51,20 @@ public slots:
     /// \brief readyForNextLine parse the next line and prepare to send it to the view
     ///
     void readyForNextLine();
+    void mainMenuSlot();
 
 private:
     Deck deck;
     Player playerOne;
     Player dealer;
     Game game;
-    bool isRigged;
+    bool isRigged = false;
     int currentLevel;
     void endGame();
     std::vector<Card> riggedCards;
     int nextCard = 0;
+    void resetGame();
+    void enableGameRestartButtons();
     ///
     /// \brief scriptOutputDetails a string used as an additional output by the script object
     ///
