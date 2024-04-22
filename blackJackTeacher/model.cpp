@@ -134,6 +134,7 @@ void Model::SetLevel(int level){
             default:
             {
                 levelNum = "Three";
+                break;
             }
         }
         QString scriptName =":/scripts/levelScripts/level";
