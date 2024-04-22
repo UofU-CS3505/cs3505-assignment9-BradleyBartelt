@@ -9,13 +9,12 @@ class Game
 
 private:
     Deck gameDeck; // the given deck
-    int dealerHits = 0;
     bool isRigged;
 public:
     int personCount; // count that the left hand (or center if no split) totals to
     int dealerCount; // dealers count
     int personSplitCount; // count that the right hand totals to
-    Game(Deck deck, Player& person, Player& dealer, bool isRigged);
+    Game(Deck& deck, Player& person, Player& dealer, bool isRigged);
 
     Game(const Game& other);
     //destructor
@@ -35,7 +34,7 @@ public:
     /// decides who won or loss, bool determines whether the dealer won or the player won, and the int determines which hand won
     QString endResult();
     /// clears person and dealer hand, as well as, shuffles the deck
-    void resetGame(Player& person, Player& dealer);
+    void resetGame(Player& person, Player& dealer, Deck& deck);
     /// initial checker for whether the dealer or the player or both got a blackjack
     int checkBlackJack(Player& person, Player& dealer);
     /// rigs Game

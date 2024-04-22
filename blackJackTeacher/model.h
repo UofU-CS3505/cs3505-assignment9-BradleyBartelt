@@ -22,6 +22,7 @@ signals:
     void winMessage(bool);
     void updatePlayerCount(QString);
     void updateDealerCount(QString);
+    void enableMainMenu(bool);
     ///
     /// \brief endLevel send a signal to the view to display game end information
     /// \param errorState whether the game was terminated due to an error or naturally
@@ -57,6 +58,7 @@ private:
     void endGame();
     std::vector<Card> riggedCards;
     int nextCard = 0;
+    void enableGameRestartButtons();
     ///
     /// \brief scriptOutputDetails a string used as an additional output by the script object
     ///
