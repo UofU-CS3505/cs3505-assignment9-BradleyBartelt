@@ -31,7 +31,7 @@ public slots:
 
     void addCardToDealerHand(Card card, bool isFirstCard);
 
-    void gameStateUpdateView(bool bust, bool won, bool canSplit);
+    void canSplit(bool enableSplit);
 
     void clearOldImages();
 
@@ -49,6 +49,7 @@ public slots:
 private slots:
     void on_nextButton_clicked();
     void endLevel(bool errorState);
+    void split();
 
 private:
     Ui::PlayingWindow *ui;

@@ -9,6 +9,7 @@ Model::Model(QObject *parent)
     , dealer(true)
     , game(deck, playerOne, dealer, false)
 {
+    probability = Probability();
 }
 void Model::standSlot(){
     // if a 1 is returned then the player has stood on their split hand, this makes it so the players
@@ -85,6 +86,8 @@ void Model::hitSlot(){
         emit updatePlayerCount(QString(QString::number(game.personCount)));
         nextCard++;
         readyForNextLine();
+        emit sendProbabilities(probability.probabilityOfDealerBust(dealer.cardArray, playerOne.cardArray, true),
+                               probability.probabilityOfDealerExceeding(dealer.cardArray, playerOne.cardArray));
     }
     else{
         gameTuple = game.hit(playerOne);
@@ -226,6 +229,8 @@ void Model::initialDeal(){
         enableGameRestartButtons();
         // emit tie
     }
+    if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value){ emit enableSplit(true); }
+    else{emit enableSplit(false);}
 }
 void Model::enableGameRestartButtons(){
     emit enableDealCards(true);

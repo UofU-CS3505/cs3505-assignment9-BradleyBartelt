@@ -20,7 +20,7 @@ public:
     /// \param playersHand a vector of cards representing the player's hand
     /// \return a double percentage representing the likelyhood that the next card will cause the value of the dealer's hand to exceed 21
     ///
-    double probabilityOfDealerBust(std::vector<Card> dealersHand, std::vector<Card> playersHand);
+    double probabilityOfDealerBust(std::vector<Card> dealersHand, std::vector<Card> playersHand, bool holeRevealed);
     ///
     /// \brief probabilityOfDealerBust calculates the probability of the dealer busting on the next draw. Use the three argument version for when the player has split
     /// \param dealersHand a vector of cards representing the dealer's hand

@@ -1,8 +1,6 @@
 #include "PlayingWindow.h"
 #include "ui_PlayingWindow.h"
 #include "model.h"
-#include <iostream>
-#include <ostream>
 PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::PlayingWindow)
@@ -85,8 +83,13 @@ void PlayingWindow::clearOldImages(){
     cards.clear();
 }
 
-void PlayingWindow::gameStateUpdateView(bool bust, bool won, bool canSplit){
-
+void PlayingWindow::canSplit(bool enableSplit){
+    if(enableSplit){
+        ui->splitButton->setEnabled(true);
+    }
+    else{
+        ui->splitButton->setEnabled(false);
+    }
 }
 
 void PlayingWindow::messageRecieved(QString message)
@@ -128,6 +131,29 @@ void PlayingWindow::unlockStand()
         ui->nextButton->setEnabled(true);
     }
 }
+
+void PlayingWindow::split(){
+    // Create a new scroll area
+    QScrollArea* splitHand = new QScrollArea();
+
+    // Create a layout for the new scroll area
+    QVBoxLayout* splitHandLayout = new QVBoxLayout();
+    splitHand->setLayout(splitHandLayout);
+    ui->handLayout->addWidget(splitHand);
+    // get the card to move from the the player hand to the split hand
+    QLabel* moveCard = cards.at(2);
+    QHBoxLayout* moveFrom = qobject_cast<QHBoxLayout*>(ui->handArea->widget()->layout());
+
+    // Remove the QLabel from its current layout
+    moveFrom->removeWidget(moveCard);
+
+    // Add the QLabel to the layout of the new scroll area
+    splitHandLayout->addWidget(moveCard);
+
+    // Disable the split button
+    ui->splitButton->setEnabled(false);
+
+}
 void PlayingWindow::unlockHit()
 {
     if(readingScript)
@@ -160,7 +186,8 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->standButton, &QPushButton::clicked, &model, &Model::standSlot);
     connect(&model, &Model::disableButtons, ui->hitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
-    connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
+    // connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
+    // the split button should not be enabled right off the bat
     connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->mainMenu, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->dealCards, &QPushButton::setEnabled);
@@ -197,9 +224,12 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
     connect(&model,&Model::revealHole,this,&PlayingWindow::flipDealerCard);
     connect(&model,&Model::sendLock,this,&PlayingWindow::recievedLock);
+   
     connect(&model,&Model::sendClear,this,&PlayingWindow::clearOldImages);
     connect(&model,&Model::sendReadingScript,this,&PlayingWindow::setReadingScript);
-
+    //============= split connect
+    connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::split);
+    connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);
 
 }
 
