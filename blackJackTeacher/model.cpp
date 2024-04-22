@@ -115,13 +115,16 @@ void Model::dealCards(){
 }
 void Model::SetLevel(int level){
     currentLevel = level;
-    levelScript.setScript(":/scripts/levelScripts/levelOneScript.txt");//Change this once we get something better figured out
-    QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
-    interpretCommand(messagetype);
+
     if(currentLevel < 4)
+    {
         isRigged = true;
+        levelScript.setScript(":/scripts/levelScripts/levelOneScript.txt");//Change this once we get something better figured out
+        QString messagetype = levelScript.nextCommand(&scriptOutputDetails);
+        interpretCommand(messagetype);
+    }
     initialDeal();
-    riggedCards.clear();
+    //riggedCards.clear();
 }
 void Model::initialDeal(){
     emit lossMessage(false);
@@ -264,13 +267,18 @@ void Model::interpretCommand(QString messageType)
     }
     else if (messageType == "finish")
     {
+        riggedCards.clear();
         //emit end level signal
         emit endLevel(false);
     }
     else if (messageType == "shuffle")
     {
         //Pull all cards back into the deck and shuffle
+        emit sendClear();
         initialDeal();
+
+
+
     }
     else if (messageType == "lock")
     {

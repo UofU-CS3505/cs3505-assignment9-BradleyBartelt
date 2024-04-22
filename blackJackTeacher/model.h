@@ -38,6 +38,8 @@ signals:
     ///
     void revealHole(QImage cardFront);
 
+    void sendClear();
+
 public slots:
     void hitSlot();
     void dealCards();
@@ -53,7 +55,7 @@ private:
     Player playerOne;
     Player dealer;
     Game game;
-    bool isRigged;
+    bool isRigged = false;
     int currentLevel;
     void endGame();
     std::vector<Card> riggedCards;
