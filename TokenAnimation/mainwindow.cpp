@@ -56,7 +56,7 @@ void MainWindow::setupBox2D() {
 void MainWindow::updateWorld() {
 
     // Step the world
-    world.Step(1.0f / 60.0f, 10, 5); //trying to increase her for smoothness
+    world.Step(1.0f / 60.0f, 10, 5); //trying to increase here for smoothness
 
     // Get the position of the Box2D object
     b2Vec2 position = circleBody->GetPosition();
@@ -91,12 +91,14 @@ void MainWindow::updateWorld() {
     int targetY = static_cast<int>(-position.y * 100);
     int deltaX = targetX - currentX;
     int deltaY = targetY - currentY;
-    currentX += deltaX * 0.2; // Adjust the interpolation factor as needed
-    currentY += deltaY * 0.2; // Adjust the interpolation factor as needed
+    currentX += deltaX * 0.5; // Adjust the interpolation factor as needed
+    currentY += deltaY * 0.5; // Adjust the interpolation factor as needed
 
     // Update the positions of the QLabel objects
     QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png");
     QPixmap scaledPixmap = pixmap.scaled(50, 50, Qt::KeepAspectRatio);
+
+    int labelYOffset = commonEndY - (100 + scaledPixmap.height()); // Calculate the Y offset
 
     ui->label->setPixmap(scaledPixmap);
     ui->label->move(100 + currentX, 100 + currentY);
