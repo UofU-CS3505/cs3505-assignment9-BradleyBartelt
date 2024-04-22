@@ -86,7 +86,6 @@ void PlayingWindow::clearOldImages(){
 void PlayingWindow::canSplit(bool enableSplit){
     if(enableSplit){
         ui->splitButton->setEnabled(true);
-
     }
     else{
         ui->splitButton->setEnabled(false);
@@ -143,8 +142,6 @@ void PlayingWindow::split(){
     ui->handLayout->addWidget(splitHand);
     // get the card to move from the the player hand to the split hand
     QLabel* moveCard = cards.at(2);
-
-    // Get the layout from which you want to move the QLabel
     QHBoxLayout* moveFrom = qobject_cast<QHBoxLayout*>(ui->handArea->widget()->layout());
 
     // Remove the QLabel from its current layout
@@ -189,7 +186,8 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->standButton, &QPushButton::clicked, &model, &Model::standSlot);
     connect(&model, &Model::disableButtons, ui->hitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
-    connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
+    // connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
+    // the split button should not be enabled right off the bat
     connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->mainMenu, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->dealCards, &QPushButton::setEnabled);
@@ -205,8 +203,6 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     connect(&model,&Model::addCardToDealerHand,this,&PlayingWindow::addCardToDealerHand);
     connect(&model,&Model::addCardToPlayerHand,this,&PlayingWindow::addCardToPlayerHand);
-
-    connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);
 
     //============= dealCards
 
@@ -233,6 +229,7 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model,&Model::sendReadingScript,this,&PlayingWindow::setReadingScript);
     //============= split connect
     connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::split);
+    connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);
 
 }
 
