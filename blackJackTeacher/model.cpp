@@ -32,7 +32,8 @@ void Model::standSlot(){
             waitTime = abs(count * waitTime);
             if(isRigged){
                 // pass in card you want to rig
-                continueDealing = get<0>(game.hit(dealer));
+                continueDealing = get<0>(game.hit(dealer, riggedCards[nextCard]));
+                nextCard++;
                 if(dealer.getState()){ // if the dealer pulls between a 17 and 21 or they have a higher number than the player under a 17
                     endGame();
                     QTimer::singleShot(waitTime, this,[=]{ emit enableDealCards(true);});
@@ -281,7 +282,7 @@ void Model::interpretCommand(QString messageType)
     else if (messageType == "shuffle")
     {
         //Pull all cards back into the deck and shuffle
-        game.resetGame(playerOne, dealer);
+        initialDeal();
     }
     else if (messageType == "lock")
     {

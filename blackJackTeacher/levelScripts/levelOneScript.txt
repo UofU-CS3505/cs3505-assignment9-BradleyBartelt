@@ -18,7 +18,6 @@
 / In this case you have a pretty terrible hand. You should hit. lock hit
 / This is a bust on your end. Unfortunately, that means you lose your bet.
 / The dealer can also bust, in which case you would win your bet, unless you also busted.
-* shuffle
 / Now we get to the name of the game. When the player or dealer is dealt a natural two-card 21, it is considered a blackjack.
 / Blackjack is a special card state that beats all other hands, including 21s gained after the initial deal.
 * shuffle
@@ -29,7 +28,6 @@
 / Congrats on your win!
 * shuffle
 / Finally lets talk about the Ace
-* shuffle
 / The ace card is special, because it can either act as an 11 or a 1, whichever is better for the hand.
 / Currently, you have an ace and a five. In this scenario the ace acts as an 11, because a total of 16 is better than a total of 6.
 / However, let's say you were to hit. lock hit
