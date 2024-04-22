@@ -42,6 +42,8 @@ public slots:
 
     void recievedLock(QString allBut);
 
+    void setReadingScript(bool reading);
+
     void unlockStand();
     void unlockHit();
 private slots:
