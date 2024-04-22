@@ -26,6 +26,10 @@ PlayingWindow::~PlayingWindow()
     delete ui;
 }
 
+void PlayingWindow::receivedProb(double probOfDealerBust, double probOfDealerWin){
+    ui->ProbOfDealerBustLabel->setText("probablity of dealer bust: " + QString::number(probOfDealerBust));
+}
+
 
 void PlayingWindow::addCardToPlayerHand(Card card){
     QLabel* newCard = new QLabel( ui->handArea);
@@ -107,18 +111,28 @@ void PlayingWindow::recievedLock(QString allBut)
             ui->hitButton->setEnabled(false);
             ui->standButton->setEnabled(true);
             ui->nextButton->setEnabled(false);
+            ui->splitButton->setEnabled(false);
         }
         if(allBut == "hit\n")
         {
             ui->hitButton->setEnabled(true);
             ui->standButton->setEnabled(false);
             ui->nextButton->setEnabled(false);
+            ui->splitButton->setEnabled(false);
         }
         if(allBut == "next\n")
         {
             ui->hitButton->setEnabled(false);
             ui->standButton->setEnabled(false);
             ui->nextButton->setEnabled(true);
+            ui->splitButton->setEnabled(false);
+        }
+        if(allBut == "split\n")
+        {
+            ui->hitButton->setEnabled(false);
+            ui->standButton->setEnabled(false);
+            ui->nextButton->setEnabled(false);
+            ui->splitButton->setEnabled(true);
         }
     }
 }
@@ -129,6 +143,18 @@ void PlayingWindow::unlockStand()
         ui->hitButton->setEnabled(false);
         ui->standButton->setEnabled(false);
         ui->nextButton->setEnabled(true);
+        ui->splitButton->setEnabled(false);
+    }
+}
+
+void PlayingWindow::unlockSplit()
+{
+    if(readingScript)
+    {
+        ui->hitButton->setEnabled(false);
+        ui->standButton->setEnabled(false);
+        ui->nextButton->setEnabled(true);
+        ui->splitButton->setEnabled(false);
     }
 }
 
@@ -161,8 +187,8 @@ void PlayingWindow::unlockHit()
         ui->hitButton->setEnabled(false);
         ui->standButton->setEnabled(false);
         ui->nextButton->setEnabled(true);
+        ui->splitButton->setEnabled(false);
     }
-
 }
 
 void PlayingWindow::setReadingScript(bool reading)
@@ -220,13 +246,15 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model,&Model::sendMessage,this,&PlayingWindow::messageRecieved);
     connect(this, &PlayingWindow::nextLine,&model,&Model::readyForNextLine);
     connect(&model,&Model::endLevel,this,&PlayingWindow::endLevel);
+    connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::unlockSplit);
     connect(ui->standButton,&QPushButton::clicked,this,&PlayingWindow::unlockStand);
     connect(ui->hitButton,&QPushButton::clicked,this,&PlayingWindow::unlockHit);
     connect(&model,&Model::revealHole,this,&PlayingWindow::flipDealerCard);
     connect(&model,&Model::sendLock,this,&PlayingWindow::recievedLock);
-   
     connect(&model,&Model::sendClear,this,&PlayingWindow::clearOldImages);
     connect(&model,&Model::sendReadingScript,this,&PlayingWindow::setReadingScript);
+    connect(&model,&Model::sendProbabilities,this,&PlayingWindow::receivedProb);
+
     //============= split connect
     connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::split);
     connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);

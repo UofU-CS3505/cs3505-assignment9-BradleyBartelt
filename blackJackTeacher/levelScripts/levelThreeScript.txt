@@ -1,4 +1,4 @@
-+ hTen dTen dSeven sFive cSeven cFive cQueen sJack hSix cFive cTen sTen hSeven hFive cEight sSeven sAce
++ hTen dTen dSeven sFive cSeven cFive cQueen sJack hSix dFive cTen sTen hSeven hFive cEight sSeven sAce
 / In this lesson, you will learn the basics of playing around the dealer's hand.
 / Remember in Blackjack, the only hand you have to beat is the dealers, so whatever they have in their hand should influence your decision to hit or stand.
 / The dealer's cards matter the most when dealing with what is called a "hard hand".

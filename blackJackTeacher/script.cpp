@@ -9,6 +9,7 @@ Script::~Script()
 
 void Script::setScript(std::string filename)
 {
+    lines.clear();
     //Try to open the provided file name
     QFile file(QString::fromStdString(filename));
     file.open(QIODevice::ReadOnly | QIODevice::Text);

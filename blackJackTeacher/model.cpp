@@ -229,7 +229,7 @@ void Model::initialDeal(){
         enableGameRestartButtons();
         // emit tie
     }
-    if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value){ emit enableSplit(true); }
+    if(playerOne.cardArray.at(0).rank == playerOne.cardArray.at(1).rank && isRigged == false){ emit enableSplit(true); }
     else{emit enableSplit(false);}
 }
 void Model::enableGameRestartButtons(){
@@ -251,11 +251,12 @@ void Model::interpretCommand(QString messageType)
     }
     else if (messageType == "message")
     {
+        std::vector<QString> tokens =levelScript.tokenize(scriptOutputDetails);
+        if(tokens[tokens.size()-2] == "lock"){
+            emit sendLock(tokens[tokens.size()-1]);
+        }
         //emit message to the view (it will show the popup)
         emit sendMessage(scriptOutputDetails);
-        std::vector<QString> tokens =levelScript.tokenize(scriptOutputDetails);
-        if(tokens[tokens.size()-2] == "lock")
-            emit sendLock(tokens[tokens.size()-1]);
     }
     else if (messageType == "deal")
     {
