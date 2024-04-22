@@ -2,7 +2,7 @@
 
 Probability::Probability() {}
 
-double Probability::probabilityOfDealerBust(std::vector<Card> dealersHand, std::vector<Card> playersHand)
+double Probability::probabilityOfDealerBust(std::vector<Card> dealersHand, std::vector<Card> playersHand,bool holeRevealed)
 {
     return probabilityOfBust(dealersHand, playersHand)*100;
 }
