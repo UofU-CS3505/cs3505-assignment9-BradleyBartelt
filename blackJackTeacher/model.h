@@ -51,9 +51,13 @@ signals:
     void displayEndGameMessage(bool);
     void changeEndGameMessage(QString);
     ///
-    /// \brief updatePlayerCount displays the count for a player
+    /// \brief updatePlayerCount displays the main hand count for a player
     ///
     void updatePlayerCount(QString);
+    ///
+    /// \brief updatePlayerCount displays the split count for a player
+    ///
+    void updateSplitPlayerCount(QString);
     ///
     /// \brief updateDealerCount displayes the count for a dealer
     ///

@@ -13,6 +13,7 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     ui->doubleButton->setEnabled(false);
     ui->winButton->setVisible(false);
 
+
     QPalette palette = this->palette();
     QColor bg = QColor(61, 59, 59);
     palette.setColor(QPalette::Window, bg);
@@ -85,6 +86,8 @@ void PlayingWindow::mainMenuClicked()
 }
 
 void PlayingWindow::clearOldImages(){
+    ui->splitLabel->setEnabled(false);
+    ui->splitTotal->setEnabled(false);
     ui->handLayout->setStretch(0,1);
     for(int i = 0; i < cards.size(); i++){
         delete cards.at(i);
@@ -183,6 +186,10 @@ void PlayingWindow::split(){
     // Disable the split button
     ui->splitButton->setEnabled(false);
 
+    ui->splitLabel->setEnabled(true);
+    ui->splitTotal->setEnabled(true);
+
+
 }
 void PlayingWindow::unlockHit()
 {
@@ -243,6 +250,7 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     connect(&model, &Model::updateDealerCount, ui->dealerTotal, &QLabel::setText);
     connect(&model, &Model::updatePlayerCount, ui->playerTotal, &QLabel::setText);
+     connect(&model, &Model::updateSplitPlayerCount, ui->splitTotal, &QLabel::setText);
 
 
     //============= script Handling connections

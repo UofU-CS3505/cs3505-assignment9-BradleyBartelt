@@ -17,10 +17,10 @@ void Model::standSlot(){
     // hits now only work on the left hand (represented by a 0)
     int num = game.stand(playerOne);
     if(num == 0){ // if the player has stayed on the initial hand or the hand on the left of the split
-        emit SendCardImage(dealer.cardArray.begin()->image); // flips dealer card
-        emit updateDealerCount(QString(QString::number(game.dealerCount))); // updates the count
+        emit SendCardImage(dealer.getCardArray().begin()->image); // flips dealer card
+        emit updateDealerCount(QString(QString::number(game.getDealerCount()))); // updates the count
         emit disableButtons(false); // disables buttons so that the player cannot hit or stand or split while the dealer deals
-        if(game.dealerCount > 16){
+        if(game.getDealerCount() > 16){ // if the dealers hand is above a 16 with its given two cards end the round
             endGame();
             return;
         }
@@ -35,19 +35,19 @@ void Model::standSlot(){
             else{
                 get<0>(game.hit(dealer));
             }
-            if(game.dealerCount > 16){
-                // end game stuff
-                QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-                emit updateDealerCount(QString(QString::number(game.dealerCount)));
+            if(game.getDealerCount() > 16){ // after hitting, if the dealer is above a 16, end the game and display the card
+                QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.getCardArray().at(count + 1),false);});
+                emit updateDealerCount(QString(QString::number(game.getDealerCount())));
                 endGame();
                 break;
             }
-            QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-            QTimer::singleShot(waitTime, this,[=]{ emit updateDealerCount(QString(QString::number(game.dealerCount)));});
+            // display card and hit again
+            QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.getCardArray().at(count + 1),false);});
+            QTimer::singleShot(waitTime, this,[=]{ emit updateDealerCount(QString(QString::number(game.getDealerCount())));});
             count++;
         }
     }
-    else{
+    else{ // if the split hand is dealt a 21 forcibly stand it
         std::tuple<bool, int> stateCheck = game.checkState(playerOne); // checks if the main hand is a 21
         if(get<1>(stateCheck) == 3){
             standSlot();
@@ -55,7 +55,7 @@ void Model::standSlot(){
     }
 }
 void Model::endGame(){
-    if(!isRigged){
+    if(!isRigged){ // if the game isnt rigged, when the game ends wait 3 seconds to renable the main menu and deal cards button
         QTimer::singleShot(3000, this,[=]{ emit enableDealCards(true);});
         QTimer::singleShot(3000, this,[=]{ emit enableMainMenu(true);});
     }
@@ -110,40 +110,42 @@ void Model::endGame(){
 void Model::hitSlot(){
     std::tuple<bool, int> gameTuple;
     if(isRigged){
-        // pass in whatever card that needs to be rigged into the game
         gameTuple = game.hit(playerOne,riggedCards[nextCard]);
-        emit updatePlayerCount(QString(QString::number(game.personCount)));
+        emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
         nextCard++;
         readyForNextLine();
-        emit sendProbabilities(probability.probabilityOfDealerBust(dealer.cardArray, playerOne.cardArray, true),
-                               probability.probabilityOfDealerExceeding(dealer.cardArray, playerOne.cardArray));
+        emit sendProbabilities(probability.probabilityOfDealerBust(dealer.getCardArray(), playerOne.getCardArray(), true),
+                               probability.probabilityOfDealerExceeding(dealer.getCardArray(), playerOne.getCardArray()));
     }
     else{
         gameTuple = game.hit(playerOne);
     }
-    if(get<0>(gameTuple) && get<1>(gameTuple) == 0){
-        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
-        emit updatePlayerCount(QString(QString::number(game.personCount)));
+    if(get<0>(gameTuple) && get<1>(gameTuple) == 0){ // if the main hand didn't bust
+        emit addCardToPlayerHand(playerOne.getCardArray().back(), false); // display main hand card
+        emit updatePlayerCount(QString(QString::number(game.getPersonCount()))); // update count
     }
-    else if(get<0>(gameTuple) && get<1>(gameTuple) == 1){
-        emit addCardToPlayerHand(playerOne.splitArray.back(), true);
+    else if(get<0>(gameTuple) && get<1>(gameTuple) == 1){ // if the split hand didn't bust
+        emit addCardToPlayerHand(playerOne.getSplitArray().back(), true); // display split hand card
+        emit updateSplitPlayerCount(QString(QString::number(game.getPersonSplitCount()))); // update count
     }
-    else if(!get<0>(gameTuple) && get<1>(gameTuple) == 1){
-        emit addCardToPlayerHand(playerOne.splitArray.back(), true);
+    else if(!get<0>(gameTuple) && get<1>(gameTuple) == 1){ // if the split hand bust
+        emit addCardToPlayerHand(playerOne.getSplitArray().back(), true);
+        emit updateSplitPlayerCount(QString(QString::number(game.getPersonSplitCount())));
     }
-    else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21
-        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
-        emit updatePlayerCount(QString(QString::number(game.personCount)));
+    else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21 on main hand
+        emit addCardToPlayerHand(playerOne.getCardArray().back(), false);
+        emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
         emit disableButtons(false);
         standSlot();
     }
-    else if(get<0>(gameTuple) && get<1>(gameTuple) == 4){ //players split hand gets a 21
-        emit addCardToPlayerHand(playerOne.splitArray.back(), true);
+    else if(get<0>(gameTuple) && get<1>(gameTuple) == 4){ //players split hand gets a 21 on split hand
+        emit addCardToPlayerHand(playerOne.getSplitArray().back(), true);
+        emit updateSplitPlayerCount(QString(QString::number(game.getPersonSplitCount())));
         standSlot();
     }
-    else{
-        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
-        emit updatePlayerCount(QString(QString::number(game.personCount)));
+    else{ // the main hand bust
+        emit addCardToPlayerHand(playerOne.getCardArray().back(), false);
+        emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
         endGame();
         emit disableButtons(false);
         emit enableDealCards(true);
@@ -155,9 +157,9 @@ void Model::dealCards(){
         isRigged = true;
     else
         isRigged = false;
-    initialDeal();
     emit disableButtons(true);
     emit enableDealCards(false);
+    initialDeal();
 }
 void Model::SetLevel(int level){
     currentLevel = level;
@@ -198,7 +200,6 @@ void Model::SetLevel(int level){
     //riggedCards.clear();
 }
 void Model::mainMenuSlot(){
-    std::cout << "reset stuff" << std::endl;
     riggedCards.clear();
     deck.shuffle();
     levelScript.lineNum = 0;
@@ -212,11 +213,11 @@ void Model::resetGame(){
 }
 void Model::initialDeal(){
     emit displayEndGameMessage(false);
+    emit enableSplit(false);
     if(isRigged){
         resetGame();
         Game riggedGame(deck, playerOne, dealer, true);
-        game = riggedGame;
-        // hit with specific cards in the order of person dealer person dealer
+        game = riggedGame; // creates a new game and passes in shuffled + reset information
         for(int i = 0; i<4; i++)
         {
             if(i%2==0)
@@ -225,51 +226,51 @@ void Model::initialDeal(){
                 game.hit(dealer, riggedCards[nextCard]);
             nextCard++;
         }
-        emit updatePlayerCount(QString(QString::number(game.personCount)));
-        int temp = game.dealerCount;
-        temp = temp - dealer.cardArray.at(0).value;
+        emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
+        int temp = game.getDealerCount();
+        temp = temp - dealer.getCardArray().at(0).value;
         emit updateDealerCount(QString(QString::number(temp)));
     }
     else{
         resetGame();
         Game newGame(deck, playerOne, dealer, false);
-        game = newGame;
-        emit updatePlayerCount(QString(QString::number(game.personCount)));
-        int temp = game.dealerCount;
-        temp = temp - dealer.cardArray.at(0).value;
+        game = newGame; // creates a new game and passes in shuffled + reset information
+        emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
+        int temp = game.getDealerCount();
+        temp = temp - dealer.getCardArray().at(0).value;
         emit updateDealerCount(QString(QString::number(temp)));
     }
     emit enableDealCards(false);
-    emit addCardToPlayerHand(playerOne.cardArray.at(0), false);
-    emit addCardToDealerHand(dealer.cardArray.at(0), true);
-    emit addCardToPlayerHand(playerOne.cardArray.at(1), false);
-    emit addCardToDealerHand(dealer.cardArray.at(1), false);
+    emit addCardToPlayerHand(playerOne.getCardArray().at(0), false);
+    emit addCardToDealerHand(dealer.getCardArray().at(0), true);
+    emit addCardToPlayerHand(playerOne.getCardArray().at(1), false);
+    emit addCardToDealerHand(dealer.getCardArray().at(1), false);
     int checkBlackJack = game.checkBlackJack(playerOne,dealer);
     if(checkBlackJack == 1){
         emit blackJackButtons(false);
         emit displayEndGameMessage(true);
         emit changeEndGameMessage("You won");
-        emit SendCardImage(dealer.cardArray.begin()->image);
-        emit updateDealerCount(QString(QString::number(game.dealerCount)));
+        emit SendCardImage(dealer.getCardArray().begin()->image);
+        emit updateDealerCount(QString(QString::number(game.getDealerCount())));
         std::cout << "player BlackJack" << std::endl;
     }
     else if(checkBlackJack == 2){
         emit blackJackButtons(false);
         emit displayEndGameMessage(true);
         emit changeEndGameMessage("You lost");
-        emit SendCardImage(dealer.cardArray.begin()->image);
-        emit updateDealerCount(QString(QString::number(game.dealerCount)));
+        emit SendCardImage(dealer.getCardArray().begin()->image);
+        emit updateDealerCount(QString(QString::number(game.getDealerCount())));
         std::cout << "dealer BlackJack" << std::endl;
     }
     else if(checkBlackJack == 3){
         emit blackJackButtons(false);
         emit displayEndGameMessage(true);
         emit changeEndGameMessage("You tied");
-        emit SendCardImage(dealer.cardArray.begin()->image);
-        emit updateDealerCount(QString(QString::number(game.dealerCount)));
+        emit SendCardImage(dealer.getCardArray().begin()->image);
+        emit updateDealerCount(QString(QString::number(game.getDealerCount())));
         // emit tie
     }
-    else if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value && isRigged == false && playerOne.cardArray.size() == 2){ emit enableSplit(true); }
+    else if(playerOne.getCardArray().at(0).value == playerOne.getCardArray().at(1).value && isRigged == false && playerOne.getCardArray().size() == 2){ emit enableSplit(true); }
     else{emit enableSplit(false);}
 }
 void Model::splitSlot(){
@@ -278,9 +279,10 @@ void Model::splitSlot(){
     if(get<1>(stateCheck) == 4){
         standSlot();
     }
-    emit updatePlayerCount(QString(QString::number(game.personCount)));
-    emit addCardToPlayerHand(playerOne.splitArray.back(), true);
-    emit addCardToPlayerHand(playerOne.cardArray.back(), false);
+    emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
+    emit updateSplitPlayerCount(QString(QString::number(game.getPersonSplitCount())));
+    emit addCardToPlayerHand(playerOne.getSplitArray().back(), true);
+    emit addCardToPlayerHand(playerOne.getCardArray().back(), false);
 }
 void Model::readyForNextLine()
 {
@@ -334,7 +336,7 @@ void Model::interpretCommand(QString messageType)
     else if (messageType == "reveal")
     {
         //reveal hole
-        emit revealHole(dealer.cardArray[0].image);
+        emit revealHole(dealer.getCardArray()[0].image);
     }
     else if (messageType == "addCards")
     {

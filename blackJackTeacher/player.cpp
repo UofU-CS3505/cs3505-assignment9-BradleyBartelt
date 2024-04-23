@@ -40,3 +40,15 @@ bool Player::getState(){
 bool Player::getIsDealer(){
     return isDealer;
 }
+std::vector<Card> Player::getCardArray(){
+    return cardArray;
+}
+std::vector<Card> Player::getSplitArray(){
+    return splitArray;
+}
+int Player::getCurrentHand(){
+    return currentHand;
+}
+void Player::setCurrentHand(int setter){
+    currentHand = setter;
+}
