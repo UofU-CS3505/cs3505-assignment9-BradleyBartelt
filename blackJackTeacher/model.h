@@ -31,9 +31,6 @@ signals:
     /// \brief disableButtons disables or enables the split, hit, and stand button
     ///
     void disableButtons(bool);
-<<<<<<< Updated upstream
-    void addCardToPlayerHand(Card);
-=======
     ///
     /// \brief addCardToPlayerHand displays the most recent card for the player
     ///        the bool determines which hand
@@ -42,7 +39,6 @@ signals:
     ///
     /// \brief addCardToDealerHand displays the dealers most recent card
     ///
->>>>>>> Stashed changes
     void addCardToDealerHand(Card, bool);
     ///
     /// \brief enableDealCards enables or disables the ability to click the deal cards button
@@ -104,13 +100,10 @@ public slots:
     /// \brief standSlot handles logic for when the player hits the stand button
     ///
     void standSlot();
-<<<<<<< Updated upstream
-=======
     ///
     /// \brief splitSlot handles logic for when the player hits the split button
     ///
     void splitSlot();
->>>>>>> Stashed changes
     ///
     /// \brief readyForNextLine parse the next line and prepare to send it to the view
     ///

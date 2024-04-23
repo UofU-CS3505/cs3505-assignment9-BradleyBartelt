@@ -31,32 +31,21 @@ void PlayingWindow::receivedProb(double probOfDealerBust, double probOfDealerWin
 }
 
 
-<<<<<<< Updated upstream
-void PlayingWindow::addCardToPlayerHand(Card card){
-=======
 void PlayingWindow::addCardToPlayerHand(Card card, bool isSplit){
->>>>>>> Stashed changes
-    QLabel* newCard = new QLabel( ui->handArea);
+    QLabel* newCard = new QLabel( ui->scrollArea);
     cards.push_back(newCard);
     newCard->setFixedSize(125, 175);
     newCard->setStyleSheet("QPushButton {background-color: rgb(224,224,224);}");
-<<<<<<< Updated upstream
-
-    QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
-    layout->addWidget(newCard, Qt::AlignLeft);
-    updateCardImage(card.image);
-=======
     if(isSplit){
         splitLayout->addWidget(newCard,Qt::AlignLeft);
         updateCardImage(card.image);
     }
     else{
-        QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
+        QHBoxLayout* layout = (QHBoxLayout*)ui->scrollArea->widget()->layout();
         layout->addWidget(newCard, Qt::AlignLeft);
         updateCardImage(card.image);
     }
 
->>>>>>> Stashed changes
 }
 
 
@@ -176,15 +165,6 @@ void PlayingWindow::unlockSplit()
 }
 
 void PlayingWindow::split(){
-<<<<<<< Updated upstream
-    // Create a new scroll area
-    QScrollArea* splitHand = new QScrollArea();
-
-    // Create a layout for the new scroll area
-    QVBoxLayout* splitHandLayout = new QVBoxLayout();
-    splitHand->setLayout(splitHandLayout);
-    ui->handLayout->addWidget(splitHand);
-=======
 
     // Create a layout for the new scroll area
     ui->splitArea->widget()->setLayout(new QHBoxLayout);
@@ -192,10 +172,9 @@ void PlayingWindow::split(){
     ui->handLayout->setStretch(0,0);
 
 
->>>>>>> Stashed changes
     // get the card to move from the the player hand to the split hand
     QLabel* moveCard = cards.at(2);
-    QHBoxLayout* moveFrom = qobject_cast<QHBoxLayout*>(ui->handArea->widget()->layout());
+    QHBoxLayout* moveFrom = qobject_cast<QHBoxLayout*>(ui->scrollArea->widget()->layout());
 
     // Remove the QLabel from its current layout
     moveFrom->removeWidget(moveCard);
@@ -234,7 +213,6 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     // ============ stand connections
 
-    connect(ui->standButton,&QPushButton::clicked,&model,&Model::standSlot);
     connect(&model,&Model::SendCardImage,this,&PlayingWindow::flipDealerCard);
     connect(ui->standButton, &QPushButton::clicked, &model, &Model::standSlot);
     connect(&model, &Model::disableButtons, ui->hitButton, &QPushButton::setEnabled);
@@ -282,6 +260,7 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     //============= split connect
     connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::split);
+    connect(ui->splitButton,&QPushButton::clicked,&model,&Model::splitSlot);
     connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);
 
 }

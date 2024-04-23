@@ -2,14 +2,9 @@
 #define PLAYINGWINDOW_H
 
 #include <QMainWindow>
-<<<<<<< Updated upstream
-=======
 #include "QtWidgets/qboxlayout.h"
-#include "QtWidgets/qscrollarea.h"
->>>>>>> Stashed changes
 #include "model.h"
 #include "qlabel.h"
-#include "qpushbutton.h"
 
 namespace Ui {
 class PlayingWindow;
@@ -25,7 +20,6 @@ public:
 signals:
     /// @brief tells the model that the hit button has been pressed and it needs to update the game.
     void hit();
-    /// @brief informs the model that the player is ready to proceed to the next line
     void nextLine();
 public slots:
 
@@ -33,7 +27,7 @@ public slots:
 
     void updateCardImage(QImage);
 
-    void addCardToPlayerHand(Card card);
+    void addCardToPlayerHand(Card card, bool isSplit);
 
     void addCardToDealerHand(Card card, bool isFirstCard);
 
@@ -42,48 +36,18 @@ public slots:
     void clearOldImages();
 
     void flipDealerCard(QImage);
-
-    ///
-    /// \brief messageRecieved slot triggered when a instruction message is recieved from the model. displays to the message box in the top left
-    /// \param message the message to display to the user
-    ///
     void messageRecieved(QString message);
-
     void winPopUp(bool);
     void lossPopUp(bool);
 
-    ///
-    /// \brief recievedLock slot triggered when a lock instruction is recieved. Locks all buttons but the one provided to the method
-    /// \param allBut the button that we do not want to lock
-    ///
     void recievedLock(QString allBut);
 
-    ///
-    /// \brief setReadingScript setter for the readingScript field
-    /// \param reading if we are reading from a script or not
-    ///
     void setReadingScript(bool reading);
 
-    ///
-    /// \brief unlockStand unlocks the next button and locks the other buttons
-    ///
     void unlockStand();
-
-    ///
-    /// \brief unlockHit unlocks the next button and locks the other buttons
-    ///
     void unlockHit();
-
-    ///
-    /// \brief unlockSplit unlocks the next button and locks the other buttons
-    ///
     void unlockSplit();
 
-    ///
-    /// \brief receivedProb updates the probability displayed to the user
-    /// \param probOfDealerBust
-    /// \param probOfDealerWin
-    ///
     void receivedProb(double probOfDealerBust, double probOfDealerWin);
 private slots:
     void on_nextButton_clicked();
@@ -94,6 +58,7 @@ private:
     Ui::PlayingWindow *ui;
     QMainWindow* mainMenu;
     Model* model;
+    QHBoxLayout* splitLayout;
     void SetUpConnections(Model& model);
     QVector<QLabel*> cards;
     bool readingScript = false;
