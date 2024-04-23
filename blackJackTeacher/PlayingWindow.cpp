@@ -205,6 +205,8 @@ void PlayingWindow::unlockHit()
 void PlayingWindow::setReadingScript(bool reading)
 {
     readingScript = reading;
+    if(!readingScript)
+        ui->nextButton->setEnabled(false);
 }
 //=========================== CONECTIONS =========================
 

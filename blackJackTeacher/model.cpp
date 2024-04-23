@@ -194,7 +194,10 @@ void Model::SetLevel(int level){
         emit sendLock("next\n");
     }
     else
+    {
         isRigged = false;
+        emit sendReadingScript(isRigged);
+    }
 
     initialDeal();
     //riggedCards.clear();
