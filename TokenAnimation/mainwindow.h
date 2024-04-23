@@ -2,15 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QGraphicsView>
-#include <QGraphicsScene>
-#include <QGraphicsEllipseItem>
 #include <QTimer>
-#include <Box2D/Box2D.h>
-#include "ui_mainwindow.h"
 #include <QLabel>
+#include <vector>
+#include <Box2D/Box2D.h>
 
-class MainWindow : public QMainWindow {
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
+
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:
@@ -22,18 +24,14 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsView *view;
-    QGraphicsScene *scene;
-    void setupBox2D();
-    QGraphicsEllipseItem *circleItem;
     QTimer *timer;
-    b2World world;
-    b2Body *circleBody; // Add a member for the circle body
-    QLabel *label;
-    std::vector<b2World*> labelWorlds;
-    std::vector<b2Body*> labelBodies;
-    int currentX = 0; // Add declaration for currentX
-    int currentY = 0; // Add declaration for currentY
+    float currentX;
+    float currentY;
+    std::vector<b2World*> worlds;
+
+    void setupBox2D();
+    void setupBox2D(float x, int index);
+
 };
 
 #endif // MAINWINDOW_H
