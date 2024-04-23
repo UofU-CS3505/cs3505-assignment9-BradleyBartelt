@@ -13,6 +13,7 @@ public:
     explicit Model(QObject *parent = nullptr);
 
 signals:
+    void blackJackButtons(bool);
     ///
     /// \brief enableSplit send a signal to the view to enable to split button
     /// \param canSplit
@@ -45,13 +46,10 @@ signals:
     ///
     void enableDealCards(bool);
     ///
-    /// \brief lossMessage displays upon a loss
+    /// \brief winMessage displays upon the end of a game
     ///
-    void lossMessage(bool);
-    ///
-    /// \brief winMessage displays upon a win
-    ///
-    void winMessage(bool);
+    void displayEndGameMessage(bool);
+    void changeEndGameMessage(QString);
     ///
     /// \brief updatePlayerCount displays the count for a player
     ///
@@ -157,10 +155,7 @@ private:
     /// \brief helper method that handles all of the logic for when a person trys to reset a game (deal new cards)
     ///
     void resetGame();
-    ///
-    /// \brief helper method that disables specific buttons upon a black jack
-    ///
-    void enableGameRestartButtons();
+
     ///
     /// \brief initialDeal method that is used to create a new game, is called whenever a level is selected or deal cards is pressed
     ///

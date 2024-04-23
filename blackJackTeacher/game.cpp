@@ -107,6 +107,9 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
         if(personCount > 21){ // if the player goes above a 21 they lose
             return std::tuple<bool,int>(false,0);
         }
+        else if(personCount == 21 && currentPlayer.currentHand == 0){
+            return std::tuple<bool,int>(true,3);
+        }
         if(int(currentPlayer.splitArray.size()) != 0){ // same as above but for a split hand
             personSplitCount = 0;
             aceCount = 0;
@@ -128,44 +131,60 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
             if(personSplitCount > 21){
                 return std::tuple<bool,int>(false,1);
             }
+            else if(personSplitCount == 21){
+                return std::tuple<bool,int>(true,4);
+            }
         }
     }
     return std::tuple<bool,int>(true, currentPlayer.currentHand);
 }
 
-QString Game::endResult(){
-    if(dealerCount > 21){
-        return "win";
-    }
-    if(personCount < dealerCount){
-        return "loss";
-    }
-    if(personCount == dealerCount){
-        return "tie";
-    }
-    if(personCount > dealerCount){
-        return "win";
-    }
+std::tuple<QString,QString> Game::endResult(){
+    std::tuple<QString,QString> returnTuple("","");
     if(personSplitCount != 0){ // if a split exists
         if(personSplitCount == dealerCount){
-            return "splitTie";
+            get<1>(returnTuple) = "splitTie";
         }
         if(personSplitCount < dealerCount){
-            return "splitLoss";
+            get<1>(returnTuple) = "splitLoss";
         }
         if(personSplitCount > dealerCount){
-            return "splitWin";
+            get<1>(returnTuple) = "splitWin";
         }
     }
-    return "";
+    if(dealerCount > 21){
+        get<0>(returnTuple) = "win";
+        if(personSplitCount <= 21 && personSplitCount != 0){
+            get<1>(returnTuple) = "splitWin";
+        }
+        else if(personSplitCount != 0){
+            get<1>(returnTuple) = "splitLoss";
+        }
+    }
+    else if(personCount < dealerCount){
+        get<0>(returnTuple) = "loss";
+    }
+    else if(personCount == dealerCount){
+        get<0>(returnTuple) = "tie";
+    }
+    else if(personCount > dealerCount){
+        get<0>(returnTuple) = "win";
+    }
+    if(personSplitCount > 21){
+        get<1>(returnTuple) = "splitLoss";
+    }
+    if(personCount > 21){
+        get<0>(returnTuple) = "loss";
+    }
+    return returnTuple;
 }
 std::tuple<bool,int> Game::hit(Player& currentPlayer){
     currentPlayer.addCard(gameDeck.draw());
     std::tuple<bool, int> playerState = checkState(currentPlayer);
-    if(get<0>(playerState) && get<1>(playerState) == 0 && personCount == 21){ // if its true that means the game can continue
+    if(get<0>(playerState) && get<1>(playerState) == 3 ){ // if its true that means the game can continue
         return std::tuple<bool, int>(true,3);
     }
-    if(get<0>(playerState) && get<1>(playerState) == 1 && personSplitCount == 21){ // if its true that means the game can continue
+    if(get<0>(playerState) && get<1>(playerState) == 4){ // if its true that means the game can continue
         return std::tuple<bool, int>(true,4);
     }
     if(get<0>(playerState) && get<1>(playerState) == 0){ // if its true that means the game can continue
@@ -214,11 +233,11 @@ std::tuple<bool,int> Game::hit(Player& currentPlayer, Card card){
 
 bool Game::split(Player& person){
     person.addHand(gameDeck.draw(), gameDeck.draw());
+    checkState(person);
     return true;
 }
 
 int Game::stand(Player& currentPlayer){
-    std::cout << currentPlayer.currentHand << std::endl;
     currentPlayer.setState(true);
     if(currentPlayer.currentHand == 0)
         return 0;

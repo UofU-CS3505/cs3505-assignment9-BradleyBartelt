@@ -13,7 +13,7 @@ private:
 public:
     int personCount; // count that the left hand (or center if no split) totals to
     int dealerCount; // dealers count
-    int personSplitCount; // count that the right hand totals to
+    int personSplitCount = 0; // count that the right hand totals to
     Game(Deck& deck, Player& person, Player& dealer, bool isRigged);
 
     Game(const Game& other);
@@ -32,7 +32,7 @@ public:
     /// disables further actions on players current hand
     int stand(Player& person);
     /// decides who won or loss, bool determines whether the dealer won or the player won, and the int determines which hand won
-    QString endResult();
+    std::tuple<QString,QString> endResult();
     /// initial checker for whether the dealer or the player or both got a blackjack
     int checkBlackJack(Player& person, Player& dealer);
     /// rigs Game

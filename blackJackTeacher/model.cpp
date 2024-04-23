@@ -2,6 +2,7 @@
 #include "game.h"
 #include <QTimer>
 #include <iostream>
+#include <ostream>
 Model::Model(QObject *parent)
     : QObject{parent}
     , deck()
@@ -16,11 +17,10 @@ void Model::standSlot(){
     // hits now only work on the left hand (represented by a 0)
     int num = game.stand(playerOne);
     if(num == 0){ // if the player has stayed on the initial hand or the hand on the left of the split
-        emit SendCardImage(dealer.cardArray.begin()->image);
-        emit updateDealerCount(QString(QString::number(game.dealerCount)));
-        emit disableButtons(false);
+        emit SendCardImage(dealer.cardArray.begin()->image); // flips dealer card
+        emit updateDealerCount(QString(QString::number(game.dealerCount))); // updates the count
+        emit disableButtons(false); // disables buttons so that the player cannot hit or stand or split while the dealer deals
         if(game.dealerCount > 16){
-            // end game stuff
             endGame();
             return;
         }
@@ -29,27 +29,28 @@ void Model::standSlot(){
         while(true){
             waitTime = abs(count * waitTime);
             if(isRigged){
-                // pass in card you want to rig
                 get<0>(game.hit(dealer, riggedCards[nextCard]));
                 nextCard++;
-                if(game.dealerCount > 16){
-                    QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-                    endGame();
-                    break;
-                }
             }
             else{
                 get<0>(game.hit(dealer));
-                if(game.dealerCount > 16){
-                    // end game stuff
-                    QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
-                    endGame();
-                    break;
-                }
+            }
+            if(game.dealerCount > 16){
+                // end game stuff
+                QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
+                emit updateDealerCount(QString(QString::number(game.dealerCount)));
+                endGame();
+                break;
             }
             QTimer::singleShot(waitTime, this,[=]{ emit addCardToDealerHand(dealer.cardArray.at(count + 1),false);});
             QTimer::singleShot(waitTime, this,[=]{ emit updateDealerCount(QString(QString::number(game.dealerCount)));});
             count++;
+        }
+    }
+    else{
+        std::tuple<bool, int> stateCheck = game.checkState(playerOne); // checks if the main hand is a 21
+        if(get<1>(stateCheck) == 3){
+            standSlot();
         }
     }
 }
@@ -58,28 +59,53 @@ void Model::endGame(){
         QTimer::singleShot(3000, this,[=]{ emit enableDealCards(true);});
         QTimer::singleShot(3000, this,[=]{ emit enableMainMenu(true);});
     }
-    if(game.endResult() == "tie"){
-        // emit main hand tie
+    std::tuple endResult = game.endResult();
+    if(get<0>(endResult) == "tie"){
+        if(get<1>(endResult) == "splitTie"){
+            emit changeEndGameMessage("You tied on both hands");
+        }
+        else if(get<1>(endResult) == "splitWin"){
+            emit changeEndGameMessage("You tied on your main hand and won your split hand");
+        }
+        else if(get<1>(endResult) == "splitLoss"){
+            emit displayEndGameMessage(true);
+            emit changeEndGameMessage("You tied on your main hand and lost your split hand");
+        }
+        else{
+            emit changeEndGameMessage("You tied");
+        }
     }
-    else if(game.endResult() == "win"){
-        std::cout << "end Win" << std::endl;
-
-        emit winMessage(true);
+    else if(get<0>(endResult) == "loss"){
+        if(get<1>(endResult) == "splitTie"){
+            emit changeEndGameMessage("You tied on your main hand and tied on your split hand");
+        }
+        else if(get<1>(endResult) == "splitWin"){
+            emit changeEndGameMessage("You lost on your main hand and won your split hand");
+        }
+        else if(get<1>(endResult) == "splitLoss"){
+            emit changeEndGameMessage("You lost on both hands");
+        }
+        else{
+            emit changeEndGameMessage("You lost");
+        }
     }
-    else if(game.endResult() == "loss"){
-        std::cout << "end loss" << std::endl;
-
-        emit lossMessage(true);
+    else if(get<0>(endResult) == "win"){
+        if(get<1>(endResult) == "splitTie"){
+            emit changeEndGameMessage("You won on your main hand and tied on your split hand");
+        }
+        else if(get<1>(endResult) == "splitWin"){
+            emit displayEndGameMessage(true);
+            emit changeEndGameMessage("You won on both hands");
+        }
+        else if(get<1>(endResult) == "splitLoss"){
+            emit displayEndGameMessage(true);
+            emit changeEndGameMessage("You won on your main hand and lost your split hand");
+        }
+        else{
+            emit changeEndGameMessage("You won");
+        }
     }
-    else if(game.endResult() == "splitTie"){
-        // emit split hand tie
-    }
-    else if(game.endResult() == "splitWin"){
-        // emit split hand win
-    }
-    else{
-        // emit split hand loss
-    }
+    emit displayEndGameMessage(true);
 }
 void Model::hitSlot(){
     std::tuple<bool, int> gameTuple;
@@ -94,25 +120,31 @@ void Model::hitSlot(){
     }
     else{
         gameTuple = game.hit(playerOne);
+    }
+    if(get<0>(gameTuple) && get<1>(gameTuple) == 0){
+        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
         emit updatePlayerCount(QString(QString::number(game.personCount)));
     }
-    if(get<0>(gameTuple) && get<1>(gameTuple) == 0)
-        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
-    else if(get<0>(gameTuple) && get<1>(gameTuple) == 1)
+    else if(get<0>(gameTuple) && get<1>(gameTuple) == 1){
         emit addCardToPlayerHand(playerOne.splitArray.back(), true);
+    }
+    else if(!get<0>(gameTuple) && get<1>(gameTuple) == 1){
+        emit addCardToPlayerHand(playerOne.splitArray.back(), true);
+    }
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21
         emit addCardToPlayerHand(playerOne.cardArray.back(), false);
+        emit updatePlayerCount(QString(QString::number(game.personCount)));
         emit disableButtons(false);
         standSlot();
     }
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 4){ //players split hand gets a 21
         emit addCardToPlayerHand(playerOne.splitArray.back(), true);
-        emit disableButtons(false);
         standSlot();
     }
     else{
         emit addCardToPlayerHand(playerOne.cardArray.back(), false);
-        emit lossMessage(true);
+        emit updatePlayerCount(QString(QString::number(game.personCount)));
+        endGame();
         emit disableButtons(false);
         emit enableDealCards(true);
     }
@@ -179,8 +211,7 @@ void Model::resetGame(){
     deck.shuffle();
 }
 void Model::initialDeal(){
-    emit lossMessage(false);
-    emit winMessage(false);
+    emit displayEndGameMessage(false);
     if(isRigged){
         resetGame();
         Game riggedGame(deck, playerOne, dealer, true);
@@ -215,39 +246,41 @@ void Model::initialDeal(){
     emit addCardToDealerHand(dealer.cardArray.at(1), false);
     int checkBlackJack = game.checkBlackJack(playerOne,dealer);
     if(checkBlackJack == 1){
-        emit winMessage(true);
+        emit blackJackButtons(false);
+        emit displayEndGameMessage(true);
+        emit changeEndGameMessage("You won");
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         std::cout << "player BlackJack" << std::endl;
-        enableGameRestartButtons();
-        emit winMessage(true);
     }
     else if(checkBlackJack == 2){
+        emit blackJackButtons(false);
+        emit displayEndGameMessage(true);
+        emit changeEndGameMessage("You lost");
         emit SendCardImage(dealer.cardArray.begin()->image);
-        emit lossMessage(true);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
-        emit lossMessage(true);
-        enableGameRestartButtons();
         std::cout << "dealer BlackJack" << std::endl;
     }
     else if(checkBlackJack == 3){
+        emit blackJackButtons(false);
+        emit displayEndGameMessage(true);
+        emit changeEndGameMessage("You tied");
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
-        enableGameRestartButtons();
         // emit tie
     }
-    if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value && isRigged == false && playerOne.cardArray.size() == 2){ emit enableSplit(true); }
+    else if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value && isRigged == false && playerOne.cardArray.size() == 2){ emit enableSplit(true); }
     else{emit enableSplit(false);}
 }
 void Model::splitSlot(){
     game.split(playerOne);
+    std::tuple<bool, int> stateCheck = game.checkState(playerOne); // checks if the split hand is a 21
+    if(get<1>(stateCheck) == 4){
+        standSlot();
+    }
+    emit updatePlayerCount(QString(QString::number(game.personCount)));
     emit addCardToPlayerHand(playerOne.splitArray.back(), true);
     emit addCardToPlayerHand(playerOne.cardArray.back(), false);
-}
-void Model::enableGameRestartButtons(){
-    emit disableButtons(false);
-    emit enableDealCards(true);
-    emit enableMainMenu(true);
 }
 void Model::readyForNextLine()
 {

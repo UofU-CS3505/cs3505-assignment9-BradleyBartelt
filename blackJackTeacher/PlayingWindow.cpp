@@ -12,7 +12,6 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     ui->dealCards->setEnabled(false);
     ui->doubleButton->setEnabled(false);
     ui->winButton->setVisible(false);
-    ui->loseButton->setVisible(false);
 
     QPalette palette = this->palette();
     QColor bg = QColor(61, 59, 59);
@@ -167,7 +166,6 @@ void PlayingWindow::unlockSplit()
 void PlayingWindow::split(){
 
     // Create a layout for the new scroll area
-    ui->splitArea->widget()->setLayout(new QHBoxLayout);
     splitLayout = (QHBoxLayout*)ui->splitArea->widget()->layout();
     ui->handLayout->setStretch(0,0);
 
@@ -220,8 +218,10 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->mainMenu, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->dealCards, &QPushButton::setEnabled);
-    connect(&model, &Model::winMessage, this, &PlayingWindow::winPopUp);
-    connect(&model, &Model::lossMessage, this, &PlayingWindow::lossPopUp);
+    connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
+    connect(&model, &Model::blackJackButtons, this, &PlayingWindow::blackJack);
+    connect(&model, &Model::displayEndGameMessage, this, &PlayingWindow::endGamePopup);
+    connect(&model, &Model::changeEndGameMessage, this, &PlayingWindow::changePopupText);
     connect(&model, &Model::enableMainMenu, ui->mainMenu, &QPushButton::setEnabled);
 
     //============= Reset game connections
@@ -285,11 +285,18 @@ void PlayingWindow::endLevel(bool errorState)
     }
 
 }
-void PlayingWindow::winPopUp(bool isVisible)
+void PlayingWindow::endGamePopup(bool isVisible)
 {
     ui->winButton->setVisible(isVisible);
 }
-void PlayingWindow::lossPopUp(bool isVisible)
-{
-    ui->loseButton->setVisible(isVisible);
+void PlayingWindow::changePopupText(QString text){
+    ui->winButton->setText(text);
+}
+void PlayingWindow::blackJack(bool setState){
+    ui->splitButton->setEnabled(setState);
+    ui->hitButton->setEnabled(setState);
+    ui->standButton->setEnabled(setState);
+    ui->doubleButton->setEnabled(setState);
+    ui->mainMenu->setEnabled(!setState);
+    ui->dealCards->setEnabled(!setState);
 }

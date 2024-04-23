@@ -84,7 +84,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      </layout>
     </item>
     <item row="0" column="1" rowspan="2">
-     <layout class="QVBoxLayout" name="playAreaLayout" stretch="2,2,2,2">
+     <layout class="QVBoxLayout" name="playAreaLayout" stretch="2,2,2">
       <item>
        <widget class="QScrollArea" name="dealerArea">
         <property name="widgetResizable">
@@ -96,7 +96,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
            <x>0</x>
            <y>0</y>
            <width>379</width>
-           <height>175</height>
+           <height>202</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout"/>
@@ -120,22 +120,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="loseButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>30</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>You Lose!</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="handLayout" stretch="1,0">
         <item>
          <widget class="QScrollArea" name="scrollArea">
@@ -148,7 +132,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              <x>0</x>
              <y>0</y>
              <width>293</width>
-             <height>173</height>
+             <height>200</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_8"/>
@@ -166,7 +150,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              <x>0</x>
              <y>0</y>
              <width>72</width>
-             <height>173</height>
+             <height>200</height>
             </rect>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
