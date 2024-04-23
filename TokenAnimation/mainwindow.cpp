@@ -29,11 +29,15 @@ void MainWindow::setupBox2D() {
     // Create Box2D world for each label with different x positions
     float initialX = -10.0f; // Initial x position
     float spacing = 5.0f; // Spacing between bodies
+    //float delay = 0.2f;
     for (int i = 0; i < 9; ++i) {
+        //float currentDelay = delay * i;
+        //QTimer::singleShot(static_cast<int>(currentDelay * 1000), [=]() {
         b2Vec2 gravity(0.0f, -50.0f);
         worlds.push_back(new b2World(gravity));
         //setupBox2D(5.0f * i - 10.0f, i);
         setupBox2D(initialX + spacing * i, i);
+        //});
     }
 }
 
@@ -63,6 +67,17 @@ void MainWindow::setupBox2D(float x, int index) {
     fixtureDef.restitution = 0.9f; // High restitution for bouncing
 
     circleBody->CreateFixture(&fixtureDef);
+
+    // Apply initial upward impulse to make it fall
+    circleBody->ApplyLinearImpulse(b2Vec2(0.0f, -10.0f), circleBody->GetWorldCenter(), true);
+
+    // Increment index to create the next body, if not reached the limit
+    if (++index < 9) {
+        float delay = 0.2f; // Delay in seconds
+        QTimer::singleShot(static_cast<int>(delay * 1000), [=]() {
+            setupBox2D(x + 5.0f, index); // Call setupBox2D with incremented x and index
+        });
+    }
 }
 
 void MainWindow::updateWorld() {
@@ -85,7 +100,7 @@ void MainWindow::updateWorld() {
         float initialY = 0;
 
         // Adjust the initial x position and spacing between labels
-        float initialX = 20.0f; // Initial x position
+        float initialX = 10.0f; // Initial x position
         float labelSpacing = 100.0f; // Spacing between labels
 
         for (int i = 0; i < 9; ++i) {
