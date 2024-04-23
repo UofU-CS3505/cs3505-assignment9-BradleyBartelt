@@ -29,6 +29,7 @@ public:
     /// \return a double percentage representing the likelyhood that the next card will cause the value of the dealer's hand to exceed 21 (0-100)
     ///
     double probabilityOfDealerBust(std::vector<Card> dealersHand, std::vector<Card> playersHand1, std::vector<Card>playersHand2);
+
     ///
     /// \brief probabilityOfPlayerBust calculates the probability of the player busting on their next draw. Use the two argument version for when the player has not split
     /// \param dealersHand the dealer's hand. We dont calculate any odds for this one
@@ -36,6 +37,7 @@ public:
     /// \return a double percentage representing the likelyhood that the next card will cause the value of the player's hand to exceed 21 (0-100)
     ///
     double probabilityOfPlayerBust(std::vector<Card> dealersHand, std::vector<Card> playersHand);
+
     ///
     /// \brief probabilityOfPlayerBust calculates the probability of the player busting on their next draw. Use the three argument version for when the player has split
     /// \param dealersHand the dealer's hand. We dont calculate any odds for this one
@@ -60,6 +62,7 @@ private:
     /// \return a double percentage representing the likelyhood that the next card will cause the value of the first hand to exceed 21 (0-1)
     ///
     double probabilityOfBust(std::vector<Card> handToAnalyze, std::vector<Card> otherHand);
+
     ///
     /// \brief probabilityOfBustSplit Calculates the probability that the next dealt card will cause the first provided hand to go bust
     /// \param handToAnalyze the hand we are calculating odds on
@@ -68,6 +71,7 @@ private:
     /// \return a double percentage representing the likelyhood that the next card will cause the value of the first hand to exceed 21 (0-1)
     ///
     double probabilityOfBustSplit(std::vector<Card> handToAnalyze, std::vector<Card> otherHand, std::vector<Card> thirdHand);
+
     ///
     /// \brief probabilityOfBust3OrMoreHands Calculates the probability of the first hand provided to go bust. Use this version when at least 2 players and the dealer are playing.
     /// \param hands a vector filled with vectors of cards. Represents all cards on the table

@@ -12,7 +12,7 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     ui->dealCards->setEnabled(false);
     ui->doubleButton->setEnabled(false);
     ui->winButton->setVisible(false);
-    ui->loseButton->setVisible(false);
+
 
     QPalette palette = this->palette();
     QColor bg = QColor(61, 59, 59);
@@ -31,15 +31,21 @@ void PlayingWindow::receivedProb(double probOfDealerBust, double probOfDealerWin
 }
 
 
-void PlayingWindow::addCardToPlayerHand(Card card){
-    QLabel* newCard = new QLabel( ui->handArea);
+void PlayingWindow::addCardToPlayerHand(Card card, bool isSplit){
+    QLabel* newCard = new QLabel( ui->scrollArea);
     cards.push_back(newCard);
     newCard->setFixedSize(125, 175);
     newCard->setStyleSheet("QPushButton {background-color: rgb(224,224,224);}");
+    if(isSplit){
+        splitLayout->addWidget(newCard,Qt::AlignLeft);
+        updateCardImage(card.image);
+    }
+    else{
+        QHBoxLayout* layout = (QHBoxLayout*)ui->scrollArea->widget()->layout();
+        layout->addWidget(newCard, Qt::AlignLeft);
+        updateCardImage(card.image);
+    }
 
-    QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
-    layout->addWidget(newCard, Qt::AlignLeft);
-    updateCardImage(card.image);
 }
 
 
@@ -79,8 +85,10 @@ void PlayingWindow::mainMenuClicked()
     delete this;
 }
 
-// not working yet
 void PlayingWindow::clearOldImages(){
+    ui->splitLabel->setEnabled(false);
+    ui->splitTotal->setEnabled(false);
+    ui->handLayout->setStretch(0,1);
     for(int i = 0; i < cards.size(); i++){
         delete cards.at(i);
     }
@@ -159,25 +167,28 @@ void PlayingWindow::unlockSplit()
 }
 
 void PlayingWindow::split(){
-    // Create a new scroll area
-    QScrollArea* splitHand = new QScrollArea();
 
     // Create a layout for the new scroll area
-    QVBoxLayout* splitHandLayout = new QVBoxLayout();
-    splitHand->setLayout(splitHandLayout);
-    ui->handLayout->addWidget(splitHand);
+    splitLayout = (QHBoxLayout*)ui->splitArea->widget()->layout();
+    ui->handLayout->setStretch(0,0);
+
+
     // get the card to move from the the player hand to the split hand
     QLabel* moveCard = cards.at(2);
-    QHBoxLayout* moveFrom = qobject_cast<QHBoxLayout*>(ui->handArea->widget()->layout());
+    QHBoxLayout* moveFrom = qobject_cast<QHBoxLayout*>(ui->scrollArea->widget()->layout());
 
     // Remove the QLabel from its current layout
     moveFrom->removeWidget(moveCard);
 
     // Add the QLabel to the layout of the new scroll area
-    splitHandLayout->addWidget(moveCard);
+    splitLayout->addWidget(moveCard);
 
     // Disable the split button
     ui->splitButton->setEnabled(false);
+
+    ui->splitLabel->setEnabled(true);
+    ui->splitTotal->setEnabled(true);
+
 
 }
 void PlayingWindow::unlockHit()
@@ -194,6 +205,8 @@ void PlayingWindow::unlockHit()
 void PlayingWindow::setReadingScript(bool reading)
 {
     readingScript = reading;
+    if(!readingScript)
+        ui->nextButton->setEnabled(false);
 }
 //=========================== CONECTIONS =========================
 
@@ -207,18 +220,17 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     // ============ stand connections
 
-    connect(ui->standButton,&QPushButton::clicked,&model,&Model::standSlot);
     connect(&model,&Model::SendCardImage,this,&PlayingWindow::flipDealerCard);
     connect(ui->standButton, &QPushButton::clicked, &model, &Model::standSlot);
     connect(&model, &Model::disableButtons, ui->hitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
-    // connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
-    // the split button should not be enabled right off the bat
     connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->mainMenu, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->dealCards, &QPushButton::setEnabled);
-    connect(&model, &Model::winMessage, this, &PlayingWindow::winPopUp);
-    connect(&model, &Model::lossMessage, this, &PlayingWindow::lossPopUp);
+    connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
+    connect(&model, &Model::blackJackButtons, this, &PlayingWindow::blackJack);
+    connect(&model, &Model::displayEndGameMessage, this, &PlayingWindow::endGamePopup);
+    connect(&model, &Model::changeEndGameMessage, this, &PlayingWindow::changePopupText);
     connect(&model, &Model::enableMainMenu, ui->mainMenu, &QPushButton::setEnabled);
 
     //============= Reset game connections
@@ -240,6 +252,7 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     connect(&model, &Model::updateDealerCount, ui->dealerTotal, &QLabel::setText);
     connect(&model, &Model::updatePlayerCount, ui->playerTotal, &QLabel::setText);
+     connect(&model, &Model::updateSplitPlayerCount, ui->splitTotal, &QLabel::setText);
 
 
     //============= script Handling connections
@@ -257,6 +270,7 @@ void PlayingWindow::SetUpConnections(Model& model){
 
     //============= split connect
     connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::split);
+    connect(ui->splitButton,&QPushButton::clicked,&model,&Model::splitSlot);
     connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);
 
 }
@@ -281,11 +295,18 @@ void PlayingWindow::endLevel(bool errorState)
     }
 
 }
-void PlayingWindow::winPopUp(bool isVisible)
+void PlayingWindow::endGamePopup(bool isVisible)
 {
     ui->winButton->setVisible(isVisible);
 }
-void PlayingWindow::lossPopUp(bool isVisible)
-{
-    ui->loseButton->setVisible(isVisible);
+void PlayingWindow::changePopupText(QString text){
+    ui->winButton->setText(text);
+}
+void PlayingWindow::blackJack(bool setState){
+    ui->splitButton->setEnabled(setState);
+    ui->hitButton->setEnabled(setState);
+    ui->standButton->setEnabled(setState);
+    ui->doubleButton->setEnabled(setState);
+    ui->mainMenu->setEnabled(!setState);
+    ui->dealCards->setEnabled(!setState);
 }

@@ -12,6 +12,9 @@ class Player
 private:
     bool isDealer; // if the player is a dealer the rules will be different
     bool choseStand[2] = {false, false}; // if theres a split lets game know to check that hand too
+    std::vector<Card> cardArray; //holds the players hand
+    std::vector<Card> splitArray; //if theres a split the second card goes here
+    int currentHand = 0; // 0 is left hand, 1 is right hand
 public:
     Player(bool isDealer);
     /// adds card to players hand
@@ -25,9 +28,27 @@ public:
     void resetPlayer();
     /// getter for whether or not the player is a dealer
     bool getIsDealer();
-    std::vector<Card> cardArray; //holds the players hand
-    std::vector<Card> splitArray; //if theres a split the second card goes here
-    int currentHand = 0; // 0 is left hand, 1 is right hand
+    ///
+    /// \brief getCurrentHand returns the players current hand
+    /// \return
+    ///
+    int getCurrentHand();
+    ///
+    /// \brief setCurrentHand sets the players current hand
+    /// \param setter
+    ///
+    void setCurrentHand(int setter);
+    ///
+    /// \brief getCardArray gets the cardArray Vector
+    /// \return
+    ///
+    std::vector<Card> getCardArray();
+    ///
+    /// \brief getSplitArray gets the splitArray Vector
+    /// \return
+    ///
+    std::vector<Card> getSplitArray();
+
 };
 
 #endif // PLAYER_H

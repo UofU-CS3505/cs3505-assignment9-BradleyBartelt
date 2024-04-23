@@ -9,10 +9,13 @@ class Script
 {
 public:
     ///
-    /// \brief index
+    /// \brief Script default constructor
     ///
-    int lineNum = 0;
     Script();
+
+    ///
+    /// \brief Destructor
+    ///
     ~Script();
     ///
     /// \brief nextCommand Parses the next line of the script and returns a string representing the type of command
@@ -21,15 +24,31 @@ public:
     ///
     QString nextCommand(QString* outputDetails);
 
+    ///
+    /// \brief operator = assignment operator
+    /// \param other the other script
+    /// \return the script that was provided on the rhs
+    ///
     Script& operator=(Script& other);
 
+    ///
+    /// \brief setScript clears the previous script and starts the provided file script
+    /// \param filename the script to be read
+    ///
     void setScript(std::string filename);
+
     ///
     /// \brief tokenize breaks a given string into a vector of tokens seperated by a ' ' as a delimiter
     /// \param providedString a line to be tokenized
     /// \return a vector inn which each entry is a word in the original string.
     ///
     std::vector<QString> tokenize(QString providedString);
+
+    ///
+    /// \brief index
+    ///
+    int lineNum = 0;
+
 private:
     ///
     /// \brief script a file stream reading the script
