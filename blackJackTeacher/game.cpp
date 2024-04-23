@@ -165,6 +165,9 @@ std::tuple<bool,int> Game::hit(Player& currentPlayer){
     if(get<0>(playerState) && get<1>(playerState) == 0 && personCount == 21){ // if its true that means the game can continue
         return std::tuple<bool, int>(true,3);
     }
+    if(get<0>(playerState) && get<1>(playerState) == 1 && personSplitCount == 21){ // if its true that means the game can continue
+        return std::tuple<bool, int>(true,4);
+    }
     if(get<0>(playerState) && get<1>(playerState) == 0){ // if its true that means the game can continue
         return std::tuple<bool, int>(true,currentPlayer.currentHand);
     }
@@ -210,19 +213,17 @@ std::tuple<bool,int> Game::hit(Player& currentPlayer, Card card){
 }
 
 bool Game::split(Player& person){
-    if(person.cardArray.at(0).rank == person.cardArray.at(1).rank){
-        person.addHand(gameDeck.draw(), gameDeck.draw());
-        return true;
-    }
-    return false;
+    person.addHand(gameDeck.draw(), gameDeck.draw());
+    return true;
 }
 
 int Game::stand(Player& currentPlayer){
+    std::cout << currentPlayer.currentHand << std::endl;
     currentPlayer.setState(true);
-    if(currentPlayer.currentHand != 1)
-        return currentPlayer.currentHand;
+    if(currentPlayer.currentHand == 0)
+        return 0;
     currentPlayer.currentHand -= 1;
-    return currentPlayer.currentHand + 1;
+    return 1;
 }
 
 void Game::doubleBet(){

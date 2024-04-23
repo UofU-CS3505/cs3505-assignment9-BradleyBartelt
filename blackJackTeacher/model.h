@@ -17,7 +17,7 @@ signals:
     void sendLock(QString allBut);
     void SendCardImage(QImage);
     void disableButtons(bool);
-    void addCardToPlayerHand(Card);
+    void addCardToPlayerHand(Card, bool);
     void addCardToDealerHand(Card, bool);
     void enableDealCards(bool);
     void lossMessage(bool);
@@ -49,6 +49,7 @@ public slots:
     void dealCards();
     void SetLevel(int level);
     void standSlot();
+    void splitSlot();
     ///
     /// \brief readyForNextLine parse the next line and prepare to send it to the view
     ///

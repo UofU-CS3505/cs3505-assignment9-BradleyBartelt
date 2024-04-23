@@ -14,7 +14,9 @@ Model::Model(QObject *parent)
 void Model::standSlot(){
     // if a 1 is returned then the player has stood on their split hand, this makes it so the players
     // hits now only work on the left hand (represented by a 0)
-    if(game.stand(playerOne) == 0){ // if the player has stayed on the initial hand or the hand on the left of the split
+    std::cout<<"called"<<std::endl;
+    int num = game.stand(playerOne);
+    if(num== 0){ // if the player has stayed on the initial hand or the hand on the left of the split
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         emit disableButtons(false);
@@ -93,15 +95,22 @@ void Model::hitSlot(){
         gameTuple = game.hit(playerOne);
         emit updatePlayerCount(QString(QString::number(game.personCount)));
     }
-    if(get<0>(gameTuple) && get<1>(gameTuple) != 3)
-        emit addCardToPlayerHand(playerOne.cardArray.back());
+    if(get<0>(gameTuple) && get<1>(gameTuple) == 0)
+        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
+    else if(get<0>(gameTuple) && get<1>(gameTuple) == 1)
+        emit addCardToPlayerHand(playerOne.splitArray.back(), true);
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21
-        emit addCardToPlayerHand(playerOne.cardArray.back());
+        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
+        emit disableButtons(false);
+        standSlot();
+    }
+    else if(get<0>(gameTuple) && get<1>(gameTuple) == 4){ //player gets a 21
+        emit addCardToPlayerHand(playerOne.splitArray.back(), true);
         emit disableButtons(false);
         standSlot();
     }
     else{
-        emit addCardToPlayerHand(playerOne.cardArray.back());
+        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
         emit lossMessage(true);
         emit disableButtons(false);
         emit enableDealCards(true);
@@ -199,9 +208,9 @@ void Model::initialDeal(){
         emit updateDealerCount(QString(QString::number(temp)));
     }
     emit enableDealCards(false);
-    emit addCardToPlayerHand(playerOne.cardArray.at(0));
+    emit addCardToPlayerHand(playerOne.cardArray.at(0), false);
     emit addCardToDealerHand(dealer.cardArray.at(0), true);
-    emit addCardToPlayerHand(playerOne.cardArray.at(1));
+    emit addCardToPlayerHand(playerOne.cardArray.at(1), false);
     emit addCardToDealerHand(dealer.cardArray.at(1), false);
     int checkBlackJack = game.checkBlackJack(playerOne,dealer);
     if(checkBlackJack == 1){
@@ -229,8 +238,13 @@ void Model::initialDeal(){
         enableGameRestartButtons();
         // emit tie
     }
-    if(playerOne.cardArray.at(0).rank == playerOne.cardArray.at(1).rank && isRigged == false){ emit enableSplit(true); }
+    if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value && isRigged == false){ emit enableSplit(true); }
     else{emit enableSplit(false);}
+}
+void Model::splitSlot(){
+    game.split(playerOne);
+    emit addCardToPlayerHand(playerOne.splitArray.back(), true);
+    emit addCardToPlayerHand(playerOne.cardArray.back(), false);
 }
 void Model::enableGameRestartButtons(){
     emit enableDealCards(true);

@@ -2,6 +2,7 @@
 #define PLAYINGWINDOW_H
 
 #include <QMainWindow>
+#include "QtWidgets/qboxlayout.h"
 #include "model.h"
 #include "qlabel.h"
 #include "qpushbutton.h"
@@ -27,7 +28,7 @@ public slots:
 
     void updateCardImage(QImage);
 
-    void addCardToPlayerHand(Card card);
+    void addCardToPlayerHand(Card card, bool isSplit);
 
     void addCardToDealerHand(Card card, bool isFirstCard);
 
@@ -58,6 +59,7 @@ private:
     Ui::PlayingWindow *ui;
     QMainWindow* mainMenu;
     Model* model;
+    QHBoxLayout* splitLayout;
     void SetUpConnections(Model& model);
     QVector<QLabel*> cards;
     bool readingScript = false;
