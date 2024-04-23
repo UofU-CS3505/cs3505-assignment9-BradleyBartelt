@@ -93,7 +93,7 @@ void MainWindow::updateWorld() {
         }
 
         // Update the positions of the QLabel objects
-        QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png");
+        QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png"); // Adjust the path to your poker chip image
         QPixmap scaledPixmap = pixmap.scaled(100, 100, Qt::KeepAspectRatio);
 
         // Calculate the initial Y position for all labels (top of the window)
@@ -128,9 +128,17 @@ void MainWindow::updateWorld() {
                 // Map the Box2D X position to QLabel X position
                 float posX = initialX + labelSpacing * i; // Adjusted for spacing
 
+                // Calculate the final Y position based on the window's height
+                float finalY = this->height() - scaledPixmap.height();
+                // Smoothly interpolate the Y position towards the final position
+                posY += (finalY - posY) * (elapsedTime / totalTime);
+
                 label->setPixmap(scaledPixmap);
                 label->move(posX, posY);
             }
         }
+    } else {
+        // Animation finished, stop the timer
+        timer->stop();
     }
 }
