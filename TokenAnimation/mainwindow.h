@@ -31,6 +31,7 @@ private:
 
     void setupBox2D();
     void setupBox2D(float x, int index);
+
 };
 
 #endif // MAINWINDOW_H

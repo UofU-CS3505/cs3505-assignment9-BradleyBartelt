@@ -29,7 +29,7 @@ void MainWindow::setupBox2D() {
     // Create Box2D world for each label with different x positions
     float initialX = -10.0f; // Initial x position
     float spacing = 5.0f; // Spacing between bodies
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 9; ++i) {
         b2Vec2 gravity(0.0f, -50.0f);
         worlds.push_back(new b2World(gravity));
         //setupBox2D(5.0f * i - 10.0f, i);
@@ -85,10 +85,10 @@ void MainWindow::updateWorld() {
         float initialY = 0;
 
         // Adjust the initial x position and spacing between labels
-        float initialX = 50.0f; // Initial x position
+        float initialX = 20.0f; // Initial x position
         float labelSpacing = 100.0f; // Spacing between labels
 
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < 9; ++i) {
             QLabel *label = nullptr;
             switch (i) {
             case 0: label = ui->label; break;
@@ -97,6 +97,9 @@ void MainWindow::updateWorld() {
             case 3: label = ui->label_4; break;
             case 4: label = ui->label_5; break;
             case 5: label = ui->label_6; break;
+            case 6: label = ui->label_7; break;
+            case 7: label = ui->label_8; break;
+            case 8: label = ui->label_9; break;
             default: break;
             }
 
