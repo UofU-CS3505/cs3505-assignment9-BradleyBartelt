@@ -2,6 +2,11 @@
 #define PLAYINGWINDOW_H
 
 #include <QMainWindow>
+<<<<<<< Updated upstream
+=======
+#include "QtWidgets/qboxlayout.h"
+#include "QtWidgets/qscrollarea.h"
+>>>>>>> Stashed changes
 #include "model.h"
 #include "qlabel.h"
 #include "qpushbutton.h"

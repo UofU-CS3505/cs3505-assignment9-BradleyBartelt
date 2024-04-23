@@ -53,8 +53,10 @@ void Model::standSlot(){
     }
 }
 void Model::endGame(){
-    QTimer::singleShot(3000, this,[=]{ emit enableDealCards(true);});
-    QTimer::singleShot(3000, this,[=]{ emit enableMainMenu(true);});
+    if(!isRigged){
+        QTimer::singleShot(3000, this,[=]{ emit enableDealCards(true);});
+        QTimer::singleShot(3000, this,[=]{ emit enableMainMenu(true);});
+    }
     if(game.endResult() == "tie"){
         // emit main hand tie
     }
@@ -96,7 +98,16 @@ void Model::hitSlot(){
     if(get<0>(gameTuple) && get<1>(gameTuple) != 3)
         emit addCardToPlayerHand(playerOne.cardArray.back());
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21
+<<<<<<< Updated upstream
         emit addCardToPlayerHand(playerOne.cardArray.back());
+=======
+        emit addCardToPlayerHand(playerOne.cardArray.back(), false);
+        emit disableButtons(false);
+        standSlot();
+    }
+    else if(get<0>(gameTuple) && get<1>(gameTuple) == 4){ //players split hand gets a 21
+        emit addCardToPlayerHand(playerOne.splitArray.back(), true);
+>>>>>>> Stashed changes
         emit disableButtons(false);
         standSlot();
     }
@@ -205,7 +216,6 @@ void Model::initialDeal(){
     emit addCardToDealerHand(dealer.cardArray.at(1), false);
     int checkBlackJack = game.checkBlackJack(playerOne,dealer);
     if(checkBlackJack == 1){
-        emit disableButtons(false);
         emit winMessage(true);
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
@@ -214,7 +224,6 @@ void Model::initialDeal(){
         emit winMessage(true);
     }
     else if(checkBlackJack == 2){
-        emit disableButtons(false);
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit lossMessage(true);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
@@ -223,16 +232,20 @@ void Model::initialDeal(){
         std::cout << "dealer BlackJack" << std::endl;
     }
     else if(checkBlackJack == 3){
-        emit disableButtons(false);
         emit SendCardImage(dealer.cardArray.begin()->image);
         emit updateDealerCount(QString(QString::number(game.dealerCount)));
         enableGameRestartButtons();
         // emit tie
     }
+<<<<<<< Updated upstream
     if(playerOne.cardArray.at(0).rank == playerOne.cardArray.at(1).rank && isRigged == false){ emit enableSplit(true); }
+=======
+    if(playerOne.cardArray.at(0).value == playerOne.cardArray.at(1).value && isRigged == false && playerOne.cardArray.size() == 2){ emit enableSplit(true); }
+>>>>>>> Stashed changes
     else{emit enableSplit(false);}
 }
 void Model::enableGameRestartButtons(){
+    emit disableButtons(false);
     emit enableDealCards(true);
     emit enableMainMenu(true);
 }
