@@ -29,15 +29,10 @@ void MainWindow::setupBox2D() {
     // Create Box2D world for each label with different x positions
     float initialX = -10.0f; // Initial x position
     float spacing = 5.0f; // Spacing between bodies
-    //float delay = 0.2f;
     for (int i = 0; i < 9; ++i) {
-        //float currentDelay = delay * i;
-        //QTimer::singleShot(static_cast<int>(currentDelay * 1000), [=]() {
         b2Vec2 gravity(0.0f, -50.0f);
         worlds.push_back(new b2World(gravity));
-        //setupBox2D(5.0f * i - 10.0f, i);
         setupBox2D(initialX + spacing * i, i);
-        //});
     }
 }
 
@@ -54,7 +49,7 @@ void MainWindow::setupBox2D(float x, int index) {
     // Dynamic body setup for the circle
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(x, 4.0f);
+    bodyDef.position.Set(x, 10.0f); // Adjusted initial Y position to prevent glitch
     b2Body* circleBody = worlds[index]->CreateBody(&bodyDef);
 
     b2CircleShape circleShape;
@@ -79,6 +74,7 @@ void MainWindow::setupBox2D(float x, int index) {
         });
     }
 }
+
 
 void MainWindow::updateWorld() {
     static float totalTime = 2.0;
