@@ -53,41 +53,56 @@ void MainWindow::setupBox2D() {
 }
 
 void MainWindow::updateWorld() {
+    static float delays[] = {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}; // Delays for each label
+    static int numLabels = 6;
+    static float totalTime = 2.0; // Total time for the animation
 
-    // Step the world
-    world.Step(1.0f / 60.0f, 10, 5); // 60Hz
+    // Calculate the current time in the animation
+    static float elapsedTime = 0.0f;
+    elapsedTime += 1.0f / 60.0f; // Increment by 1/60 seconds
 
-    // Get the position of the Box2D object
-    b2Vec2 position = circleBody->GetPosition();
+    // Apply animation only if within the total animation time
+    if (elapsedTime <= totalTime) {
+        // Step the world
+        world.Step(1.0f / 60.0f, 10, 5); // 60Hz
 
-    int commonEndX = 100; // Adjust as needed
-    int commonEndY = 100;
+        // Get the position of the Box2D object
+        b2Vec2 position = circleBody->GetPosition();
 
-    // Smoothly interpolate the position for smoother animation
-    float ratio = 0.2f; // Adjust the ratio for smoother animation
-    currentX = currentX * (1 - ratio) + position.x * 100 * ratio;
-    currentY = currentY * (1 - ratio) - position.y * 100 * ratio;
+        // Smoothly interpolate the position for smoother animation
+        float ratio = elapsedTime / totalTime; // Adjust the ratio for smoother animation
+        currentX = currentX * (1 - ratio) + position.x * 100 * ratio;
+        currentY = currentY * (1 - ratio) - position.y * 100 * ratio;
 
-    // Update the positions of the QLabel objects
-    QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png");
-    QPixmap scaledPixmap = pixmap.scaled(100, 100, Qt::KeepAspectRatio);
+        // Update the positions of the QLabel objects
+        QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png");
+        QPixmap scaledPixmap = pixmap.scaled(100, 100, Qt::KeepAspectRatio);
 
-    // Update the positions of the QLabel objects smoothly
-    ui->label->setPixmap(scaledPixmap);
-    ui->label->move(100 + currentX, 100 + currentY);
+        // Calculate the initial Y position for all labels (top of the window)
+        float initialY = 0;
 
-    ui->label_2->setPixmap(scaledPixmap);
-    ui->label_2->move(200 + currentX, 100 + currentY);
+        // Update the positions of the QLabel objects smoothly
+        for (int i = 0; i < numLabels; ++i) {
+            QLabel *label = nullptr;
+            switch(i) {
+            case 0: label = ui->label; break;
+            case 1: label = ui->label_2; break;
+            case 2: label = ui->label_3; break;
+            case 3: label = ui->label_4; break;
+            case 4: label = ui->label_5; break;
+            case 5: label = ui->label_6; break;
+            default: break;
+            }
 
-    ui->label_3->setPixmap(scaledPixmap);
-    ui->label_3->move(300 + currentX, 100 + currentY);
-
-    ui->label_4->setPixmap(scaledPixmap);
-    ui->label_4->move(400 + currentX, 100 + currentY);
-
-    ui->label_5->setPixmap(scaledPixmap);
-    ui->label_5->move(500 + currentX, 100 + currentY);
-
-    ui->label_6->setPixmap(scaledPixmap);
-    ui->label_6->move(600 + currentX, 100 + currentY);
+            if (label) {
+                float labelDelay = delays[i] * totalTime;
+                if (elapsedTime >= labelDelay) {
+                    label->setPixmap(scaledPixmap);
+                    float adjustedX = 100 * (i + 1) + currentX;
+                    float adjustedY = initialY + (elapsedTime - labelDelay) / totalTime * (this->height() - scaledPixmap.height()); // Drop gradually
+                    label->move(adjustedX, adjustedY);
+                }
+            }
+        }
+    }
 }
