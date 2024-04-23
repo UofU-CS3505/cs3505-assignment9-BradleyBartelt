@@ -32,11 +32,11 @@ void MainWindow::setupBox2D() {
     for (int i = 0; i < 9; ++i) {
         b2Vec2 gravity(0.0f, -50.0f);
         worlds.push_back(new b2World(gravity));
-        setupBox2D(initialX + spacing * i, i);
+        setupBox2D(initialX + spacing * i, i, i); // Pass the label index as well
     }
 }
 
-void MainWindow::setupBox2D(float x, int index) {
+void MainWindow::setupBox2D(float x, int index, int labelIndex) {
     // Ground body setup
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0.0f, -10.0f);
@@ -70,7 +70,7 @@ void MainWindow::setupBox2D(float x, int index) {
     if (++index < 9) {
         float delay = 0.2f; // Delay in seconds
         QTimer::singleShot(static_cast<int>(delay * 1000), [=]() {
-            setupBox2D(x + 5.0f, index); // Call setupBox2D with incremented x and index
+            setupBox2D(x + 5.0f, index, labelIndex); // Pass the label index
         });
     }
 }
@@ -84,8 +84,8 @@ void MainWindow::updateWorld() {
     // Apply animation only if within the total animation time
     if (elapsedTime <= totalTime) {
         // Step the Box2D worlds
-        for (auto world : worlds) {
-            world->Step(1.0f / 60.0f, 10, 5); // Step the world
+        for (int i = 0; i < worlds.size(); ++i) {
+            worlds[i]->Step(1.0f / 60.0f, 10, 5); // Step the world
         }
 
         // Update the positions of the QLabel objects
@@ -99,7 +99,7 @@ void MainWindow::updateWorld() {
         float initialX = 10.0f; // Initial x position
         float labelSpacing = 100.0f; // Spacing between labels
 
-        for (int i = 0; i < 9; ++i) {
+        for (int i = 0; i < worlds.size(); ++i) {
             QLabel *label = nullptr;
             switch (i) {
             case 0: label = ui->label; break;
@@ -116,7 +116,17 @@ void MainWindow::updateWorld() {
 
             if (label) {
                 // Get the Box2D body position for the current label
-                b2Vec2 position = worlds[i]->GetBodyList()->GetPosition();
+                b2Body* body = worlds[i]->GetBodyList();
+                b2Vec2 position;
+                if (body) {
+                    position = body->GetPosition();
+                } else {
+                    qDebug() << "No body found for label" << i + 1;
+                    continue;
+                }
+
+                // Debugging output: Print the position of the Box2D body
+                qDebug() << "Label" << i + 1 << "Position:" << position.x << "," << position.y;
 
                 // Map the Box2D Y position to QLabel Y position
                 float posY = initialY + (this->height() - scaledPixmap.height()) - position.y * 100; // Adjusted for Box2D scale

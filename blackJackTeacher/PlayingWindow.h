@@ -5,6 +5,10 @@
 #include "QtWidgets/qboxlayout.h"
 #include "model.h"
 #include "qlabel.h"
+#include <QTimer>
+#include <QLabel>
+#include <vector>
+#include <Box2D/Box2D.h>
 
 namespace Ui {
 class PlayingWindow;
@@ -77,6 +81,7 @@ private slots:
     void on_nextButton_clicked();
     void endLevel(bool errorState);
     void split();
+    void updateWorld();
 
 private:
     Ui::PlayingWindow *ui;
@@ -86,6 +91,14 @@ private:
     void SetUpConnections(Model& model);
     QVector<QLabel*> cards;
     bool readingScript = false;
+
+    QTimer* timer;
+    QVector<b2World*> worlds;
+    float currentX;
+    float currentY;
+
+    void setupBox2D();
+    void setupBox2D(float x, int index);
 
 };
 

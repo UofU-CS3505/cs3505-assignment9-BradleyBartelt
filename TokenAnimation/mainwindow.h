@@ -30,7 +30,7 @@ private:
     std::vector<b2World*> worlds;
 
     void setupBox2D();
-    void setupBox2D(float x, int index);
+    void setupBox2D(float x, int index, int labelIndex);
 
 };
 
