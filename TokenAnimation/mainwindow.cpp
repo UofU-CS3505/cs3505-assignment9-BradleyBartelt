@@ -1,34 +1,47 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <Box2D/Box2D.h>
+#include <QPixmap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     timer(new QTimer(this)),
-    world(b2Vec2(0.0f, -50.0f)), // Initialize Box2D world with gravity
-    currentX(0), // Initialize currentX
-    currentY(0) { // Initialize currentY
+    currentX(0),
+    currentY(0)
+{
     ui->setupUi(this);
 
-    setupBox2D(); // Setup Box2D world and body
+    // Setup Box2D for each chip with different x positions
+    setupBox2D();
 
-    // Initialize and configure the timer
     connect(timer, &QTimer::timeout, this, &MainWindow::updateWorld);
     timer->start(1000 / 60); // 60Hz
 }
 
 MainWindow::~MainWindow() {
     delete ui;
-    // Cleanup Box2D objects
-    world.DestroyBody(circleBody);
+    for (auto& world : worlds) {
+        delete world;
+    }
 }
 
 void MainWindow::setupBox2D() {
+    // Create Box2D world for each label with different x positions
+    float initialX = -10.0f; // Initial x position
+    float spacing = 5.0f; // Spacing between bodies
+    for (int i = 0; i < 6; ++i) {
+        b2Vec2 gravity(0.0f, -50.0f);
+        worlds.push_back(new b2World(gravity));
+        //setupBox2D(5.0f * i - 10.0f, i);
+        setupBox2D(initialX + spacing * i, i);
+    }
+}
+
+void MainWindow::setupBox2D(float x, int index) {
     // Ground body setup
     b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0.0f, -15.0f);
-    b2Body* groundBody = world.CreateBody(&groundBodyDef);
+    groundBodyDef.position.Set(0.0f, -10.0f);
+    b2Body* groundBody = worlds[index]->CreateBody(&groundBodyDef);
 
     b2PolygonShape groundBox;
     groundBox.SetAsBox(50.0f, 10.0f);
@@ -37,8 +50,8 @@ void MainWindow::setupBox2D() {
     // Dynamic body setup for the circle
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(0.0f, 4.0f);
-    circleBody = world.CreateBody(&bodyDef);
+    bodyDef.position.Set(x, 4.0f);
+    b2Body* circleBody = worlds[index]->CreateBody(&bodyDef);
 
     b2CircleShape circleShape;
     circleShape.m_radius = 0.5f; // Adjusted for Box2D's scale
@@ -47,24 +60,22 @@ void MainWindow::setupBox2D() {
     fixtureDef.shape = &circleShape;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.3f;
-    fixtureDef.restitution = 0.6f; // High restitution for bouncing
+    fixtureDef.restitution = 0.9f; // High restitution for bouncing
 
     circleBody->CreateFixture(&fixtureDef);
 }
 
 void MainWindow::updateWorld() {
-    static float delays[] = {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}; // Delays for each label
-    static int numLabels = 6;
-    static float totalTime = 2.0; // Total time for the animation
-
-    // Calculate the current time in the animation
+    static float totalTime = 2.0;
     static float elapsedTime = 0.0f;
     elapsedTime += 1.0f / 60.0f; // Increment by 1/60 seconds
 
     // Apply animation only if within the total animation time
     if (elapsedTime <= totalTime) {
-        // Step the world
-        world.Step(1.0f / 60.0f, 10, 5); // 60Hz
+        // Step the Box2D worlds
+        for (auto world : worlds) {
+            world->Step(1.0f / 60.0f, 10, 5); // Step the world
+        }
 
         // Update the positions of the QLabel objects
         QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png");
@@ -73,10 +84,13 @@ void MainWindow::updateWorld() {
         // Calculate the initial Y position for all labels (top of the window)
         float initialY = 0;
 
-        // Update the positions of the QLabel objects based on Box2D's physics
-        for (int i = 0; i < numLabels; ++i) {
+        // Adjust the initial x position and spacing between labels
+        float initialX = 50.0f; // Initial x position
+        float labelSpacing = 100.0f; // Spacing between labels
+
+        for (int i = 0; i < 6; ++i) {
             QLabel *label = nullptr;
-            switch(i) {
+            switch (i) {
             case 0: label = ui->label; break;
             case 1: label = ui->label_2; break;
             case 2: label = ui->label_3; break;
@@ -87,13 +101,17 @@ void MainWindow::updateWorld() {
             }
 
             if (label) {
-                float labelDelay = delays[i] * totalTime;
-                if (elapsedTime >= labelDelay) {
-                    label->setPixmap(scaledPixmap);
-                    float adjustedX = 100 * (i + 1); // Position based on index
-                    float adjustedY = initialY + (elapsedTime - labelDelay) / totalTime * (this->height() - scaledPixmap.height()); // Gradually move down
-                    label->move(adjustedX, adjustedY);
-                }
+                // Get the Box2D body position for the current label
+                b2Vec2 position = worlds[i]->GetBodyList()->GetPosition();
+
+                // Map the Box2D Y position to QLabel Y position
+                float posY = initialY + (this->height() - scaledPixmap.height()) - position.y * 100; // Adjusted for Box2D scale
+
+                // Map the Box2D X position to QLabel X position
+                float posX = initialX + labelSpacing * i; // Adjusted for spacing
+
+                label->setPixmap(scaledPixmap);
+                label->move(posX, posY);
             }
         }
     }
