@@ -56,7 +56,6 @@ SOURCES += \
     Box2D/Dynamics/b2WorldCallbacks.cpp \
     Box2D/Rope/b2Rope.cpp \
     PlayingWindow.cpp \
-    animation.cpp \
     deck.cpp \
     game.cpp \
     main.cpp \
@@ -115,7 +114,6 @@ HEADERS += \
     Box2D/Dynamics/b2WorldCallbacks.h \
     Box2D/Rope/b2Rope.h \
     PlayingWindow.h \
-    animation.h \
     deck.h \
     game.h \
     mainwindow.h \
@@ -126,7 +124,6 @@ HEADERS += \
 
 FORMS += \
     PlayingWindow.ui \
-    finalAnimation.ui \
     instructionMessages.ui \
     mainwindow.ui
 

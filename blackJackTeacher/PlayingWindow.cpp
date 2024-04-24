@@ -17,7 +17,7 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     ui->winButton->setVisible(false);
 
     // Connect timer signal to updateWorld slot
-    connect(timer, &QTimer::timeout, this, &PlayingWindow::updateWorld);
+    //connect(timer, &QTimer::timeout, this, &PlayingWindow::updateWorld);
     //timer->start(1000 / 60); // 60Hz
 
 
@@ -33,7 +33,7 @@ PlayingWindow::~PlayingWindow()
 {
     delete ui;
 
-    delete timer;
+    //delete timer;
     for (auto& world : worlds) {
         delete world;
     }
