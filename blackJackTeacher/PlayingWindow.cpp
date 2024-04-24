@@ -311,7 +311,6 @@ void PlayingWindow::changePopupText(QString text){
         animation->show();
 
         //connect(animation, &Animation::finished, animation, &Animation::close);
-
     }
 }
 void PlayingWindow::blackJack(bool setState){

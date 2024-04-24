@@ -148,12 +148,13 @@ void Animation::updateWorld() {
     } else {
         // Animation finished, stop the timer
         timer->stop();
+        elapsedTime = 0.0f;
         //emit finished();
     }
     // if (elapsedTime >= totalTime) {
-    //     // Animation finished, emit the signal
-    //     emit finished();
     //     // Stop the timer
     //     timer->stop();
+    //     // Animation finished, emit the signal
+    //     emit finished();
     // }
 }
