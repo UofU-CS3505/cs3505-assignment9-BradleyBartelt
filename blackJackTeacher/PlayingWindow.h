@@ -80,7 +80,7 @@ private slots:
     void endLevel(bool errorState);
     void split();
 
-    void on_pushButton_clicked();
+    //void on_pushButton_clicked();
 
 private:
     Ui::PlayingWindow *ui;

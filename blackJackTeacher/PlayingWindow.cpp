@@ -41,7 +41,7 @@ void PlayingWindow::receivedProb(double probOfDealerBust, double probOfDealerWin
 
 
 void PlayingWindow::addCardToPlayerHand(Card card, bool isSplit){
-    QLabel* newCard = new QLabel( ui->scrollArea);
+    QLabel* newCard = new QLabel( ui->handArea);
     cards.push_back(newCard);
     newCard->setFixedSize(125, 175);
     newCard->setStyleSheet("QPushButton {background-color: rgb(224,224,224);}");
@@ -50,7 +50,7 @@ void PlayingWindow::addCardToPlayerHand(Card card, bool isSplit){
         updateCardImage(card.image);
     }
     else{
-        QHBoxLayout* layout = (QHBoxLayout*)ui->scrollArea->widget()->layout();
+        QHBoxLayout* layout = (QHBoxLayout*)ui->handArea->widget()->layout();
         layout->addWidget(newCard, Qt::AlignLeft);
         updateCardImage(card.image);
     }
@@ -192,7 +192,7 @@ void PlayingWindow::split(){
 
     // get the card to move from the the player hand to the split hand
     QLabel* moveCard = cards.at(2);
-    QHBoxLayout* moveFrom = qobject_cast<QHBoxLayout*>(ui->scrollArea->widget()->layout());
+    QHBoxLayout* moveFrom = qobject_cast<QHBoxLayout*>(ui->handArea->widget()->layout());
 
     // Remove the QLabel from its current layout
     moveFrom->removeWidget(moveCard);
