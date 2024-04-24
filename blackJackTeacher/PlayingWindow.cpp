@@ -12,15 +12,22 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     SetUpConnections(model);
     ui->splitButton->setEnabled(false);
     ui->dealCards->setEnabled(false);
-    ui->doubleButton->setEnabled(false);
     ui->winButton->setVisible(false);
+    ui->splitLabel->setVisible(false);
+    ui->splitTotal->setVisible(false);
+    ui->splitHand->setVisible(false);
+    ui->mainHand->setVisible(false);
 
+    // Connect timer signal to updateWorld slot
+    //connect(timer, &QTimer::timeout, this, &PlayingWindow::updateWorld);
+    //timer->start(1000 / 60); // 60Hz
 
     QPalette palette = this->palette();
     QColor bg = QColor(61, 59, 59);
     palette.setColor(QPalette::Window, bg);
     this->setAutoFillBackground(true);
     this->setPalette(palette);
+    ui->ProbOfDealerBustLabel->setStyleSheet("color: rgb(255, 255, 255);");
 }
 
 PlayingWindow::~PlayingWindow()
@@ -88,9 +95,11 @@ void PlayingWindow::mainMenuClicked()
 }
 
 void PlayingWindow::clearOldImages(){
-    ui->splitLabel->setEnabled(false);
-    ui->splitTotal->setEnabled(false);
+    ui->splitLabel->setVisible(false);
+    ui->splitTotal->setVisible(false);
     ui->handLayout->setStretch(0,1);
+    ui->splitHand->setVisible(false);
+    ui->mainHand->setVisible(false);
     for(int i = 0; i < cards.size(); i++){
         delete cards.at(i);
     }
@@ -168,11 +177,17 @@ void PlayingWindow::unlockSplit()
     }
 }
 
+void PlayingWindow::showWhichHand(bool makeVisible){
+    ui->mainHand->setVisible(makeVisible);
+    ui->splitHand->setVisible(!makeVisible);
+}
+
 void PlayingWindow::split(){
 
     // Create a layout for the new scroll area
     splitLayout = (QHBoxLayout*)ui->splitArea->widget()->layout();
     ui->handLayout->setStretch(0,0);
+    ui->splitHand->setVisible(true);
 
 
     // get the card to move from the the player hand to the split hand
@@ -188,8 +203,8 @@ void PlayingWindow::split(){
     // Disable the split button
     ui->splitButton->setEnabled(false);
 
-    ui->splitLabel->setEnabled(true);
-    ui->splitTotal->setEnabled(true);
+    ui->splitLabel->setVisible(true);
+    ui->splitTotal->setVisible(true);
 
 
 }
@@ -226,7 +241,6 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->standButton, &QPushButton::clicked, &model, &Model::standSlot);
     connect(&model, &Model::disableButtons, ui->hitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
-    connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->mainMenu, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->dealCards, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
@@ -274,12 +288,14 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::split);
     connect(ui->splitButton,&QPushButton::clicked,&model,&Model::splitSlot);
     connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);
-
+    connect(&model,&Model::showCurrentHand,this,&PlayingWindow::showWhichHand);
 }
 
 
 void PlayingWindow::on_nextButton_clicked()
 {
+    ui->ProbOfDealerBustLabel->setStyleSheet("color: rgb(255, 255, 255);");
+
     emit nextLine();
 }
 void PlayingWindow::endLevel(bool errorState)
@@ -317,7 +333,6 @@ void PlayingWindow::blackJack(bool setState){
     ui->splitButton->setEnabled(setState);
     ui->hitButton->setEnabled(setState);
     ui->standButton->setEnabled(setState);
-    ui->doubleButton->setEnabled(setState);
     ui->mainMenu->setEnabled(!setState);
     ui->dealCards->setEnabled(!setState);
 }

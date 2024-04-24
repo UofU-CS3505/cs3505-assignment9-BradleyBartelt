@@ -63,6 +63,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </item>
       <item>
        <widget class="QLabel" name="ProbOfDealerBustLabel">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
         <property name="text">
          <string>Probability of Dealer Bust:</string>
         </property>
@@ -70,6 +78,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </item>
       <item>
        <widget class="QLabel" name="ProbOfDealerExceedLabel">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
         <property name="text">
          <string>Probability of Dealer Exceeding This Hand:</string>
         </property>
@@ -209,13 +225,16 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <item row="1" column="6">
        <widget class="QLabel" name="splitLabel">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="font">
          <font>
           <pointsize>18</pointsize>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
         </property>
         <property name="text">
          <string>Split Total: </string>
@@ -238,13 +257,16 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <item row="1" column="7">
        <widget class="QLabel" name="splitTotal">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="font">
          <font>
           <pointsize>18</pointsize>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
         </property>
         <property name="text">
          <string>0</string>
@@ -331,19 +353,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <item>
        <layout class="QHBoxLayout" name="doubleAndSplitLayout">
         <item>
-         <widget class="QPushButton" name="doubleButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>2X</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="splitButton">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -354,6 +363,127 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="text">
            <string>Split</string>
           </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="1" rowspan="2">
+     <layout class="QVBoxLayout" name="playAreaLayout" stretch="4,4,1,4">
+      <item>
+       <widget class="QScrollArea" name="dealerArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>396</width>
+           <height>202</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout"/>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="winButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>You Win!</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="mainHand">
+          <property name="font">
+           <font>
+            <pointsize>18</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Current Hand</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="splitHand">
+          <property name="font">
+           <font>
+            <pointsize>18</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Current Hand</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="handLayout" stretch="1,0">
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_7">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>339</width>
+             <height>200</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_8"/>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="splitArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>49</width>
+             <height>200</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <property name="spacing">
+             <number>7</number>
+            </property>
+           </layout>
+          </widget>
          </widget>
         </item>
        </layout>

@@ -1,4 +1,4 @@
-+ hEight sTwo sEight cTen hQueen dSeven dFour
++ hEight sTwo sEight cTen hQueen dSeven dFive sFive
 / There's one more action you can take as the player we haven’t yet covered.
 / Let's talk about splits.
 / If you are dealt two cards of the same value, you may choose to split.
@@ -10,7 +10,8 @@
 / Some casinos allow resplitting, meaning you would be permitted to split to a third hand if you got another 8.
 / This rule is dependent on the table though, and at ours, you may only split once
 / Both of these hands are passable. You could try to hit on the second hand, but your odds aren't great.
-/ You should stand. lock stand
+/ You should stand on the first hand (the one to the right). lock stand
+/ You should stand on the second as well. lock stand
 / In this scenario, your 1st hand wins and your second hand loses.
 / In a casino, you would lose the bet on the losing hand, and win the bet on the winning hand.
 / The only other hard and fast rule around splits is to always split on aces. Your total if you kept hitting on the two ace hand would be only 12.

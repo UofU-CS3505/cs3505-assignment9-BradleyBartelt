@@ -24,6 +24,8 @@ signals:
     void nextLine();
 public slots:
 
+    void showWhichHand(bool);
+
     void mainMenuClicked();
 
     void updateCardImage(QImage);
@@ -77,6 +79,8 @@ private slots:
     void on_nextButton_clicked();
     void endLevel(bool errorState);
     void split();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::PlayingWindow *ui;
