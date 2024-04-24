@@ -43,7 +43,7 @@ void PlayingWindow::receivedProb(double probOfDealerBust, double probOfDealerWin
     ui->ProbOfDealerBustLabel->setStyleSheet("{color: #C0BBFE}");
     ui->ProbOfDealerExceedLabel->setStyleSheet("{color: #C0BBFE}");
     ui->ProbOfDealerBustLabel->setText("Probablity of Dealer Bust: " + QString::number(probOfDealerBust));
-    ui->ProbOfDealerExceedLabel->setText("Probability of Dealer Exceeding Current Hand: "+QString::number(probOfDealerWin));
+    ui->ProbOfDealerExceedLabel->setText("Probability of Dealer Exceeding Current Hand: "+QString::number(probOfDealerWin*100));
 }
 
 
