@@ -5,10 +5,6 @@
 #include "QtWidgets/qboxlayout.h"
 #include "model.h"
 #include "qlabel.h"
-#include <QTimer>
-#include <QLabel>
-#include <vector>
-#include <Box2D/Box2D.h>
 
 namespace Ui {
 class PlayingWindow;
@@ -81,13 +77,8 @@ public slots:
     void blackJack(bool);
 private slots:
     void on_nextButton_clicked();
-    ///
-    /// \brief endLevel stops the user from being able to press buttons. plays the finish animation if they completed the level
-    /// \param errorState t if the level terminated abnormally. f otherwise
-    ///
     void endLevel(bool errorState);
     void split();
-    void updateWorld();
 
     void on_pushButton_clicked();
 
@@ -98,18 +89,7 @@ private:
     QHBoxLayout* splitLayout;
     void SetUpConnections(Model& model);
     QVector<QLabel*> cards;
-    ///
-    /// \brief readingScript boolean representing whether we are playing a scripted level or not
-    ///
     bool readingScript = false;
-
-    QTimer* timer;
-    QVector<b2World*> worlds;
-    float currentX;
-    float currentY;
-
-    void setupBox2D();
-    void setupBox2D(float x, int index);
 
 };
 

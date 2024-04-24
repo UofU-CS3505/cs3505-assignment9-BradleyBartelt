@@ -93,6 +93,88 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </item>
      </layout>
     </item>
+    <item row="0" column="1" rowspan="2">
+     <layout class="QVBoxLayout" name="playAreaLayout" stretch="2,2,2">
+      <item>
+       <widget class="QScrollArea" name="dealerArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>387</width>
+           <height>210</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout"/>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="winButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>You Win!</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="handLayout" stretch="1,0">
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_7">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>301</width>
+             <height>207</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_8"/>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="splitArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>72</width>
+             <height>207</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <property name="spacing">
+             <number>7</number>
+            </property>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
     <item row="2" column="1">
      <layout class="QGridLayout" name="totalDisplayLayout" columnstretch="0,0,0,0,0,0,0,0">
       <item row="1" column="3">
@@ -416,7 +498,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>816</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
