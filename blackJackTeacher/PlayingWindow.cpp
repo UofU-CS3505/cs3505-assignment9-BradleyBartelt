@@ -17,7 +17,7 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     ui->winButton->setVisible(false);
 
     // Connect timer signal to updateWorld slot
-    connect(timer, &QTimer::timeout, this, &PlayingWindow::updateWorld);
+    //connect(timer, &QTimer::timeout, this, &PlayingWindow::updateWorld);
     //timer->start(1000 / 60); // 60Hz
 
 
@@ -33,14 +33,17 @@ PlayingWindow::~PlayingWindow()
 {
     delete ui;
 
-    delete timer;
+    //delete timer;
     for (auto& world : worlds) {
         delete world;
     }
 }
 
 void PlayingWindow::receivedProb(double probOfDealerBust, double probOfDealerWin){
-    ui->ProbOfDealerBustLabel->setText("probablity of dealer bust: " + QString::number(probOfDealerBust));
+    ui->ProbOfDealerBustLabel->setStyleSheet("{color: #C0BBFE}");
+    ui->ProbOfDealerExceedLabel->setStyleSheet("{color: #C0BBFE}");
+    ui->ProbOfDealerBustLabel->setText("Probablity of Dealer Bust: " + QString::number(probOfDealerBust));
+    ui->ProbOfDealerExceedLabel->setText("Probability of Dealer Exceeding Current Hand: "+QString::number(probOfDealerWin));
 }
 
 
@@ -297,6 +300,7 @@ void PlayingWindow::endLevel(bool errorState)
 {
     if(!errorState)
     {
+        setupBox2D();
         //Play animation
         if (!timer->isActive()) {
             timer->start(1000 / 60); // Start the timer with the desired update interval
@@ -388,9 +392,11 @@ void PlayingWindow::updateWorld() {
             world->Step(1.0f / 60.0f, 10, 5); // Step the world
         }
 
-        // Update the positions of the QLabel objects
-        QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png"); // TODO Adjust this path
-        QPixmap scaledPixmap = pixmap.scaled(100, 100, Qt::KeepAspectRatio);
+        QImage *pChip = new QImage(":/images/cardImages/pokerChip.png");
+        // convert Qimage to Qpixmap
+        QPixmap pixmap = QPixmap::fromImage(*pChip);
+        //QPixmap pixmap("/Users/manyanair/Downloads/pokerchip.png"); // TODO Adjust this path
+        QPixmap scaledPixmap = pixmap.scaled(50, 50, Qt::KeepAspectRatio);
 
         // Calculate the initial Y position for all labels (top of the window)
         float initialY = 0;

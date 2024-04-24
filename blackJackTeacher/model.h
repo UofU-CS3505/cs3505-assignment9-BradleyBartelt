@@ -70,6 +70,11 @@ signals:
     /// \brief sendReadingScript
     ///
     void sendReadingScript(bool);
+    ///
+    /// \brief sendProbabilities signal that sends relevant probabilities to
+    /// \param probOfDealerBust
+    /// \param probOfDealerWin
+    ///
     void sendProbabilities(double probOfDealerBust, double probOfDealerWin);
     ///
     /// \brief endLevel send a signal to the view to display game end information
