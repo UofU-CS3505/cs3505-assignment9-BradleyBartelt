@@ -230,8 +230,8 @@ bool Game::split(Player& person){
     return true;
 }
 
-bool Game::split(Player& person, Card mainCard, Card splitCard){
-    person.addHand(gameDeck.draw(mainCard.rank, mainCard.suit), gameDeck.draw(splitCard.rank, splitCard.suit));
+bool Game::split(Player& person, Card splitCard, Card mainCard){
+    person.addHand(gameDeck.draw(splitCard.rank, splitCard.suit), gameDeck.draw(mainCard.rank, mainCard.suit));
     checkState(person);
     return true;
 }
