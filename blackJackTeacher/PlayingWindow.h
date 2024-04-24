@@ -28,6 +28,8 @@ signals:
     void nextLine();
 public slots:
 
+    void showWhichHand(bool);
+
     void mainMenuClicked();
 
     void updateCardImage(QImage);

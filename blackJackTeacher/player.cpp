@@ -32,8 +32,8 @@ void Player::resetPlayer(){
     cardArray.clear();
     currentHand = 0;
 }
-bool Player::getState(){
-    if(currentHand == 0)
+bool Player::getState(QString hand){
+    if(hand == "main")
         return choseStand[0];
     return choseStand[1];
 }

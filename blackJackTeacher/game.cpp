@@ -105,7 +105,7 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
         else if(personCount == 21 && currentPlayer.getCurrentHand() == 0){ // if the player gets a 21 and they aren't currently dealing with the split hand
             return std::tuple<bool,int>(true,3); // returns that its not a bust and that the main hand is a 21
         }
-        if(int(currentPlayer.getSplitArray().size()) != 0){ // same as above but for a split hand
+        if(int(currentPlayer.getSplitArray().size()) != 0 && !currentPlayer.getState("split")){ // same as above but for a split hand
             personSplitCount = 0;
             aceCount = 0;
             for(int i = 0; i < int(currentPlayer.getSplitArray().size()); i++){
@@ -194,7 +194,6 @@ std::tuple<bool,int> Game::hit(Player& currentPlayer){
     }
     else{ // the split hand is greater than a 21
         int tempVal = currentPlayer.getCurrentHand();
-        currentPlayer.setCurrentHand(0);
         return std::tuple<bool, int>(false, tempVal);
     }
 }
@@ -255,7 +254,4 @@ int Game::getPersonSplitCount(){
     return personSplitCount;
 }
 
-void Game::doubleBet(){
-    // if we work with bets we can make this method do something
-}
 

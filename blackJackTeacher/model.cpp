@@ -51,6 +51,7 @@ void Model::standSlot(){
         }
     }
     else{ // if the split hand is dealt a 21 forcibly stand it
+        emit showCurrentHand(true);
         std::tuple<bool, int> stateCheck = game.checkState(playerOne); // checks if the main hand is a 21
         if(get<1>(stateCheck) == 3){
             standSlot();
@@ -59,8 +60,8 @@ void Model::standSlot(){
 }
 void Model::endGame(){
     if(!isRigged){ // if the game isnt rigged, when the game ends wait 3 seconds to renable the main menu and deal cards button
-        QTimer::singleShot(3000, this,[=]{ emit enableDealCards(true);});
-        QTimer::singleShot(3000, this,[=]{ emit enableMainMenu(true);});
+        QTimer::singleShot(3500, this,[=]{ emit enableDealCards(true);});
+        QTimer::singleShot(3500, this,[=]{ emit enableMainMenu(true);});
     }
     std::tuple endResult = game.endResult();
     if(get<0>(endResult) == "tie"){
@@ -122,6 +123,8 @@ void Model::hitSlot(){
     }
     else{
         gameTuple = game.hit(playerOne);
+        std::cout << game.getPersonCount() << std::endl;
+        std::cout << game.getPersonSplitCount() << std::endl;
     }
     if(get<0>(gameTuple) && get<1>(gameTuple) == 0){ // if the main hand didn't bust
         emit addCardToPlayerHand(playerOne.getCardArray().back(), false); // display main hand card
@@ -134,6 +137,7 @@ void Model::hitSlot(){
     else if(!get<0>(gameTuple) && get<1>(gameTuple) == 1){ // if the split hand bust
         emit addCardToPlayerHand(playerOne.getSplitArray().back(), true);
         emit updateSplitPlayerCount(QString(QString::number(game.getPersonSplitCount())));
+        standSlot();
     }
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21 on main hand
         emit addCardToPlayerHand(playerOne.getCardArray().back(), false);
@@ -150,11 +154,7 @@ void Model::hitSlot(){
     else{ // the main hand bust
         emit addCardToPlayerHand(playerOne.getCardArray().back(), false);
         emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
-        endGame();
-        if(!isRigged){
-            emit disableButtons(false);
-            emit enableDealCards(true);
-        }
+        standSlot();
     }
 
 }
@@ -164,7 +164,6 @@ void Model::dealCards(){
     else
         isRigged = false;
     emit disableButtons(true);
-    emit enableDealCards(false);
     initialDeal();
 }
 void Model::SetLevel(int level){
@@ -259,28 +258,25 @@ void Model::initialDeal(){
         if(!isRigged)
             emit blackJackButtons(false);
         emit displayEndGameMessage(true);
-        emit changeEndGameMessage("You won");
+        emit changeEndGameMessage("You got a blackjack");
         emit SendCardImage(dealer.getCardArray().begin()->image);
         emit updateDealerCount(QString(QString::number(game.getDealerCount())));
-        std::cout << "player BlackJack" << std::endl;
     }
     else if(checkBlackJack == 2){
         if(!isRigged)
             emit blackJackButtons(false);
         emit displayEndGameMessage(true);
-        emit changeEndGameMessage("You lost");
+        emit changeEndGameMessage("The dealer got a blackjack");
         emit SendCardImage(dealer.getCardArray().begin()->image);
         emit updateDealerCount(QString(QString::number(game.getDealerCount())));
-        std::cout << "dealer BlackJack" << std::endl;
     }
     else if(checkBlackJack == 3){
         if(!isRigged)
             emit blackJackButtons(false);
         emit displayEndGameMessage(true);
-        emit changeEndGameMessage("You tied");
+        emit changeEndGameMessage("You and the dealer both got blackjack");
         emit SendCardImage(dealer.getCardArray().begin()->image);
         emit updateDealerCount(QString(QString::number(game.getDealerCount())));
-        // emit tie
     }
     else if(playerOne.getCardArray().at(0).rank == playerOne.getCardArray().at(1).rank && isRigged == false && playerOne.getCardArray().size() == 2){ emit enableSplit(true); }
     else{emit enableSplit(false);}
@@ -289,9 +285,6 @@ void Model::initialDeal(){
 }
 void Model::splitSlot(){
     if(isRigged){
-        // pass in cards youd like to rig
-        // first card passed in will go to the right hand
-        // second card passed in will go to the left hand
         game.split(playerOne, riggedCards[nextCard + 1], riggedCards[nextCard]);
         nextCard += 2;
     }

@@ -13,6 +13,7 @@ public:
     explicit Model(QObject *parent = nullptr);
 
 signals:
+    void showCurrentHand(bool);
     void blackJackButtons(bool);
     ///
     /// \brief enableSplit send a signal to the view to enable to split button

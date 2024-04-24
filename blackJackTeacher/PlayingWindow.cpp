@@ -13,8 +13,11 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     SetUpConnections(model);
     ui->splitButton->setEnabled(false);
     ui->dealCards->setEnabled(false);
-    ui->doubleButton->setEnabled(false);
     ui->winButton->setVisible(false);
+    ui->splitLabel->setVisible(false);
+    ui->splitTotal->setVisible(false);
+    ui->splitHand->setVisible(false);
+    ui->mainHand->setVisible(false);
 
     // Connect timer signal to updateWorld slot
     //connect(timer, &QTimer::timeout, this, &PlayingWindow::updateWorld);
@@ -102,9 +105,11 @@ void PlayingWindow::mainMenuClicked()
 }
 
 void PlayingWindow::clearOldImages(){
-    ui->splitLabel->setEnabled(false);
-    ui->splitTotal->setEnabled(false);
+    ui->splitLabel->setVisible(false);
+    ui->splitTotal->setVisible(false);
     ui->handLayout->setStretch(0,1);
+    ui->splitHand->setVisible(false);
+    ui->mainHand->setVisible(false);
     for(int i = 0; i < cards.size(); i++){
         delete cards.at(i);
     }
@@ -182,11 +187,17 @@ void PlayingWindow::unlockSplit()
     }
 }
 
+void PlayingWindow::showWhichHand(bool makeVisible){
+    ui->mainHand->setVisible(makeVisible);
+    ui->splitHand->setVisible(!makeVisible);
+}
+
 void PlayingWindow::split(){
 
     // Create a layout for the new scroll area
     splitLayout = (QHBoxLayout*)ui->splitArea->widget()->layout();
     ui->handLayout->setStretch(0,0);
+    ui->splitHand->setVisible(true);
 
 
     // get the card to move from the the player hand to the split hand
@@ -202,8 +213,8 @@ void PlayingWindow::split(){
     // Disable the split button
     ui->splitButton->setEnabled(false);
 
-    ui->splitLabel->setEnabled(true);
-    ui->splitTotal->setEnabled(true);
+    ui->splitLabel->setVisible(true);
+    ui->splitTotal->setVisible(true);
 
 
 }
@@ -240,7 +251,6 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->standButton, &QPushButton::clicked, &model, &Model::standSlot);
     connect(&model, &Model::disableButtons, ui->hitButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->standButton, &QPushButton::setEnabled);
-    connect(&model, &Model::disableButtons, ui->doubleButton, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->mainMenu, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->dealCards, &QPushButton::setEnabled);
     connect(&model, &Model::disableButtons, ui->splitButton, &QPushButton::setEnabled);
@@ -288,6 +298,7 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->splitButton,&QPushButton::clicked,this,&PlayingWindow::split);
     connect(ui->splitButton,&QPushButton::clicked,&model,&Model::splitSlot);
     connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);
+    connect(&model,&Model::showCurrentHand,this,&PlayingWindow::showWhichHand);
 
 }
 
@@ -326,7 +337,6 @@ void PlayingWindow::blackJack(bool setState){
     ui->splitButton->setEnabled(setState);
     ui->hitButton->setEnabled(setState);
     ui->standButton->setEnabled(setState);
-    ui->doubleButton->setEnabled(setState);
     ui->mainMenu->setEnabled(!setState);
     ui->dealCards->setEnabled(!setState);
 }
@@ -408,15 +418,15 @@ void PlayingWindow::updateWorld() {
         for (int i = 0; i < 9; ++i) {
             QLabel *label = nullptr;
             switch (i) {
-            case 0: label = ui->label; break;
-            case 1: label = ui->label_2; break;
-            case 2: label = ui->label_3; break;
-            case 3: label = ui->label_4; break;
-            case 4: label = ui->label_5; break;
-            case 5: label = ui->label_6; break;
-            case 6: label = ui->label_7; break;
-            case 7: label = ui->label_8; break;
-            case 8: label = ui->label_9; break;
+            // case 0: label = ui->label; break;
+            // case 1: label = ui->label_2; break;
+            // case 2: label = ui->label_3; break;
+            // case 3: label = ui->label_4; break;
+            // case 4: label = ui->label_5; break;
+            // case 5: label = ui->label_6; break;
+            // case 6: label = ui->label_7; break;
+            // case 7: label = ui->label_8; break;
+            // case 8: label = ui->label_9; break;
             default: break;
             }
 

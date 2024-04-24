@@ -28,8 +28,6 @@ public:
     /// splits a persons hand
     bool split(Player& person);
     bool split(Player& person, Card card, Card secondCard);
-    /// doubles the current bet
-    void doubleBet();
     /// disables further actions on players current hand
     int stand(Player& person);
     /// decides who won or loss, bool determines whether the dealer won or the player won, and the int determines which hand won

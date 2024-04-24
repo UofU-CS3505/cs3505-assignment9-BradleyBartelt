@@ -22,7 +22,7 @@ public:
     /// if a player chooses to split, creates another hand
     void addHand(Card topCard, Card cardAfter);
     /// getter and setter for state of the current hand
-    bool getState();
+    bool getState(QString hand);
     void setState(bool state);
     /// resets the player back to how they are at the start
     void resetPlayer();
