@@ -275,6 +275,8 @@ void Model::initialDeal(){
     }
     else if(playerOne.getCardArray().at(0).value == playerOne.getCardArray().at(1).value && isRigged == false && playerOne.getCardArray().size() == 2){ emit enableSplit(true); }
     else{emit enableSplit(false);}
+    emit sendProbabilities(probability.probabilityOfDealerBust(dealer.getCardArray(), playerOne.getCardArray(), false),
+                           probability.probabilityOfDealerExceeding(dealer.getCardArray(), playerOne.getCardArray()));
 }
 void Model::splitSlot(){
     game.split(playerOne);

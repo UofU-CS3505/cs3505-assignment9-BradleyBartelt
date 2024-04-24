@@ -79,6 +79,10 @@ public slots:
     void blackJack(bool);
 private slots:
     void on_nextButton_clicked();
+    ///
+    /// \brief endLevel stops the user from being able to press buttons. plays the finish animation if they completed the level
+    /// \param errorState t if the level terminated abnormally. f otherwise
+    ///
     void endLevel(bool errorState);
     void split();
     void updateWorld();
@@ -90,6 +94,9 @@ private:
     QHBoxLayout* splitLayout;
     void SetUpConnections(Model& model);
     QVector<QLabel*> cards;
+    ///
+    /// \brief readingScript boolean representing whether we are playing a scripted level or not
+    ///
     bool readingScript = false;
 
     QTimer* timer;
