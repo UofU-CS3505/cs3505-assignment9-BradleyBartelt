@@ -279,7 +279,14 @@ void Model::initialDeal(){
                            probability.probabilityOfDealerExceeding(dealer.getCardArray(), playerOne.getCardArray()));
 }
 void Model::splitSlot(){
-    game.split(playerOne);
+    if(isRigged){
+        // pass in cards youd like to rig
+        // first card passed in will go to the right hand
+        // second card passed in will go to the left hand
+        game.split(playerOne);
+    }
+    else
+        game.split(playerOne);
     std::tuple<bool, int> stateCheck = game.checkState(playerOne); // checks if the split hand is a 21
     if(get<1>(stateCheck) == 4){
         standSlot();
