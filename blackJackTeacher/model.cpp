@@ -20,6 +20,9 @@ void Model::standSlot(){
         emit SendCardImage(dealer.getCardArray().begin()->image); // flips dealer card
         emit updateDealerCount(QString(QString::number(game.getDealerCount()))); // updates the count
         emit disableButtons(false); // disables buttons so that the player cannot hit or stand or split while the dealer deals
+        if(isRigged){
+            emit enableMainMenu(true);
+        }
         if(game.getDealerCount() > 16){ // if the dealers hand is above a 16 with its given two cards end the round
             endGame();
             return;
@@ -135,7 +138,8 @@ void Model::hitSlot(){
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 3){ //player gets a 21 on main hand
         emit addCardToPlayerHand(playerOne.getCardArray().back(), false);
         emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
-        emit disableButtons(false);
+        if(!isRigged)
+            emit disableButtons(false);
         standSlot();
     }
     else if(get<0>(gameTuple) && get<1>(gameTuple) == 4){ //players split hand gets a 21 on split hand
@@ -147,8 +151,10 @@ void Model::hitSlot(){
         emit addCardToPlayerHand(playerOne.getCardArray().back(), false);
         emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
         endGame();
-        emit disableButtons(false);
-        emit enableDealCards(true);
+        if(!isRigged){
+            emit disableButtons(false);
+            emit enableDealCards(true);
+        }
     }
 
 }
@@ -250,7 +256,8 @@ void Model::initialDeal(){
     emit addCardToDealerHand(dealer.getCardArray().at(1), false);
     int checkBlackJack = game.checkBlackJack(playerOne,dealer);
     if(checkBlackJack == 1){
-        emit blackJackButtons(false);
+        if(!isRigged)
+            emit blackJackButtons(false);
         emit displayEndGameMessage(true);
         emit changeEndGameMessage("You won");
         emit SendCardImage(dealer.getCardArray().begin()->image);
@@ -258,7 +265,8 @@ void Model::initialDeal(){
         std::cout << "player BlackJack" << std::endl;
     }
     else if(checkBlackJack == 2){
-        emit blackJackButtons(false);
+        if(!isRigged)
+            emit blackJackButtons(false);
         emit displayEndGameMessage(true);
         emit changeEndGameMessage("You lost");
         emit SendCardImage(dealer.getCardArray().begin()->image);
@@ -266,14 +274,15 @@ void Model::initialDeal(){
         std::cout << "dealer BlackJack" << std::endl;
     }
     else if(checkBlackJack == 3){
-        emit blackJackButtons(false);
+        if(!isRigged)
+            emit blackJackButtons(false);
         emit displayEndGameMessage(true);
         emit changeEndGameMessage("You tied");
         emit SendCardImage(dealer.getCardArray().begin()->image);
         emit updateDealerCount(QString(QString::number(game.getDealerCount())));
         // emit tie
     }
-    else if(playerOne.getCardArray().at(0).value == playerOne.getCardArray().at(1).value && isRigged == false && playerOne.getCardArray().size() == 2){ emit enableSplit(true); }
+    else if(playerOne.getCardArray().at(0).rank == playerOne.getCardArray().at(1).rank && isRigged == false && playerOne.getCardArray().size() == 2){ emit enableSplit(true); }
     else{emit enableSplit(false);}
     emit sendProbabilities(probability.probabilityOfDealerBust(dealer.getCardArray(), playerOne.getCardArray(), false),
                            probability.probabilityOfDealerExceeding(dealer.getCardArray(), playerOne.getCardArray()));
@@ -283,7 +292,8 @@ void Model::splitSlot(){
         // pass in cards youd like to rig
         // first card passed in will go to the right hand
         // second card passed in will go to the left hand
-        game.split(playerOne);
+        game.split(playerOne, riggedCards[nextCard + 1], riggedCards[nextCard]);
+        nextCard += 2;
     }
     else
         game.split(playerOne);
