@@ -99,7 +99,10 @@ std::tuple<bool,int> Game::checkState(Player currentPlayer){
                 break;
             }
         }
-        if(personCount > 21){
+        if(personCount > 21 && personSplitCount < 22 && personSplitCount > 0){
+            return std::tuple<bool,int>(false,5);
+        }
+        else if(personCount > 21){
             return std::tuple<bool,int>(false,0);
         }
         else if(personCount == 21 && currentPlayer.getCurrentHand() == 0){ // if the player gets a 21 and they aren't currently dealing with the split hand
@@ -215,6 +218,9 @@ std::tuple<bool,int> Game::hit(Player& currentPlayer, Card card){
     }
     if(get<0>(playerState) && get<1>(playerState) == 1){ // if the split hand is less than a 21
         return std::tuple<bool, int>(true, currentPlayer.getCurrentHand());
+    }
+    if(!get<0>(playerState) && get<1>(playerState) == 5){
+        return std::tuple<bool,int>(false, 5);
     }
     else{ // the split hand is greater than a 21
         int tempVal = currentPlayer.getCurrentHand();

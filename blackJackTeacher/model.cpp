@@ -154,7 +154,16 @@ void Model::hitSlot(){
     else{ // the main hand bust
         emit addCardToPlayerHand(playerOne.getCardArray().back(), false);
         emit updatePlayerCount(QString(QString::number(game.getPersonCount())));
-        standSlot();
+        if(get<0>(gameTuple) && get<1>(gameTuple) == 5){
+            standSlot();
+        }
+        else{
+            endGame();
+            if(!isRigged){
+                emit disableButtons(false);
+                emit enableDealCards(true);
+            }
+        }
     }
 
 }
