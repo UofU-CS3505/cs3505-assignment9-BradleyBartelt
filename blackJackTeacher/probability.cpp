@@ -1,6 +1,7 @@
 #include "probability.h"
 
-Probability::Probability() {}
+Probability::Probability() {
+}
 
 double Probability::probabilityOfDealerBust(std::vector<Card> dealersHand, std::vector<Card> playersHand,bool holeRevealed)
 {
@@ -34,8 +35,9 @@ double Probability::probabilityOfDealerExceeding(std::vector<Card> dealersHand, 
     }
     //Hold a tally of the player's cards
     int pHandSum = 0;
-    for(Card card:playersHand)
+    for(int i = 0; i<playersHand.size(); i++)
     {
+        Card card = playersHand[i];
         if(card.rank == ace)
         {
             inDeck[0] -= 1;
@@ -65,8 +67,9 @@ double Probability::probabilityOfDealerExceeding(std::vector<Card> dealersHand, 
     }
     //Hold a tally of the player's cards
     int dHandSum = 0;
-    for(Card card:dealersHand)
+    for(int i = 0; i<dealersHand.size(); i++)
     {
+        Card card = dealersHand[i];
         if(card.rank == ace)
         {
             inDeck[0] -= 1;
@@ -122,8 +125,9 @@ double Probability::probabilityOfBust(std::vector<Card> handToAnalyze, std::vect
     }
     //Hold a tally of the handToAnalyze's cards
     int handSum = 0;
-    for(Card card:handToAnalyze)
+    for(int i = 0; i<handToAnalyze.size(); i++)
     {
+        Card card = handToAnalyze[i];
         if(card.rank == ace)
         {
             inDeck[0] -= 1;
@@ -153,8 +157,9 @@ double Probability::probabilityOfBust(std::vector<Card> handToAnalyze, std::vect
     }
 
     //Remove the cards in the other hand from the pool of possible cards
-    for(Card card:otherHand)
+    for(int i = 0; i<otherHand.size(); i++)
     {
+        Card card = otherHand[i];
         if(card.rank == ace)
             inDeck[0] -= 1;
         else if(card.rank == jack)
