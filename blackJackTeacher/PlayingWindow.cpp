@@ -319,7 +319,7 @@ void PlayingWindow::endGamePopup(bool isVisible)
 }
 void PlayingWindow::changePopupText(QString text){
     ui->winButton->setText(text);
-    if (ui->winButton->text() == "You won") {
+    if (ui->winButton->text() == "You won" || ui->winButton->text() == "You got a blackjack") {
         //qDebug() << "Entering endGamePopup function"; // Debug line
         Animation *animation = new Animation(this);
         // Show the new window
