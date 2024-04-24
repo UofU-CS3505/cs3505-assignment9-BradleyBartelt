@@ -23,9 +23,6 @@
 * shuffle
 / The suit doesn't matter for a blackjack. All you need is to have a card total of 21 off of your first two cards. This means you have an Ace, and either a 10 or a face card.
 / Some casinos pay 3:2 when you get a blackjack, however this is generally for tables where the house is dealing from many decks at once.
-/ Let's see the dealer's hand
-* reveal hole
-/ Congrats on your win!
 * shuffle
 / Finally lets talk about the Ace
 / The ace card is special, because it can either act as an 11 or a 1, whichever is better for the hand.
