@@ -36,7 +36,8 @@ PlayingWindow::~PlayingWindow()
 }
 
 void PlayingWindow::receivedProb(double probOfDealerBust, double probOfDealerWin){
-    ui->ProbOfDealerBustLabel->setText("probablity of dealer bust: " + QString::number(probOfDealerBust));
+    ui->ProbOfDealerBustLabel->setText("Probability of Dealer Bust: " + QString::number(probOfDealerBust) + "%");
+    ui->ProbOfDealerExceedLabel->setText("Probability of Dealer Exceeding Current Hand: " + QString::number(probOfDealerWin*100) + "%");
 }
 
 
