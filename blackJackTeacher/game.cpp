@@ -230,6 +230,12 @@ bool Game::split(Player& person){
     return true;
 }
 
+bool Game::split(Player& person, Card mainCard, Card splitCard){
+    person.addHand(gameDeck.draw(mainCard.rank, mainCard.suit), gameDeck.draw(splitCard.rank, splitCard.suit));
+    checkState(person);
+    return true;
+}
+
 int Game::stand(Player& currentPlayer){
     currentPlayer.setState(true);
     if(currentPlayer.getCurrentHand() == 0) // if the player has stood on the main hand
@@ -237,6 +243,7 @@ int Game::stand(Player& currentPlayer){
     currentPlayer.setCurrentHand(currentPlayer.getCurrentHand() - 1); // if the player stood on a split hand, deincriment currenthand by one
     return 1;
 }
+
 
 int Game::getDealerCount(){
     return dealerCount;

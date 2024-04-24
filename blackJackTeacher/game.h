@@ -27,6 +27,7 @@ public:
     std::tuple<bool,int> hit(Player& person);
     /// splits a persons hand
     bool split(Player& person);
+    bool split(Player& person, Card card, Card secondCard);
     /// doubles the current bet
     void doubleBet();
     /// disables further actions on players current hand
