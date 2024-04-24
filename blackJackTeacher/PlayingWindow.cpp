@@ -22,14 +22,12 @@ PlayingWindow::PlayingWindow(Model &model,QMainWindow* menu, QWidget *parent)
     // Connect timer signal to updateWorld slot
     //connect(timer, &QTimer::timeout, this, &PlayingWindow::updateWorld);
     //timer->start(1000 / 60); // 60Hz
-
-
     QPalette palette = this->palette();
     QColor bg = QColor(61, 59, 59);
     palette.setColor(QPalette::Window, bg);
     this->setAutoFillBackground(true);
     this->setPalette(palette);
-
+    ui->ProbOfDealerBustLabel->setStyleSheet("color: rgb(255, 255, 255);");
 }
 
 PlayingWindow::~PlayingWindow()
@@ -299,12 +297,13 @@ void PlayingWindow::SetUpConnections(Model& model){
     connect(ui->splitButton,&QPushButton::clicked,&model,&Model::splitSlot);
     connect(&model,&Model::enableSplit,this,&PlayingWindow::canSplit);
     connect(&model,&Model::showCurrentHand,this,&PlayingWindow::showWhichHand);
-
 }
 
 
 void PlayingWindow::on_nextButton_clicked()
 {
+    ui->ProbOfDealerBustLabel->setStyleSheet("color: rgb(255, 255, 255);");
+
     emit nextLine();
 }
 void PlayingWindow::endLevel(bool errorState)

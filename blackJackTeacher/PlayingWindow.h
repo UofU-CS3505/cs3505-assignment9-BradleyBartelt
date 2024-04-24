@@ -89,6 +89,8 @@ private slots:
     void split();
     void updateWorld();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::PlayingWindow *ui;
     QMainWindow* mainMenu;
